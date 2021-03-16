@@ -3,23 +3,24 @@
 #                                                         ::::::::             #
 #    Makefile                                           :+:    :+:             #
 #                                                      +:+                     #
-#    By: robijnvanhouts <robijnvanhouts@student.      +#+                      #
+#    By: rvan-hou <rvan-hou@student.42.fr>            +#+                      #
 #                                                    +#+                       #
 #    Created: 2021/03/15 15:36:52 by robijnvanho   #+#    #+#                  #
-#    Updated: 2021/03/15 15:39:12 by robijnvanho   ########   odam.nl          #
+#    Updated: 2021/03/16 14:33:22 by rvan-hou      ########   odam.nl          #
 #                                                                              #
 # **************************************************************************** #
 
 NAME			=	ft_containers
 
-SOURCES			= 	0_main.cpp \
-					4_vector_test.cpp \
-					catch.cpp \
+SOURCES			= 	UNIT_TEST/0_main.cpp \
+					UNIT_TEST/1_vector_test.cpp \
+					UNIT_TEST/catch.cpp \
 
 OBJECTS 		=	${SOURCES:%.c=%.o}
 
 FLAGS 			=	-Wall -Wextra -Werror
-INCLUDES 		=	-IHEADER_FILES/
+INCLUDES 		=	-Iincludes/
+UTILS			=	-Iincludes/utils/
 UNIT_TEST		=	-IUNIT_TEST/
 COMPILE			=	clang++ -std=c++14
 
@@ -33,13 +34,13 @@ all: $(NAME)
 
 $(NAME): $(OBJECTS)
 	@echo "$(GREEN)----------------------------------------------------"
-	@$(COMPILE) $(INCLUDES) $(UNIT_TEST) $(FLAGS) -o $(NAME) $(OBJECTS)
+	@$(COMPILE) $(INCLUDES) $(UTILS) $(UNIT_TEST) $(FLAGS) -o $(NAME) $(OBJECTS)
 	@echo "Executable				./ft_containers"
 	@echo "$(GREEN)----------------------------------------------------"
 
-	%.o: %.c
+%.o: %.c
 	@echo "$(GREY)Compiling...				$(WHITE)$<"
-	@$(COMPILE) $(INCLUDES) $(UNIT_TEST) $(FLAGS) -c -o $@ $<
+	@$(COMPILE) $(INCLUDES) $(UTILS) $(UNIT_TEST) $(FLAGS) -c -o $@ $<
 
 clean:
 	@echo "$(RED)----------------------------------------------------"
@@ -47,4 +48,4 @@ clean:
 	@echo "$(RED)----------------------------------------------------"
 	@/bin/rm -f $(NAME)
 
-	re: clean all
+re: clean all

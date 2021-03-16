@@ -1,8 +1,7 @@
 #include "catch.hpp"
 
 #include <vector>
-#include "includes/Vector.hpp"
-
+#include "../includes/vector.hpp"
 
 TEST_CASE( "vector - empty container constructor (default constructor)", "[vector]" ) {
     ft::Vector<int> first;                                // empty list of ints
