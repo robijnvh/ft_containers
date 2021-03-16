@@ -9,13 +9,13 @@
 	// return (0);
 // }
 
-template<typename T>
-void	printVector(const ft::Vector<T>& vector)
-{
-	for (size_t i = 0; i < vector.size() ; ++i)
-		std::cout << vector[i] << std::endl;
-	std::cout << "------------------" << std::endl;
-}
+// template<typename T>
+// void	printVector(const ft::Vector<T>& vector)
+// {
+// 	for (size_t i = 0; i < vector.size() ; ++i)
+// 		std::cout << vector[i] << std::endl;
+// 	std::cout << "------------------" << std::endl;
+// }
 
 int main (void)
 {

@@ -6,7 +6,7 @@
 /*   By: rvan-hou <rvan-hou@student.42.fr>            +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2021/03/02 11:29:42 by rvan-hou      #+#    #+#                 */
-/*   Updated: 2021/03/02 11:42:40 by rvan-hou      ########   odam.nl         */
+/*   Updated: 2021/03/03 10:51:59 by robijnvanho   ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -16,6 +16,8 @@
 // # include "Node.hpp"
 
 namespace ft {
+
+struct IteratorTrait {};
 
 template<typename It>
 class ReverseIterator : public It {

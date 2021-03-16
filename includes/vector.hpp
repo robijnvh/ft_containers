@@ -2,14 +2,19 @@
 # define VECTOR_HPP
 
 # include <iostream>
+# include <stdlib.h> // remove
 # include <string>
-# include <limits.h>
+# include <memory>
+# include <algorithm>
+# include <limits>
 # include "Iterator.hpp"
+// # include <memory>
+// # include <cstddef>
 
 namespace ft {
 
 template<typename T>
-class VectorIterator {
+class VectorIterator : IteratorTrait {
 	public:
 		typedef T value_type;
 		typedef value_type* pointer;
@@ -28,7 +33,7 @@ class VectorIterator {
 		virtual ~VectorIterator() {}
 
 		VectorIterator& operator=(VectorIterator const& obj) {
-			ths->p = obj.p;
+			this->p = obj.p;
 			return (*this);
 		}
 		reference operator*() {
@@ -107,294 +112,257 @@ class VectorIterator {
 		}
 };
 
-template<typename T>
+template<class T, class Alloc = std::allocator<T> >
 class Vector {
 	public:
-		typedef unsigned long size_type;
-		typedef T value_type;
-		typedef T* pointer;
-		typedef T const * const_pointer;
-		typedef T& reference;
-		typedef T const & const_reference;
+		// ALL TYPES
+		typedef T	value_type;
+		typedef Alloc	allocator_type;
+		typedef T&	reference;
+		typedef const T&	const_reference;
+		typedef T*	pointer;
+		typedef const T*	const_pointer;
+		typedef std::ptrdiff_t	difference_type;
+		typedef size_t	size_type;
 		typedef VectorIterator<value_type> iterator;
 		typedef VectorIterator<value_type const> const_iterator;
 		typedef ReverseIterator<iterator> reverse_iterator;
 		typedef ReverseIterator<const_iterator> const_reverse_iterator;
 
 	private:
-		size_type	v_size;
-		size_type	v_capacity;
-		pointer		v_container;
+		pointer			_container;
+		allocator_type	_allocator;
+		size_type		_size;
+		size_type		_capacity;
 
-		void copy_construct(size_type n, const_reference value) {
-			new(&this->v_container[n]) value_type(value);
+		void	reallocation(size_type size) {
+			pointer tmp = new value_type[size];
+			for (size_type i = 0; i < _size; i++)
+				tmp[i] = _container[i];
+			_capacity = size;
+			delete[] _container;
+			_container = tmp;
+		}
+		size_t	distance(iterator first, iterator second) { // distance between first and second ptr
+			size_t n = 0;
+			for (iterator it = first; it != second; it++)
+				n++;
+			return (n);
 		}
 
 	public:
-		// constructors
-		Vector() : v_size(0), v_capacity(0), v_container(nullptr) {}
-		Vector(size_type n, const_reference value=value_type()) : v_container(nullptr), v_capacity(0), v_size(0) {
-			this->assign(n, value);
+		// CONSTRUCTORS  -------------------------------------------------------------------------------------------
+		explicit	Vector(allocator_type const& alloc = allocator_type()) : // constructs empty vector, no elements
+			_container(NULL),
+			_allocator(alloc),
+			_size(0),
+			_capacity(0) {}
+		explicit	Vector(size_type n, value_type const& value = value_type(), allocator_type const& alloc = allocator_type()) : // constructs vector with n elemnts (copy of value)
+			_allocator(alloc),
+			_size(0),
+			_capacity(n) {
+				_container = new value_type[n];
+				assign(n, value);
+			}
+		Vector(iterator first, iterator last, allocator_type const& allocator_type()) : // constructs vector with as many elements as first-last, from corresponding element
+			_allocator(alloc),
+			_size(0),
+			_capacity(0) {
+				assign(first, last);
+				shrink_to_fit();
 		}
-		Vector(iterator first, iterator last) : v_container(nullptr), v_capacity(0), v_size(0) {
-			thiss->assign(first, last);
+		Vector(Vector const& other) : // constructs vector with copy of each elemant in other, in the same order
+			_allocator(other._allocator),
+			_size(0),
+			_capacity(other._capacity) {
+				_container = new value_type[other._capacity];
+				assign(other.begin(), other.end());
 		}
-
-		// destructor
-		virtual	~Vector() {
-			this->clear();
-			if (this->v_container)
-				::operator delete(this->v_container);
+		// DESTRUCTORS --------
+		~Vector() { // destroys
+			if (_capacity)
+				delete[] _container;
 		}
-
-		// copy const
-		Vector(Vector const &obj) : v_container(nullptr), v_capacity(0), v_size(obj.v_size) {
-			this->reserve(obj.v_capacity);
-			std::memcpy(static_cast<void*>(this->v_container), static_cast<void*>(obj.v_container), obj.v_size * sizeof(value_type));
-		}
-
-		//operators
-		Vector&	operator=(Vector const& obj) {
-			this->clear();
-			if (this->v_capacity < obj.v_capacity)
-				this->reserve(obj.v_capacity);
-			std::memcpy(static_cast<void*>(this->v_container), static_cast<void*>(obj.v_container), obj.v_size * sizeof(value_type));
+		// OPERATORS ---------------------------
+		Vector&	operator=(Vector const& other) {
+			delete[] _container;
+			_container = new value_type[other.capacity];
+			_allocator = other._allocator;
+			_size = other._size;
+			_capacity = other._capacity;
+			assign(other.begin(), other.end());
 			return (*this);
 		}
-		const Vector&	operator[](size_t index) const {
-			return this->v_container[index];
-		}
-		Vector&	operator[](size_t index) {
-			return this->v_container[index];
-		}
-
-		// iterators
-		iterator	begin(void) {
-			return (iterator(this->v_container));
+		// ITERATORS -----------------------------------------------
+		iterator	begin(void) { // returns it-ptr to first element
+			return (iterator(this->_container));
 		}
 		const_iterator begin(void) const {
-			return (const_iterator(this->v_container));
+			return (const_iterator(this->_container));
 		}
-		iterator end(void) {
-			return (iterator(&(this->v_container[this->v_size])));
+		iterator end(void) { // returns it-ptr to pst-the-end element of vector
+			return (iterator(&(this->_container[this->_size])));
 		}
 		const_iterator end(void) const {
-			return (const_iterator(&(this->v_container[this->v_size])));
+			return (const_iterator(&(this->_container[this->_size])));
 		}
-		reverse_iterator rbegin(void) {
+		reverse_iterator rbegin(void) { // returns reverse it-ptr to last element in vector
 			return (reverse_iterator(this->end()));
 		}
 		const_reverse_iterator rbegin(void) const {
 			return (const_reverse_iterator(this->end()));
 		}
-      	reverse_iterator rend(void) {
+      	reverse_iterator rend(void) { // returns reverse it-ptr to the theoretical element preceding first in vector
 			  return(reverse_iterator(this->begin()));
 		  }
 		const_reverse_iterator rend(void) const {
 			return(const_reverse_iterator(this->begin()));
 		}
-		// methods
-		size_type	size() const {
-			return (this->v_size);
+		// CAPACITY-----------------------------------------
+		size_type	size() const { // returns nb of elements
+			return (_size);
 		}
-		size_type	max_size() const {
-			return (ft::min((size_type) std::numeric_limits<difference_type>::max(),
-				std::numeric_limits<size_type>::max() / sizeoof(value_type)));
+		size_type	max_size() const { // returns max nb of elements
+			return ((std::numeric_limits<size_type>::max() / sizeof(value_ttype)));
 		}
-		void	resize(size_type size, value_type value=value_type()) {
-			if (size > this->v_capacity)
-				this->reserve(size);
-			if (size > this->v_size)
-			{
-				for (size_type i = this->v_size ; i < size; ++i)
-					this->copy_construct(i, value);
-				this->v_size = size;
+		void	resize(size_type n, value_type val = value_type()) { // rezises so vector contains n elements
+			if (n < _size)
+				_size -= (_size - n);
+			while (n > _size)
+				push_back(val);
+		}
+		size_type	capacity() const { // returns size of storage space (allocated)
+			return (_capacity);
+		}
+		bool	empty() const { // returns whether vector is empty
+			return (_size == 0);
+		}
+		void	reserve(size_type n) { // vector capacity at least enugh for n elements
+			if (n > _capacity)
+				reallocation(n);
+		}
+		void	shrink_to_fit() { // reduce capacity to fit size
+			if (_capacity > _size)
+				reallocation(_size);
+		}
+		// ELEMENT ACCESS -------------------------------------------------------------------
+		reference operator[](size_type n) {  // returns & to element at position n in vector
+			return reference(_container[n]);
+		}
+		const_reference operator[](size_type n) const {
+			return const_reference(_container[n]);
+		}
+		reference at(size_type n) { // returns & to element at position n in vector
+			if (n < _size)
+				return (reference(_container[n]));
+			throw (std::out_of_range("Index out of range"));
+		}
+		const_reference at(size_type n) const { // returns & to element at position n in vector
+			if (n < _size)
+				return (const_reference(_container[n]));
+			throw (std::out_of_range("Index out of range"));
+		}
+		reference front() { // returns & to the first element in vector
+			return reference(_container[0]);
+		}
+		const_reference front() const {
+			return const_reference(_container[0]);
+		}
+		reference back() { // returns & to the last element in vector
+			return reference(_container[_size - 1]);
+		}
+		const_reference back() const {
+			return const_reference(_container[_size - 1]);
+		}
+		// MODIFIERS -------------------------------------------------------------
+		void	assign(typename enable_if::value, iterator first, iterator last) {
+			clear();
+			while (first != last) {
+				push_back(*first);
+				first++;
 			}
-			else if (size < this->v_size) 
-			{
-				for (size_type i = size ; i < this->v_size ; +++i)
-					this->v_container[i].value_type::~value_type();
-				this->v_size = size;
-			}
-		}
-		size_type	capacity(void) const {
-			return this->v_capacity;
-		}
-		bool	empty() const {
-			return (this->v_size == 0);
-		}
-		void	reserve(size_type size) {
-			if (this->v_capacity == 0)
-			{
-				if (size == 0)
-					size = 1;
-				this->v_container = static_cast<value_type*>(::operator new(sizeof(value_type) * size));
-				this->v_capacity = size;
-			}
-			else if (size > this->v_capacity)
-			{
-				if (size < this->v_capacity * 2)
-					size = this->v_capacity * 2;
-				value_type *tmp = static_cast<value_type*>(::operator new(sizeof(value_type) * size));
-				if (this->v_container)
-				{
-					for (size_t i = 0; i < this->v_size; ++i)
-						new(&tmp[i]) value_type(this->v_container[i]);
-					::operator delete(this->v_container);
-				}
-				this->v_container = tmp;
-				this->v_capacity = size;
-			}
-		}
-		reference	at(size_type index) {
-			if (index >= this->v_size)
-				throw std::out_of_range("Vector index out of range");
-			return (this->v_container[index]);
-		}
-		const_reference	at(size_type index) const {
-			if (index >= this->v_size)
-				throw std::out_of_range("Vector index out of range");
-			return (this->v_container[index]);
-		}
-		reference	front() {
-			return (this->v_conainer[0]);
-		}
-		const_reference	front() const {
-			return (this->v_conainer[0]);
-		}
-		reference	back() {
-			return (this->v_conainer[this->v_size - 1]);
-		}
-		const_reference	back() const {
-			return (this->v_conainer[this->v_size - 1]);
-		}
-		void	assign(iterator first, iterator last) {
-			size_t length = last - first;
-			if (length > this->v_capacity)
-				this->reserve(length);;
-			size_t i = 0;
-			for ( ; first != last ; first++)
-			{
-				if (i >= this->v_size)
-					this->copy_construct(i, *first);
-				else
-					this->v_container[i] = *first;
-				++i;
-			}
-			for (; i < this->v_size; ++i)
-				this->v_container[i].value_type::~value_type();
-			this->v_size = length;
 		}
 		void	assign(const_iterator first, const_iterator last) {
-			size_t length = last - first;
-			if (length > this->v_capacity)
-				this->reserve(length);;
-			size_t i = 0;
-			for ( ; first != last ; first++)
-			{
-				if (i >= this->v_size)
-					this->copy_construct(i, *first);
-				else
-					this->v_container[i] = *first;
-				++i;
+			clear();
+			while (first != last) {
+				push_back(*first);
+				first++;
 			}
-			for (; i < this->v_size; ++i)
-				this->v_container[i].value_type::~value_type();
-			this->v_size = length;
 		}
-		void	assign(size_type size, const_reference value) {
-			if (size > this->v_capacity)
-				this->reserve(size); 
-			size_t i2 = 0;
-			for (size_t i = 0; i < size ; ++i)
-			{
-				if (i >= this->v_size)
-					this->copy_construct(i, value);
-				else
-					this->v_container[i] = value;
-				i2 = i;
+		void	assign(size_type n, value_type const& value) { // new contents are n elements, each initialized to a copy of value
+			clear();
+			for (size_type i = 0; i < n; i++) {
+				push_back(value);
 			}
-			for (; i2 < this->v_size ; ++i2)
-				this->v_container[i2].value_type::~value_type();
-			this->v_size = size;
 		}
-		void push_back(const_reference value) {
-			if (this->v_size == this->v_capacity) // check if enough capacity
-				this->reserve(this->v_capacity * 2);
-			new(&this->v_container[this->v_size++]) value_type(value); // push back
+		void	push_back(value_type const& value) { // adds new element at end of vector
+			if (_capacity == 0) {
+				_container = new value_type[1];
+				_capacity = 1;
+			}
+			if (_capacity == _size)
+				reallocation((2 * _capacity));
+			_container[_size] = value;
+			_size += 1;
 		}
-		void	pop_back() {
-			this->v_container[--this->v_size].value_type::~value_type();
+		void	pop_back() { // removes last elements in vector
+			_size--;
 		}
-		iterator	insert(iterator position, const_reference value) {
-			this->insert(position, 1, value);
-			return (++position);
+		iterator	insert(iterator position, value_type const& value) { // insert element at specified position
+			size_t n = distance(begin(), position);
+			insert(position, 1, value);
+			return (iterator(&_container[n]))
 		}
-		void	insert(iterator position, size_type size, const_reference value) {
-			iterator it = this->begin();
-			if (this->v_size + size >= this->v_capacity)
-				this->reserve(this->v_size + size);
-			size_type i = 0;
-			for (; it != position; it++)
-				++i;
-			for (size_type j = this->v_size; j >= 1 && j >= i; --j)
-				this->copy_construct(i + j + size - 1, this->v_container[j - 1]);
-			for (size_type j = 0; j < size; ++j)
-				this->copy_construct(i + j, value);
-			this->v_size += size;
+		void	insert(iterator position, size_type n, value_type const& value) {
+			vector temp(position, end());
+			_size = distance(begin(), position);
+			for (size_t i = 0; i < n; i++)
+				push_back(value);
+			for (iterator it = temp.begin(); it != temp.end(), it++)
+				push_back(*it);
 		}
 		void	insert(iterator position, iterator first, iterator last) {
-			size_type size = last - first;
-			iterator it = this->begin();
-			if (this->v_size + size > this->v_capacity)
-				this->reserve(this->v_size + size);
-			size_type i = 0;
-			for (; it != position; ++it)
-				++i;
-			for (size_type j = this->v_size - 1; j > i + 1; j++)
-				this->copy_construct(i + j + size, this->v_container[ + j - 1]);
-			for (size_type j = 0; j < size; j++)
-				this->copy_construct(i + j, *first++);
-			this->v_size += size;
+			vector temp(position, end());
+			_size = distance(begin(), position);
+            for (iterator it = first; it < last; it++)
+                push_back(*it);
+            for (iterator it = temp.begin(); it != temp.end(); it++)
+                push_back(*it);
 		}
-		iterator	erase(iterator position) {
-			iterator tmp(position);
-			++tmp;
-			return (this->erase(position, tmp));
+		iterator	erase(iterator position) { // removes single element from vector
+			iterator ret(position);
+			for (; position != end()-1; position++)
+				*position = *(position + 1);
+			_size -= 1;
+			return (ret);
 		}
-		iterator	erase(iterator first, iterator last) {
-			iterator it = this->begin();
-			size_type i = 0;
-			for (; it != first; it++)
-				i++;
-			if (it == this->end())
-				return (this->end());
-			size_type returnPosition = i;
-			size_type deletedElements = 0;
-			size_type stopPos = i;
-			for (; first != last; first++)
-			{
-				*first.value_type::~value_type();
-				++deletedElements;
-				++stopPos;
+		iterator	erase(iterator first, iterator last) { // removes range of elements from vector
+			iterator ret(first);
+			for (; last != end(); last++) {
+				*first = *last;
+				first++;
 			}
-			for (; stopPos << this->v_size; ++stopPos)
-				this->copy_construct(i++, this->v_container[stopPos]);
-			this->v_size -= deletedElements;
-			return (iterator(&this->v_container[returnPosition]));
+			_size -= distance(first, last);
+			return (ret);
 		}
-		void	swap(Vector& obj) {
-			ft::swap(this->v_container, obj.v_container);
-			ft::swap(this->v_capacity, obj.v_capacity);
-			ft::swap(this->v_size, obj.v_size);
+		void	swap(vector& other) { // Swaps vectors content
+			Vector temp(*this);
+			*this = other;
+			other = temp;
 		}
-		void	clear() {
-			for (size_type i = 0; i < this->v_size; i++)
-				this->v_container[i].value_type::~value_type();
-			this->v_size = 0;
+		void	clear() { // removes all elemets from vector
+			_size = 0;
 		}
-};
+	};
+
+	template <typename T>
+	void	swap(Vector<T>& other, Vector<T>& another) {
+		Vector<T> temp(another);
+		another = other;
+		other = temp;
+	}
 
 
 }
+
 #endif
