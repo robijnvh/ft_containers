@@ -1,235 +1,238 @@
+/* ************************************************************************** */
+/*                                                                            */
+/*                                                        ::::::::            */
+/*   vector.hpp                                         :+:    :+:            */
+/*                                                     +:+                    */
+/*   By: robijnvanhouts <robijnvanhouts@student.      +#+                     */
+/*                                                   +#+                      */
+/*   Created: 2021/03/23 13:22:00 by robijnvanho   #+#    #+#                 */
+/*   Updated: 2021/03/25 16:20:53 by robijnvanho   ########   odam.nl         */
+/*                                                                            */
+/* ************************************************************************** */
+
 #ifndef VECTOR_HPP
 # define VECTOR_HPP
 
-# include <stdlib.h> // remove
-#include <cstddef>
-# include <memory>
-# include <algorithm>
-# include <limits>
-
 # include "utils/RandomAccessIterator.hpp"
-# include "utils/traits.hpp"
+# include <limits>
+# include <memory>
 
 namespace ft {
 
 template<class T, class Alloc = std::allocator<T> >
-class Vector {
+class vector {
 	public:
 		// ALL TYPES
-		typedef T	value_type;
-		typedef Alloc	allocator_type;
-		typedef T&	reference;
-		typedef const T&	const_reference;
-		typedef T*	pointer;
-		typedef const T*	const_pointer;
-		typedef std::ptrdiff_t	difference_type;
-		typedef size_t	size_type;
-        typedef RandomAccessIterator<T>	iterator;
+		typedef RandomAccessIterator<T>	iterator;
         typedef ConstRandomAccessIterator<T>	const_iterator;
         typedef RevRandomAccessIterator<T>	reverse_iterator;
         typedef ConstRevRandomAccessIterator<T>	const_reverse_iterator;
-
+	
 	private:
-		pointer			_container;
-		allocator_type	_allocator;
-		size_type		_size;
-		size_type		_capacity;
-
-		void	reallocation(size_type size) {
-			pointer tmp = new value_type[size];
-			for (size_type i = 0; i < _size; i++)
+		T*		_container;
+		Alloc	_allocator;
+		size_t	_size;
+		size_t	_capacity;
+	
+		void	realloc(size_t size) { // reallocate Vector of size amount
+			T* tmp = _allocator.allocate(size);
+			// T* tmp = new T[size];
+			for (size_t i = 0; i < _size; i++)
 				tmp[i] = _container[i];
 			_capacity = size;
 			delete[] _container;
 			_container = tmp;
 		}
-		size_t	distance(iterator first, iterator second) { // distance between first and second ptr
+		size_t	distance(iterator first, iterator second) { // returns dist between first and sec ptr
 			size_t n = 0;
 			for (iterator it = first; it != second; it++)
 				n++;
-			return (n);
+			return n;
 		}
-
+	
 	public:
-		// CONSTRUCTORS  -------------------------------------------------------------------------------------------
-		explicit	Vector(allocator_type const& alloc = allocator_type()) : // constructs empty vector, no elements
+		// CONSTRUCTORS
+		explicit	vector(const Alloc& alloc = Alloc()) : // constructs empty vector, no elements
 			_container(NULL),
 			_allocator(alloc),
 			_size(0),
 			_capacity(0) {}
-		explicit	Vector(size_type n, value_type const& value = value_type(), allocator_type const& alloc = allocator_type()) : // constructs vector with n elemnts (copy of value)
+		explicit	vector(size_t n, T const& val = T(), Alloc const& alloc = Alloc()) : // constructs vector with n elements of value
 			_allocator(alloc),
 			_size(0),
 			_capacity(n) {
-				_container = new value_type[n];
-				assign(n, value);
+				_container = _allocator.allocate(n);
+				// _container = new T[n];
+				assign(n, val);
 			}
-		template<class InputIterator>
-		Vector(typename enable_if<is_input_iterator<InputIterator>::value, InputIterator>::type first, InputIterator last, allocator_type const& alloc = allocator_type()) : // constructs vector with as many elements as first-last, from corresponding element
+		// template<class InputIterator>
+		// vector(InputIterator first, InputIterator last, Alloc const& alloc = Alloc()) :  // constructs vector of first-last elements
+		vector(iterator first, iterator last, Alloc const& alloc = Alloc()) :  // constructs vector of first-last elements
 			_allocator(alloc),
 			_size(0),
 			_capacity(0) {
 				assign(first, last);
 				shrink_to_fit();
 			}
-		Vector(Vector const& other) : // constructs vector with copy of each elemant in other, in the same order
+		vector(vector const& other) : // constructs vector with copy of each elemant in other
 			_allocator(other._allocator),
 			_size(0),
 			_capacity(other._capacity) {
-				_container = new value_type[other._capacity];
+				// _container = new T[other._capacity];
+				_container = _allocator.allocate(other._capacity);
 				assign(other.begin(), other.end());
 			}
-		// DESTRUCTORS --------
-		~Vector() { // destroys
+		// DESTRUCTOR
+		~vector() { // destroys
 			if (_capacity)
 				delete[] _container;
 		}
-		// OPERATORS ---------------------------
-		Vector&	operator=(Vector const& other) {
+		// ASSIGNATION OPERATOR
+		vector&	operator=(vector const& other) {
 			delete[] _container;
-			_container = new value_type[other._capacity];
+			// _container = new T[other._capacity];
+			_container = _allocator.allocate(other._capacity);
 			_allocator = other._allocator;
 			_size = other._size;
 			_capacity = other._capacity;
 			assign(other.begin(), other.end());
-			return (*this);
+			return *this;
 		}
-		// ITERATORS -----------------------------------------------
+		// ITERATORS
 		iterator	begin(void) { // returns it-ptr to first element
-			return iterator(_container);
+			return _container;
 		}
 		const_iterator begin(void) const {
-			return const_iterator(_container);
+			return _container;
 		}
 		iterator end(void) { // returns it-ptr to pst-the-end element of vector
-			return iterator(&(_container[_size]));
+			return &(_container[_size]);
 		}
 		const_iterator end(void) const {
-			return const_iterator(&(_container[_size]));
+			return &(_container[_size]);
 		}
 		reverse_iterator rbegin(void) { // returns reverse it-ptr to last element in vector
-			return reverse_iterator(&_container[_size - 1]);
+			return &_container[_size - 1];
 		}
 		const_reverse_iterator rbegin(void) const {
-			return const_reverse_iterator(&_container[_size - 1]);
+			return &_container[_size - 1];
 		}
       	reverse_iterator rend(void) { // returns reverse it-ptr to the theoretical element preceding first in vector
-			  return reverse_iterator(_container - 1);
+			  return _container - 1;
 		  }
 		const_reverse_iterator rend(void) const {
-			return const_reverse_iterator(_container - 1);
+			return _container - 1;
 		}
-		// CAPACITY-----------------------------------------
-		size_type	size() const { // returns nb of elements
-			return (_size);
+		// CAPACITY
+		size_t	size() const { // returns size (nb of elements)
+			return _size;
 		}
-		size_type	max_size() const { // returns max nb of elements
-			return ((std::numeric_limits<size_type>::max() / sizeof(value_type)));
+		size_t	max_size() const { // returns max nb of elements possible
+			return (std::numeric_limits<size_t>::max() / sizeof(T));
 		}
-		void	resize(size_type n, value_type val = value_type()) { // rezises so vector contains n elements
+		void	resize(size_t n, T val = T()) { // resize vector to contain n elements
 			if (n < _size)
 				_size -= (_size - n);
 			while (n > _size)
 				push_back(val);
 		}
-		size_type	capacity() const { // returns size of storage space (allocated)
-			return (_capacity);
+		size_t	capacity() const  { // returns size of allocated space
+			return _capacity;
 		}
 		bool	empty() const { // returns whether vector is empty
 			return (_size == 0);
 		}
-		void	reserve(size_type n) { // vector capacity at least enugh for n elements
+		void	reserve(size_t n) { // vector capacity at least enough for n elements
 			if (n > _capacity)
-				reallocation(n);
+				realloc(n);
 		}
 		void	shrink_to_fit() { // reduce capacity to fit size
 			if (_capacity > _size)
-				reallocation(_size);
+				realloc(_size);
 		}
-		// ELEMENT ACCESS -------------------------------------------------------------------
-		reference operator[](size_type n) {  // returns & to element at position n in vector
-			return reference(_container[n]);
+		// ELEMENT ACCESS
+		T&	operator[](size_t n) { // returns ref to element at position n in vector
+			return (_container[n]);
 		}
-		const_reference operator[](size_type n) const {
-			return const_reference(_container[n]);
+		T const&	operator[](size_t n) const {
+			return (_container[n]);
 		}
-		reference at(size_type n) { // returns & to element at position n in vector
+		T&	at(size_t n) { // checks bounds and returns ref to element at position n in vector
 			if (n < _size)
-				return (reference(_container[n]));
+				return _container[n];
 			throw (std::out_of_range("Index out of range"));
 		}
-		const_reference at(size_type n) const { // returns & to element at position n in vector
+		T const&	at(size_t n) const {
 			if (n < _size)
-				return (const_reference(_container[n]));
+				return _container[n];
 			throw (std::out_of_range("Index out of range"));
 		}
-		reference front() { // returns & to the first element in vector
-			return reference(_container[0]);
+		T&	front() { // returns ref to first element in vector
+			return _container[0];
 		}
-		const_reference front() const {
-			return const_reference(_container[0]);
+		T const& front() const {
+			return _container[0];
 		}
-		reference back() { // returns & to the last element in vector
-			return reference(_container[_size - 1]);
+		T&	back() { // returns ref to last element in vector
+			return _container[_size - 1];
 		}
-		const_reference back() const {
-			return const_reference(_container[_size - 1]);
+		T const&	back() const {
+			return _container[_size - 1];
 		}
-		// MODIFIERS -------------------------------------------------------------
-		template <class InputIterator>
-		void	assign(typename enable_if<is_input_iterator<InputIterator>::value, InputIterator>::type first, InputIterator last) {
+		// MODIFIERS
+		// template <class InputIterator>
+  		// void	assign(InputIterator first, InputIterator last) {
+  		void	assign(iterator first, iterator last) {
 			clear();
-			while (first != last) {
+			for (; first != last; first++)
 				push_back(*first);
-				first++;
-			}
 		}
 		void	assign(const_iterator first, const_iterator last) {
 			clear();
-			while (first != last) {
+			for (; first != last; first++)
 				push_back(*first);
-				first++;
-			}
 		}
-		void	assign(size_type n, value_type const& value) { // new contents are n elements, each initialized to a copy of value
+		void	assign(size_t n, T const& val) { // new contents are n elements, each initialized to a copy of value
 			clear();
-			for (size_type i = 0; i < n; i++) {
-				push_back(value);
+			for (size_t i = 0; i < n; i++) {
+				push_back(val);
 			}
 		}
-		void	push_back(value_type const& value) { // adds new element at end of vector
+		void	push_back(T const& val) { // adds new element at end of vector
 			if (_capacity == 0) {
-				_container = new value_type[1];
+				// _container = new T[1];
+				_container = _allocator.allocate(1);
 				_capacity = 1;
 			}
 			if (_capacity == _size)
-				reallocation((2 * _capacity));
-			_container[_size] = value;
+				realloc((2 * _capacity));
+			_container[_size] = val;
 			_size += 1;
 		}
-		void	pop_back() { // removes last elements in vector
+		void	pop_back() { // removes last element in vector
 			_size--;
 		}
-		iterator	insert(iterator position, value_type const& value) { // insert element at specified position
+		iterator	insert(iterator position, T const& val) {
 			size_t n = distance(begin(), position);
-			insert(position, 1, value);
+			insert(position, 1, val);
 			return (iterator(&_container[n]));
 		}
-		void	insert(iterator position, size_type n, value_type const& value) {
-			Vector temp(position, end());
+		void	insert(iterator position, size_t n, T const& val) {
+			vector tmp(position, end());
 			_size = distance(begin(), position);
 			for (size_t i = 0; i < n; i++)
-				push_back(value);
-			for (iterator it = temp.begin(); it != temp.end(); it++)
+				push_back(val);
+			for (iterator it = tmp.begin(); it != tmp.end(); it++)
 				push_back(*it);
 		}
-        template <class InputIterator>
-		void	insert(iterator position, typename enable_if<is_input_iterator<InputIterator>::value, InputIterator>::type first, InputIterator last) {
-			Vector temp(position, end());
+		// template <class InputIterator>
+		// void	insert(iterator position, typename enable_if<is_input_iterator<InputIterator>::value, InputIterator>::type first, InputIterator last) {
+		void	insert(iterator position, iterator first, iterator last) {
+			vector tmp(position, end());
 			_size = distance(begin(), position);
             for (iterator it = first; it < last; it++)
                 push_back(*it);
-            for (iterator it = temp.begin(); it != temp.end(); it++)
+            for (iterator it = tmp.begin(); it != tmp.end(); it++)
                 push_back(*it);
 		}
 		iterator	erase(iterator position) { // removes single element from vector
@@ -248,54 +251,15 @@ class Vector {
 			_size -= distance(first, last);
 			return (ret);
 		}
-		void	swap(Vector& other) { // Swaps vectors content
-			Vector temp(*this);
+		void	swap(vector& other) { // swaps vectors
+			vector tmp(*this);
 			*this = other;
-			other = temp;
+			other = tmp;
 		}
-		void	clear() { // removes all elemets from vector
+		void	clear() { // removes all elements from vector
 			_size = 0;
 		}
-	};
-
-	template <typename T>
-	void	swap(Vector<T>& other, Vector<T>& another) {
-		Vector<T> temp(another);
-		another = other;
-		other = temp;
-	}
-
-	// RELATION OPERATORS ---------------------------
-	template <class value_type, class allocator_type>
-	bool	operator==(Vector<value_type,allocator_type>const& lhs, Vector<value_type,allocator_type>const& rhs) {
-		typename ft::Vector<value_type>::const_iterator it_lhs = lhs.begin();
-		typename ft::Vector<value_type>::const_iterator it_rhs = rhs.begin();
-		if (lhs.size() != rhs.size())
-			return (false);
-		while (*it_lhs != *lhs.end()) {
-			if (*it_lhs != *it_rhs)
-		return (false);
-			it_lhs++;
-			it_rhs++;
-		}
-		return (true);
-	}
-
-	template <class value_type, class allocator_type>
-	bool operator!= (const Vector<value_type,allocator_type>& lhs, const Vector<value_type,allocator_type>& rhs) {return !(lhs == rhs);}
-
-	template <class value_type, class allocator_type>
-	bool operator< (const Vector<value_type,allocator_type>& lhs, const Vector<value_type,allocator_type>& rhs) {
-		return (std::lexicographical_compare(lhs.begin(), lhs.end(), rhs.begin(), rhs.end()));}
-
-	template <class value_type, class allocator_type>
-	bool operator<= (const Vector<value_type,allocator_type>& lhs, const Vector<value_type,allocator_type>& rhs) {return !(rhs < lhs);}
-
-	template <class value_type, class allocator_type>
-	bool operator>  (const Vector<value_type,allocator_type>& lhs, const Vector<value_type,allocator_type>& rhs) {return (rhs<lhs);}
-
-	template <class value_type, class allocator_type>
-	bool operator>= (const Vector<value_type,allocator_type>& lhs, const Vector<value_type,allocator_type>& rhs) {return !(lhs < rhs);}
-};
+	}; // class vector
+}
 
 #endif
