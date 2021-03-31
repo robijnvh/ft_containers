@@ -6,7 +6,7 @@
 /*   By: robijnvanhouts <robijnvanhouts@student.      +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2021/03/23 13:22:00 by robijnvanho   #+#    #+#                 */
-/*   Updated: 2021/03/25 16:20:53 by robijnvanho   ########   odam.nl         */
+/*   Updated: 2021/03/31 12:31:21 by robijnvanho   ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,6 +14,7 @@
 # define VECTOR_HPP
 
 # include "utils/RandomAccessIterator.hpp"
+// # include "utils/traits.hpp"
 # include <limits>
 # include <memory>
 
@@ -65,9 +66,9 @@ class vector {
 				// _container = new T[n];
 				assign(n, val);
 			}
-		// template<class InputIterator>
-		// vector(InputIterator first, InputIterator last, Alloc const& alloc = Alloc()) :  // constructs vector of first-last elements
-		vector(iterator first, iterator last, Alloc const& alloc = Alloc()) :  // constructs vector of first-last elements
+		// vector(iterator first, iterator last, Alloc const& alloc = Alloc()) :  // constructs vector of first-last elements
+		template<class InputIterator>
+		vector(InputIterator first, InputIterator last, Alloc const& alloc = Alloc()) :  // constructs vector of first-last elements
 			_allocator(alloc),
 			_size(0),
 			_capacity(0) {
@@ -100,28 +101,28 @@ class vector {
 		}
 		// ITERATORS
 		iterator	begin(void) { // returns it-ptr to first element
-			return _container;
+			return iterator(_container);
 		}
 		const_iterator begin(void) const {
-			return _container;
+			return const_iterator(_container);
 		}
 		iterator end(void) { // returns it-ptr to pst-the-end element of vector
-			return &(_container[_size]);
+			return iterator(&(_container[_size]));
 		}
 		const_iterator end(void) const {
-			return &(_container[_size]);
+			return const_iterator(&(_container[_size]));
 		}
 		reverse_iterator rbegin(void) { // returns reverse it-ptr to last element in vector
-			return &_container[_size - 1];
+			return reverse_iterator(&_container[_size - 1]);
 		}
 		const_reverse_iterator rbegin(void) const {
-			return &_container[_size - 1];
+			return const_reverse_iterator(&_container[_size - 1]);
 		}
       	reverse_iterator rend(void) { // returns reverse it-ptr to the theoretical element preceding first in vector
-			  return _container - 1;
+			  return reverse_iterator(_container - 1);
 		  }
 		const_reverse_iterator rend(void) const {
-			return _container - 1;
+			return const_reverse_iterator(_container - 1);
 		}
 		// CAPACITY
 		size_t	size() const { // returns size (nb of elements)

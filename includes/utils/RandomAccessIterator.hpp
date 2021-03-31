@@ -6,7 +6,7 @@
 /*   By: robijnvanhouts <robijnvanhouts@student.      +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2021/03/23 20:02:35 by robijnvanho   #+#    #+#                 */
-/*   Updated: 2021/03/25 15:42:44 by robijnvanho   ########   odam.nl         */
+/*   Updated: 2021/03/29 15:52:01 by robijnvanho   ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -68,16 +68,16 @@ class RandomAccessIterator {
 		}
 		// OPERATORS - ARITHMETIC
 		std::ptrdiff_t	operator+(RandomAccessIterator<T> const& other) {
-			return _ptr + other._ptr;
+			return (_ptr + other._ptr);
 		}
 		RandomAccessIterator	operator+(std::ptrdiff_t const& other) {
-			return _ptr + other;
+			return RandomAccessIterator<T>(_ptr + other);
 		}
 		std::ptrdiff_t	operator-(RandomAccessIterator<T> const& other) {
-			return _ptr - other;
+			return (_ptr - other);
 		}
 		RandomAccessIterator	operator-(std::ptrdiff_t const& other) {
-			return _ptr - other;
+			return RandomAccessIterator<T>(_ptr - other);
 		}
 		RandomAccessIterator&	operator+=(std::ptrdiff_t const& other) {
 			_ptr += other;
@@ -125,6 +125,9 @@ class RandomAccessIterator {
 			_ptr(other) {}
 		ConstRandomAccessIterator(ConstRandomAccessIterator const& other) {
 			*this = other;
+		}
+		ConstRandomAccessIterator(RandomAccessIterator<T> const& other) {
+			_ptr = other.get_ptr();
 		}
 		ConstRandomAccessIterator&	operator=(ConstRandomAccessIterator const& other) {
 			if (this != &other)
@@ -313,8 +316,8 @@ class RandomAccessIterator {
 			_ptr(NULL) {}
 		explicit	ConstRevRandomAccessIterator(T* other) :
 			_ptr(other) {}
-		ConstRevRandomAccessIterator(ConstRevRandomAccessIterator const& other) {
-			*this = other;
+		ConstRevRandomAccessIterator(RevRandomAccessIterator<T> const& other) {
+			_ptr = other.get_ptr();
 		}
 		ConstRevRandomAccessIterator&	operator=(ConstRevRandomAccessIterator const& other) {
 			if (this != &other)

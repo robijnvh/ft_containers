@@ -3,149 +3,150 @@
 #include <vector>
 #include "../includes/vector.hpp"
 
+
 TEST_CASE( "vector - empty container constructor (default constructor)", "[vector]" ) {
-    ft::Vector<int> first;                                // empty list of ints
+    ft::vector<std::string> first;                                // empty list of ints
     REQUIRE(first.size() == 0);
 }
 
 TEST_CASE( "vector - fill constructor", "[vector]" ) {
-    ft::Vector<int> second (4,100);                // four ints with value 100
+    ft::vector<int> second (4,100);                // four ints with value 100
     REQUIRE(second.size() == 4);
 }
 
 TEST_CASE( "vector - range constructor", "[vector]" ) {
-    ft::Vector<int> second (5,100);
-    ft::Vector<int> third (second.begin(),second.end());  // iterating through second
+    ft::vector<int> second (5,100);
+    ft::vector<int> third (second.begin(),second.end());  // iterating through second
     REQUIRE(third.size() == 5);
     REQUIRE(third.capacity() == 5);
 }
 
 TEST_CASE( "vector - copy constructor", "[vector]" ) {
-    ft::Vector<int> second (5,100);
-    ft::Vector<int> fourth (second);                       // a copy of second
+    ft::vector<int> second (5,100);
+    ft::vector<int> fourth (second);                       // a copy of second
     REQUIRE(fourth.size() == second.size());
 }
 
 TEST_CASE( "vector - assignment operator", "[vector]" ) {
-    ft::Vector<int> second (5,100);
+    ft::vector<int> second (5,100);
 
-    ft::Vector<int> fourth;
+    ft::vector<int> fourth;
     fourth = second;                      // a copy of second
 
     REQUIRE(fourth.size() == second.size());
 }
 
 TEST_CASE( "vector - begin", "[vector]" ) {
-    ft::Vector<int> ft_Vector;
+    ft::vector<int> ft_vector;
     std::vector<int> std_vector;
 
-    for (int i=1; i<=5; i++) ft_Vector.push_back(i);
+    for (int i=1; i<=5; i++) ft_vector.push_back(i);
     for (int i=1; i<=5; i++) std_vector.push_back(i);
 
-    REQUIRE(*ft_Vector.begin() == *std_vector.begin());
+    REQUIRE(*ft_vector.begin() == *std_vector.begin());
 }
 
 TEST_CASE( "vector - rbegin", "[vector]" ) {
-    ft::Vector<int> ft_Vector;
+    ft::vector<int> ft_vector;
     std::vector<int> std_vector;
 
-    for (int i=1; i<=5; i++) ft_Vector.push_back(i);
+    for (int i=1; i<=5; i++) ft_vector.push_back(i);
     for (int i=1; i<=5; i++) std_vector.push_back(i);
 
-    REQUIRE(*ft_Vector.rbegin() == *std_vector.rbegin());
+    REQUIRE(*ft_vector.rbegin() == *std_vector.rbegin());
 }
 
 TEST_CASE( "vector - size", "[vector]" ) {
-    ft::Vector<int> ft_Vector;
+    ft::vector<int> ft_vector;
     std::vector<int> std_vector;
 
-    for (int i=1; i<=5; i++) ft_Vector.push_back(i);
+    for (int i=1; i<=5; i++) ft_vector.push_back(i);
     for (int i=1; i<=5; i++) std_vector.push_back(i);
 
-    REQUIRE(ft_Vector.size() == std_vector.size());
+    REQUIRE(ft_vector.size() == std_vector.size());
 }
 
 TEST_CASE( "vector - max_size", "[vector]" ) {
-    ft::Vector<int> ft_Vector;
+    ft::vector<int> ft_vector;
     std::vector<int> std_vector;
 
-    REQUIRE(ft_Vector.max_size() == std_vector.max_size());
+    REQUIRE(ft_vector.max_size() == std_vector.max_size());
 }
 
 TEST_CASE( "vector - resize", "[vector]" ) {
-    ft::Vector<int> ft_Vector;
-    for (int i=1; i<=10; i++) ft_Vector.push_back(i);
+    ft::vector<int> ft_vector;
+    for (int i=1; i<=10; i++) ft_vector.push_back(i);
 
-    ft_Vector.resize(10);
-    REQUIRE(ft_Vector.size() == 10);
+    ft_vector.resize(10);
+    REQUIRE(ft_vector.size() == 10);
 
-    ft_Vector.resize(5);
-    REQUIRE(ft_Vector.size() == 5);
+    ft_vector.resize(5);
+    REQUIRE(ft_vector.size() == 5);
 
-    ft_Vector.resize(15);
-    REQUIRE(ft_Vector.size() == 15);
+    ft_vector.resize(15);
+    REQUIRE(ft_vector.size() == 15);
 }
 
 TEST_CASE( "vector - capacity", "[vector]" ) {
-    ft::Vector<int> ft_Vector;
+    ft::vector<int> ft_vector;
     std::vector<int> std_vector;
 
-    for (int i=1; i<=5; i++) ft_Vector.push_back(i);
+    for (int i=1; i<=5; i++) ft_vector.push_back(i);
     for (int i=1; i<=5; i++) std_vector.push_back(i);
 
-    REQUIRE(ft_Vector.capacity() == std_vector.capacity());
+    REQUIRE(ft_vector.capacity() == std_vector.capacity());
 }
 
 TEST_CASE( "vector - empty", "[vector]" ) {
-    ft::Vector<int> ft_Vector;
+    ft::vector<int> ft_vector;
     std::vector<int> std_vector;
 
-    REQUIRE(ft_Vector.empty() == std_vector.empty());
+    REQUIRE(ft_vector.empty() == std_vector.empty());
 
-    for (int i=1; i<=5; i++) ft_Vector.push_back(i);
+    for (int i=1; i<=5; i++) ft_vector.push_back(i);
     for (int i=1; i<=5; i++) std_vector.push_back(i);
 
-    REQUIRE(ft_Vector.empty() == std_vector.empty());
+    REQUIRE(ft_vector.empty() == std_vector.empty());
 }
 
 TEST_CASE( "vector - reserve", "[vector]" ) {
-    ft::Vector<int> ft_Vector;
+    ft::vector<int> ft_vector;
     std::vector<int> std_vector;
 
-    for (int i=1; i<=5; i++) ft_Vector.push_back(i);
+    for (int i=1; i<=5; i++) ft_vector.push_back(i);
     for (int i=1; i<=5; i++) std_vector.push_back(i);
 
-    ft_Vector.reserve(25);
+    ft_vector.reserve(25);
     std_vector.reserve(25);
 
-    REQUIRE(ft_Vector.capacity() == std_vector.capacity());
+    REQUIRE(ft_vector.capacity() == std_vector.capacity());
 }
 
 TEST_CASE( "vector - shrink to fit", "[vector]" ) {
-    ft::Vector<int> ft_Vector;
+    ft::vector<int> ft_vector;
     std::vector<int> std_vector;
 
-    for (int i=1; i<=5; i++) ft_Vector.push_back(i);
+    for (int i=1; i<=5; i++) ft_vector.push_back(i);
     for (int i=1; i<=5; i++) std_vector.push_back(i);
 
-    ft_Vector.shrink_to_fit();
+    ft_vector.shrink_to_fit();
     std_vector.shrink_to_fit();
 
-    REQUIRE(ft_Vector.capacity() == std_vector.capacity());
-    REQUIRE(ft_Vector.size() == std_vector.size());
+    REQUIRE(ft_vector.capacity() == std_vector.capacity());
+    REQUIRE(ft_vector.size() == std_vector.size());
 }
 
 TEST_CASE( "vector - operator []", "[vector]" ) {
-    ft::Vector<int> ft_Vector;
+    ft::vector<int> ft_vector;
 
-    for (int i=0; i<=5; i++) ft_Vector.push_back(i);
+    for (int i=0; i<=5; i++) ft_vector.push_back(i);
 
-    REQUIRE(ft_Vector[0] == 0);
-    REQUIRE(ft_Vector[3] == 3);
+    REQUIRE(ft_vector[0] == 0);
+    REQUIRE(ft_vector[3] == 3);
 }
 
 TEST_CASE( "vector - at", "[vector]" ) {
-    ft::Vector<int> myvector (10);   // 10 zero-initialized ints
+    ft::vector<int> myvector (10);   // 10 zero-initialized ints
 
     // assign some values:
     for (unsigned i=0; i<myvector.size(); i++)
@@ -156,7 +157,7 @@ TEST_CASE( "vector - at", "[vector]" ) {
 }
 
 TEST_CASE( "vector - front", "[vector]" ) {
-    ft::Vector<int> myvector (10);   // 10 zero-initialized ints
+    ft::vector<int> myvector (10);   // 10 zero-initialized ints
 
     // assign some values:
     for (unsigned i=0; i<myvector.size(); i++)
@@ -166,7 +167,7 @@ TEST_CASE( "vector - front", "[vector]" ) {
 }
 
 TEST_CASE( "vector - back", "[vector]" ) {
-    ft::Vector<int> myvector (10);   // 10 zero-initialized ints
+    ft::vector<int> myvector (10);   // 10 zero-initialized ints
 
     // assign some values:
     for (unsigned i=0; i<myvector.size(); i++)
@@ -176,19 +177,19 @@ TEST_CASE( "vector - back", "[vector]" ) {
 }
 
 TEST_CASE( "vector - assign", "[vector]" ) {
-    ft::Vector<int> first;
-    ft::Vector<int> second;
-    ft::Vector<int> third;
+    ft::vector<int> first;
+    ft::vector<int> second;
+    ft::vector<int> third;
 
     first.assign (7,100);             // 7 ints with a value of 100
     REQUIRE(first.size() == 7);
     REQUIRE(*first.begin() == 100);
 
-    ft::Vector<int>::iterator it;
+    ft::vector<int>::iterator it;
     it=first.begin()+1;
     REQUIRE(*it == 100);
 
-    ft::Vector<int>::iterator it_end;
+    ft::vector<int>::iterator it_end;
     it_end=first.end()-1;
     REQUIRE(*it_end == 100);
 
@@ -198,8 +199,8 @@ TEST_CASE( "vector - assign", "[vector]" ) {
 }
 
 TEST_CASE( "vector - insert", "[vector]" ) {
-    ft::Vector<int> myvector (3,100);
-    ft::Vector<int>::iterator it;
+    ft::vector<int> myvector (3,100);
+    ft::vector<int>::iterator it;
 
     std::vector<int> realvector (3,100);
     std::vector<int>::iterator std_it;
@@ -221,7 +222,7 @@ TEST_CASE( "vector - insert", "[vector]" ) {
     // "it" no longer valid, get a new one:
     it = myvector.begin();
 
-    ft::Vector<int> anothervector (3,400);
+    ft::vector<int> anothervector (3,400);
     myvector.insert (it+2,anothervector.begin(),anothervector.end());
     it = myvector.begin();
     std::advance(it, 3);
@@ -230,11 +231,11 @@ TEST_CASE( "vector - insert", "[vector]" ) {
 }
 
 TEST_CASE( "vector - erase", "[vector]" ) {
-    ft::Vector<int> myvector;
+    ft::vector<int> myvector;
     std::vector<int> realvector;
 
     // initialize iterators
-    ft::Vector<int>::iterator it;
+    ft::vector<int>::iterator it;
     std::vector<int>::iterator std_it;
 
     // set some values (from 1 to 10)
@@ -274,15 +275,15 @@ TEST_CASE( "vector - swap", "[vector]" ) {
 }
 
 TEST_CASE(" vector - relational operator overloads", "[vector]") {
-    ft::Vector<int> a;
+    ft::vector<int> a;
     a.push_back(10);
     a.push_back(20);
     a.push_back(30);
-    ft::Vector<int> b;
+    ft::vector<int> b;
     b.push_back(10);
     b.push_back(20);
     b.push_back(30);
-    ft::Vector<int> c;
+    ft::vector<int> c;
     c.push_back(30);
     c.push_back(20);
     c.push_back(10);
@@ -304,9 +305,9 @@ TEST_CASE(" vector - relational operator overloads", "[vector]") {
 }
 
 TEST_CASE(" vector - subtracting two iterators", "[vector]") {
-    ft::Vector<int> myvector (3,100);
-    ft::Vector<int>::iterator it;
-    ft::Vector<int>::iterator it2;
+    ft::vector<int> myvector (3,100);
+    ft::vector<int>::iterator it;
+    ft::vector<int>::iterator it2;
 
     it = myvector.begin();
     it2 = myvector.end();
