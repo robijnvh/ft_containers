@@ -3,10 +3,10 @@
 /*                                                        ::::::::            */
 /*   vector.hpp                                         :+:    :+:            */
 /*                                                     +:+                    */
-/*   By: robijnvanhouts <robijnvanhouts@student.      +#+                     */
+/*   By: rvan-hou <rvan-hou@student.42.fr>            +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2021/03/23 13:22:00 by robijnvanho   #+#    #+#                 */
-/*   Updated: 2021/03/31 12:41:26 by robijnvanho   ########   odam.nl         */
+/*   Updated: 2021/04/06 14:57:11 by rvan-hou      ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -66,7 +66,6 @@ class vector {
 				// _container = new T[n];
 				assign(n, val);
 			}
-		// vector(iterator first, iterator last, Alloc const& alloc = Alloc()) :  // constructs vector of first-last elements
 		template<class InputIterator>
 		vector(typename enable_if<is_input_iterator<InputIterator>::value, InputIterator>::type first, InputIterator last, Alloc const& alloc = Alloc()) :  // constructs vector of first-last elements
 			_allocator(alloc),
@@ -181,7 +180,6 @@ class vector {
 			return _container[_size - 1];
 		}
 		// MODIFIERS
-  		// void	assign(iterator first, iterator last) {
 		template <class InputIterator>
         void assign (typename enable_if<is_input_iterator<InputIterator>::value, InputIterator>::type first, InputIterator last) {
 			clear();
@@ -226,7 +224,6 @@ class vector {
 			for (iterator it = tmp.begin(); it != tmp.end(); it++)
 				push_back(*it);
 		}
-		// void	insert(iterator position, iterator first, iterator last) {
 		template <class InputIterator>
         void insert (iterator position, typename enable_if<is_input_iterator<InputIterator>::value, InputIterator>::type first, InputIterator last) {
 			vector tmp(position, end());

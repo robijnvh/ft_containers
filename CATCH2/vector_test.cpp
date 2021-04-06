@@ -218,6 +218,7 @@ TEST_CASE( "vector - const back", "[vector]") {
 }
 // MODIFIERS
 TEST_CASE( "vector - assign(first, last)", "[vector]") { // klopt nog niet helemaal!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+    // INT
 	ft::vector<int> ft_vector(3, 3);
 	ft::vector<int> ft_test(2, 2);
     std::vector<int> std_vector(3, 3);
@@ -231,6 +232,29 @@ TEST_CASE( "vector - assign(first, last)", "[vector]") { // klopt nog niet helem
 	REQUIRE(ft_vector[0] != 3); // check if assigned
 	REQUIRE(ft_vector[0] == std_vector[0]); // check if elements are equal
 	REQUIRE(ft_vector[1] == std_vector[1]); // check if elements are equal
+    // STRING
+    // ft::vector<std::string> ft_vector;
+    // std::vector<std::string> std_vector;
+    // ft_vector.push_back("Hello");
+    // ft_vector.push_back("World");
+    // ft_vector.push_back("Bye");
+    // ft_vector.push_back("!");
+    // std_vector.push_back("Hello");
+    // std_vector.push_back("World");
+    // std_vector.push_back("Bye");
+    // std_vector.push_back("!");
+    // ft::vector<std::string>::iterator ft_first = ft_vector.begin();
+    // std::vector<std::string>::iterator std_first = std_vector.begin();
+	// ft::vector<std::string>::iterator ft_last = ft_vector.end() - 1;
+    // std::vector<std::string>::iterator std_last = std_vector.end() - 1;
+	// ft::vector<std::string> ft_test;
+    // std::vector<std::string> std_test;
+	// ft_test.assign(ft_first, ft_last);
+	// std_test.assign(std_first, std_last);
+    // REQUIRE(ft_test.size() != 0); // check if assigned
+    // REQUIRE(ft_test[0] == std_test[0]); // check if elements equal 0
+    // REQUIRE(ft_test[1] == std_test[1]); // check if elements equal 1
+    // REQUIRE(ft_test[3] == std_test[3]); // check if elements equal 3
 }
 TEST_CASE( "vector - assign(const first, const last)", "[vector]") { // klopt nog niet helemaal!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
 	ft::vector<int> ft_vector(3, 3);

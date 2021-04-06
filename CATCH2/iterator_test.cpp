@@ -2,7 +2,6 @@
 
 #include <string>
 #include <vector>
-// #include "../includes/utils/RandomAccessIterator.hpp"
 #include "../includes/vector.hpp" 
 
 // CONSTRUCTORS // COPLIEN
@@ -16,12 +15,25 @@ TEST_CASE( "RandomAccessIterator", "[iterator]" ) {
 	ft::vector<int>::iterator ft_it_end = ft_vector.end();
 	std::vector<int>::iterator std_it_end = std_vector.end();
 	ft::vector<int>::iterator ft_check = ft_vector.begin() + 1;
-	// SECTION ("default constructor") {
-	// }
-	// SECTION("copy constructor") {
-	// }
-	// SECTION("assignation operator") {
-	// }
+	SECTION ("default constructor") {
+        ft::vector<std::string>::iterator ft_it;
+        REQUIRE(ft_it.get_ptr() == NULL);
+	}
+	SECTION("copy constructor") {
+	    ft::vector<int> ft_vector;
+	    for (int i = 1; i <= 10; i++) ft_vector.push_back(i);
+        ft::vector<int>::iterator ft_it = ft_vector.begin();
+        ft::vector<int>::iterator ft_it_test = ft_it;
+        REQUIRE(*ft_it == *ft_it_test);
+	}
+	SECTION("assignation operator") {
+        ft::vector<int> ft_vector;
+	    for (int i = 1; i <= 10; i++) ft_vector.push_back(i);
+        ft::vector<int>::iterator ft_it = ft_vector.begin();
+        ft::vector<int>::iterator ft_it_test;
+        ft_it_test = ft_it;
+        REQUIRE(*ft_it == *ft_it_test);
+	}
 	SECTION("*") {
         ft_it_begin++;
         std_it_begin++;
