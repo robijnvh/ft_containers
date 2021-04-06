@@ -6,7 +6,7 @@
 /*   By: robijnvanhouts <robijnvanhouts@student.      +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2021/03/23 20:02:35 by robijnvanho   #+#    #+#                 */
-/*   Updated: 2021/03/29 15:52:01 by robijnvanho   ########   odam.nl         */
+/*   Updated: 2021/03/31 12:41:56 by robijnvanho   ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -19,6 +19,8 @@ namespace ft {
 	
 template<typename T>
 class RandomAccessIterator {
+	public:
+		typedef std::random_access_iterator_tag     iterator_category;
 	private:
 		T* _ptr;
 		

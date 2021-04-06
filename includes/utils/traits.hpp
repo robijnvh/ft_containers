@@ -6,7 +6,7 @@
 /*   By: robijnvanhouts <robijnvanhouts@student.      +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2021/03/30 13:54:58 by robijnvanho   #+#    #+#                 */
-/*   Updated: 2021/03/30 13:55:00 by robijnvanho   ########   odam.nl         */
+/*   Updated: 2021/03/31 12:42:25 by robijnvanho   ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -38,7 +38,6 @@ namespace ft {
 
         static const bool value = (sizeof(test(C())) == sizeof(yes));
     };
-
 }
 
 #endif //FT_CONTAINERS_TRAITS_HPP

@@ -6,7 +6,7 @@
 /*   By: robijnvanhouts <robijnvanhouts@student.      +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2021/03/23 13:22:00 by robijnvanho   #+#    #+#                 */
-/*   Updated: 2021/03/31 12:31:21 by robijnvanho   ########   odam.nl         */
+/*   Updated: 2021/03/31 12:41:26 by robijnvanho   ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,7 +14,7 @@
 # define VECTOR_HPP
 
 # include "utils/RandomAccessIterator.hpp"
-// # include "utils/traits.hpp"
+# include "utils/traits.hpp"
 # include <limits>
 # include <memory>
 
@@ -68,7 +68,7 @@ class vector {
 			}
 		// vector(iterator first, iterator last, Alloc const& alloc = Alloc()) :  // constructs vector of first-last elements
 		template<class InputIterator>
-		vector(InputIterator first, InputIterator last, Alloc const& alloc = Alloc()) :  // constructs vector of first-last elements
+		vector(typename enable_if<is_input_iterator<InputIterator>::value, InputIterator>::type first, InputIterator last, Alloc const& alloc = Alloc()) :  // constructs vector of first-last elements
 			_allocator(alloc),
 			_size(0),
 			_capacity(0) {
@@ -181,9 +181,9 @@ class vector {
 			return _container[_size - 1];
 		}
 		// MODIFIERS
-		// template <class InputIterator>
-  		// void	assign(InputIterator first, InputIterator last) {
-  		void	assign(iterator first, iterator last) {
+  		// void	assign(iterator first, iterator last) {
+		template <class InputIterator>
+        void assign (typename enable_if<is_input_iterator<InputIterator>::value, InputIterator>::type first, InputIterator last) {
 			clear();
 			for (; first != last; first++)
 				push_back(*first);
@@ -226,9 +226,9 @@ class vector {
 			for (iterator it = tmp.begin(); it != tmp.end(); it++)
 				push_back(*it);
 		}
-		// template <class InputIterator>
-		// void	insert(iterator position, typename enable_if<is_input_iterator<InputIterator>::value, InputIterator>::type first, InputIterator last) {
-		void	insert(iterator position, iterator first, iterator last) {
+		// void	insert(iterator position, iterator first, iterator last) {
+		template <class InputIterator>
+        void insert (iterator position, typename enable_if<is_input_iterator<InputIterator>::value, InputIterator>::type first, InputIterator last) {
 			vector tmp(position, end());
 			_size = distance(begin(), position);
             for (iterator it = first; it < last; it++)
