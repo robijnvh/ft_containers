@@ -6,7 +6,7 @@
 /*   By: rvan-hou <rvan-hou@student.42.fr>            +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2021/03/23 13:22:00 by robijnvanho   #+#    #+#                 */
-/*   Updated: 2021/04/06 14:57:11 by rvan-hou      ########   odam.nl         */
+/*   Updated: 2021/04/07 11:40:47 by robijnvanho   ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -258,6 +258,6 @@ class vector {
 			_size = 0;
 		}
 	}; // class vector
-}
+} // namespace
 
 #endif

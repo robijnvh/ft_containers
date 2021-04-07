@@ -1,12 +1,12 @@
 /* ************************************************************************** */
 /*                                                                            */
-/*                                                        :::      ::::::::   */
-/*   listNode.hpp                                       :+:      :+:    :+:   */
-/*                                                    +:+ +:+         +:+     */
-/*   By: rvan-hou <rvan-hou@student.42.fr>          +#+  +:+       +#+        */
-/*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2021/04/06 16:01:46 by rvan-hou          #+#    #+#             */
-/*   Updated: 2021/04/06 16:06:28 by rvan-hou         ###   ########.fr       */
+/*                                                        ::::::::            */
+/*   listNode.hpp                                       :+:    :+:            */
+/*                                                     +:+                    */
+/*   By: rvan-hou <rvan-hou@student.42.fr>            +#+                     */
+/*                                                   +#+                      */
+/*   Created: 2021/04/06 16:01:46 by rvan-hou      #+#    #+#                 */
+/*   Updated: 2021/04/07 12:46:40 by robijnvanho   ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -23,12 +23,12 @@ class listNode {
 		T			_data;
 
 		explicit listNode() : // constructs empty node
-			_prev(NULL),
-			_next(NULL),
+			_prev(),
+			_next(),
 			_data() {}
 		explicit listNode(const T &data) : // constructs node with data
-			_prev(NULL), 
-			_next(NULL),
+			_prev(), 
+			_next(),
 			_data(data) {}
 		~listNode() {
 		} // destructor
