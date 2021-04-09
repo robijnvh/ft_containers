@@ -3,7 +3,7 @@
 #include <vector>
 #include "../includes/vector.hpp"
 
-// CONSTRUCTORS // COPLIEN
+// COPLIEN
 TEST_CASE( "vector - default constructor", "[vector]" ) {
     ft::vector<int> ft_vector;
     std::vector<int> std_vector;

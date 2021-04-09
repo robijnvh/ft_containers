@@ -6,7 +6,7 @@
 #    By: rvan-hou <rvan-hou@student.42.fr>            +#+                      #
 #                                                    +#+                       #
 #    Created: 2021/03/15 15:36:52 by robijnvanho   #+#    #+#                  #
-#    Updated: 2021/03/30 14:29:45 by robijnvanho   ########   odam.nl          #
+#    Updated: 2021/04/09 12:16:00 by robijnvanho   ########   odam.nl          #
 #                                                                              #
 # **************************************************************************** #
 
@@ -16,6 +16,7 @@ SOURCES			= 	CATCH2/main.cpp \
 					CATCH2/catch.cpp \
 					CATCH2/vector_test.cpp \
 					CATCH2/iterator_test.cpp \
+					CATCH2/list_test.cpp \
 					# CATCH2/vector_test_roy.cpp \
 
 OBJECTS 		=	${SOURCES:%.c=%.o}

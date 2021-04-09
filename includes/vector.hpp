@@ -6,7 +6,7 @@
 /*   By: rvan-hou <rvan-hou@student.42.fr>            +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2021/03/23 13:22:00 by robijnvanho   #+#    #+#                 */
-/*   Updated: 2021/04/07 11:40:47 by robijnvanho   ########   odam.nl         */
+/*   Updated: 2021/04/09 13:41:44 by robijnvanho   ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -99,28 +99,28 @@ class vector {
 			return *this;
 		}
 		// ITERATORS
-		iterator	begin(void) { // returns it-ptr to first element
+		iterator	begin() { // returns it-ptr to first element
 			return iterator(_container);
 		}
-		const_iterator begin(void) const {
+		const_iterator begin() const {
 			return const_iterator(_container);
 		}
-		iterator end(void) { // returns it-ptr to pst-the-end element of vector
+		iterator end() { // returns it-ptr to pst-the-end element of vector
 			return iterator(&(_container[_size]));
 		}
-		const_iterator end(void) const {
+		const_iterator end() const {
 			return const_iterator(&(_container[_size]));
 		}
-		reverse_iterator rbegin(void) { // returns reverse it-ptr to last element in vector
+		reverse_iterator rbegin() { // returns reverse it-ptr to last element in vector
 			return reverse_iterator(&_container[_size - 1]);
 		}
-		const_reverse_iterator rbegin(void) const {
+		const_reverse_iterator rbegin() const {
 			return const_reverse_iterator(&_container[_size - 1]);
 		}
-      	reverse_iterator rend(void) { // returns reverse it-ptr to the theoretical element preceding first in vector
+      	reverse_iterator rend() { // returns reverse it-ptr to the theoretical element preceding first in vector
 			  return reverse_iterator(_container - 1);
 		  }
-		const_reverse_iterator rend(void) const {
+		const_reverse_iterator rend() const {
 			return const_reverse_iterator(_container - 1);
 		}
 		// CAPACITY
@@ -257,7 +257,57 @@ class vector {
 		void	clear() { // removes all elements from vector
 			_size = 0;
 		}
+		// GET ALLOCATOR
+		Alloc	get_allocator() const {
+			Alloc tmp;
+			tmp = _allocator;
+			return tmp;
+		}
 	}; // class vector
+	
+	// RELATIONAL OPERATORS
+	template <class T, class Alloc>
+	bool	operator==(const vector<T, Alloc>& lhs, const vector<T, Alloc>& rhs) {
+		typename ft::vector<T>::const_iterator it_lhs = lhs.begin();
+		typename ft::vector<T>::const_iterator it_rhs = rhs.begin();
+		if (lhs.size() != rhs.size())
+			return (false);
+		while (*it_lhs != *lhs.end()) {
+			if (*it_lhs != *it_rhs)
+				return (false);
+			it_lhs++;
+			it_rhs++;
+		}
+		return (true);
+	}
+	template <class T, class Alloc>
+	bool	operator!=(vector<T, Alloc> const& lhs, vector<T, Alloc> const& rhs) {
+		return !(lhs == rhs);
+	}
+	template <class T, class Alloc>
+	bool	operator<(vector<T, Alloc> const& lhs, vector<T, Alloc> const& rhs) {
+		return (std::lexicographical_compare(lhs.begin(), lhs.end(), rhs.begin(), rhs.end()));
+	}
+	template <class T, class Alloc>
+	bool	operator<=(vector<T, Alloc> const& lhs, vector<T, Alloc> const& rhs) {
+		return !(rhs < lhs);
+	}
+	template <class T, class Alloc>
+	bool	operator>(vector<T, Alloc> const& lhs, vector<T, Alloc> const& rhs) {
+		return (rhs < lhs);
+	}
+	template <class T, class Alloc>
+	bool	operator>=(vector<T, Alloc> const& lhs, vector<T, Alloc> const& rhs) {
+		return !(lhs < rhs);
+	}
+
+	// SWAP
+	template <typename T>
+	void swap(vector<T> &x, vector<T> &y) {
+		vector<T> temp(y);
+		y = x;
+		x = temp;
+	}
 } // namespace
 
 #endif

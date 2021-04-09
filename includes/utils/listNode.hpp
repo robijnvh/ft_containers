@@ -6,7 +6,7 @@
 /*   By: rvan-hou <rvan-hou@student.42.fr>            +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2021/04/06 16:01:46 by rvan-hou      #+#    #+#                 */
-/*   Updated: 2021/04/07 12:46:40 by robijnvanho   ########   odam.nl         */
+/*   Updated: 2021/04/09 12:12:37 by robijnvanho   ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -23,12 +23,12 @@ class listNode {
 		T			_data;
 
 		explicit listNode() : // constructs empty node
-			_prev(),
-			_next(),
-			_data() {}
+			_prev(0),
+			_next(0),
+			_data(0) {}
 		explicit listNode(const T &data) : // constructs node with data
-			_prev(), 
-			_next(),
+			_prev(0), 
+			_next(0),
 			_data(data) {}
 		~listNode() {
 		} // destructor
