@@ -6,7 +6,7 @@
 /*   By: rvan-hou <rvan-hou@student.42.fr>            +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2021/04/06 15:43:58 by rvan-hou      #+#    #+#                 */
-/*   Updated: 2021/04/09 14:17:25 by robijnvanho   ########   odam.nl         */
+/*   Updated: 2021/04/12 12:55:45 by robijnvanho   ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,8 +14,8 @@
 # define LIST_HPP
 
 # include "utils/listNode.hpp"
-# include "utils/traits.hpp"
 # include "utils/BidirectionalIterator.hpp"
+# include "utils/traits.hpp"
 # include <memory>
 # include <limits>
 
@@ -24,48 +24,56 @@ namespace ft {
 template<class T, class Alloc = std::allocator<T> >
 class list {
 	public:
-	    // typedef listNode<T>*                                    node_pointer;
-        // typedef listNode<T>                                     node;
-	    typedef BidirectionalIterator<T, listNode<T>>                  iterator;
+	    typedef listNode<T>*										node_pointer;
+        typedef listNode<T>											node;
+	    typedef BidirectionalIterator<T, node>						iterator;
         // typedef ConstBidirectionalIterator<T, node>             const_iterator;
         // typedef RevBidirectionalIterator<T, node>               reverse_iterator;
         // typedef ConstRevBidirectionalIterator<T, node>          const_reverse_iterator;
 	private:
 		Alloc			_allocator;
 		size_t			_size;
-		listNode<T>*	_first;
-		listNode<T>*	_last;
+		node_pointer	_first;
+		node_pointer	_last;
+
+		template <class InputIterator>
+		size_t	distance(InputIterator first, InputIterator second) { // returns dist between first and sec ptr
+			size_t n = 0;
+			for (InputIterator it = first; it != second; it++)
+				n++;
+			return n;
+		}
 	
 	public:
 		explicit	list(Alloc const& alloc = Alloc()) : // constructs empty list, no elements
 			_allocator(alloc),
 			_size(0) {
-				_first = new listNode<T>();
-				_last = new listNode<T>();
+				_first = new node();
+				_last = new node();
 				_first->_next = _last;
 				_last->_prev = _first;
 			}
 		explicit	list(size_t n, T const& val = T(), Alloc const& alloc = Alloc()) :
 			_allocator(alloc),
 			_size(0) {
-				_first = new listNode<T>();
-				_last = new listNode<T>();
+				_first = new node();
+				_last = new node();
 				_first->_next = _last;
 				_last->_prev = _first;
 				for (size_t i = 0; i < n; i++) {
 					push_back(val);
 				}
 			}
-		// template <class InputIterator>
-		// list(typename enable_if<is_input_iterator<InputIterator>::value, InputIterator>::type first, InputIterator last, const Alloc& alloc = Alloc()) :
-		// 	_allocator(alloc),
-		// 	_size(0) {
-		// 		_first = new listNode<T>();
-		// 		_last = new listNode<T>();
-		// 		_first->_next = _last;
-		// 		_last->_prev = _first;
-		// 		// assign(first, last);
-		// 	}
+		template <class InputIterator>
+		list(typename enable_if<is_input_iterator<InputIterator>::value, InputIterator>::type first, InputIterator last, const Alloc& alloc = Alloc()) :
+			_allocator(alloc),
+			_size(0) {
+				_first = new node();
+				_last = new node();
+				_first->_next = _last;
+				_last->_prev = _first;
+				assign(first, last);
+			}
 		// list(const list& other) :
 		// 	_allocator(other._allocator),
 		// 	_size(0) {
@@ -90,10 +98,10 @@ class list {
 		
 		// ITERATORS
 		iterator begin() {
-			return iterator(_first->_next);
+			return (iterator(_first->_next));
 		}
 		iterator end() { 
-			return iterator(_last);
+			return (iterator(_last));
 		}
 		// CAPACITY
 		size_t	size() const {

@@ -6,13 +6,18 @@
 // COPLIEN
 TEST_CASE( "list - default constructor", "[list]" ) {
     ft::list<int> ft_list;
-	std::list<int> std_list;
+    std::list<int> std_list;
     REQUIRE(ft_list.size() == std_list.size()); // empty list
 }
 TEST_CASE( "list - fill constructor", "[list]" ) {
     ft::list<int> ft_list(5, 100);
-	std::list<int> std_list(5, 100);
+    std::list<int> std_list(5, 100);
     REQUIRE(ft_list.size() == std_list.size()); // list with n amount of value
+}
+TEST_CASE( "list - range constructor", "[list]" ) {
+    ft::list<int> ft_test(5, 100);
+    ft::list<int> ft_list(ft_test.begin(), ft_test.end());
+    REQUIRE(ft_list.size() == ft_test.size()); // list first-last
 }
 // CAPACITY
 TEST_CASE( "list - size", "[list]" ) {
@@ -28,6 +33,7 @@ TEST_CASE( "list - max_size", "[list]" ) {
     std::list<int> std_list;
     REQUIRE(ft_list.max_size() == std_list.max_size()); // check max_size
 }
+
 // MODIIFIERS
 // TEST_CASE( "list - assign(first, last)", "[list]") { // klopt nog niet helemaal!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
 //     // INT

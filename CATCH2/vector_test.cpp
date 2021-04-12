@@ -16,7 +16,7 @@ TEST_CASE( "vector - fill constructor", "[vector]" ) {
 }
 TEST_CASE( "vector - range constructor", "[vector]" ) {
     ft::vector<int> ft_test(5, 100);
-    ft::vector<int> ft_vector(ft_test.begin(),ft_test.end());
+    ft::vector<int> ft_vector(ft_test.begin(), ft_test.end());
     REQUIRE(ft_vector.size() == 5);
     REQUIRE(ft_vector.capacity() == 5); // vector first-last
 }
@@ -154,22 +154,6 @@ TEST_CASE( "vector - reserve", "[vector]") {
 	ft_vector.reserve(2);
 	std_vector.reserve(2);
     REQUIRE(ft_vector.capacity() == std_vector.capacity()); // equal
-}
-TEST_CASE( "vector - shrink_to_fit", "[vector]") {
-	ft::vector<int> ft_vector;
-    std::vector<int> std_vector;
-	ft_vector.reserve(10);
-	std_vector.reserve(10);
-	ft_vector.shrink_to_fit();
-	std_vector.shrink_to_fit();
-    REQUIRE(ft_vector.capacity() == std_vector.capacity()); // size of 0
-	for (int i = 1; i <= 5; i++) ft_vector.push_back(i);
-    for (int i = 1; i <= 5; i++) std_vector.push_back(i);
-	ft_vector.reserve(7);
-	std_vector.reserve(7);
-	ft_vector.shrink_to_fit();
-	std_vector.shrink_to_fit();
-    REQUIRE(ft_vector.capacity() == std_vector.capacity()); // size of 5
 }
 // ELEMENT ACCESS
 TEST_CASE( "vector - operator[]", "[vector]") {

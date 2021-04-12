@@ -6,7 +6,7 @@
 /*   By: robijnvanhouts <robijnvanhouts@student.      +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2021/03/23 20:02:35 by robijnvanho   #+#    #+#                 */
-/*   Updated: 2021/04/09 11:57:16 by robijnvanho   ########   odam.nl         */
+/*   Updated: 2021/04/12 11:15:20 by robijnvanho   ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -20,7 +20,7 @@ namespace ft {
 template<typename T>
 class RandomAccessIterator {
 	public:
-		typedef std::random_access_iterator_tag     iterator_category;
+		typedef std::random_access_iterator_tag		iterator_category;
 	private:
 		T* _ptr;
 		
@@ -116,6 +116,8 @@ class RandomAccessIterator {
 
 	template<typename T>
 	class ConstRandomAccessIterator {
+	public:
+		typedef std::random_access_iterator_tag     iterator_category;
 	private:
 		T* _ptr;
 		
@@ -213,7 +215,9 @@ class RandomAccessIterator {
 	}; // ConstRandomAccessIterator
 
 	template<typename T>
-	class RevRandomAccessIterator {	
+	class RevRandomAccessIterator {
+	public:
+		typedef std::random_access_iterator_tag     iterator_category;
 	private:
 		T* _ptr;
 		
@@ -308,7 +312,9 @@ class RandomAccessIterator {
 	}; // RevRandomAccessIterator
 
 	template<typename T>
-	class ConstRevRandomAccessIterator {	
+	class ConstRevRandomAccessIterator {
+	public:
+		typedef std::random_access_iterator_tag     iterator_category;
 	private:
 		T* _ptr;
 		
