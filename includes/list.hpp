@@ -6,7 +6,7 @@
 /*   By: rvan-hou <rvan-hou@student.42.fr>            +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2021/04/06 15:43:58 by rvan-hou      #+#    #+#                 */
-/*   Updated: 2021/04/12 12:55:45 by robijnvanho   ########   odam.nl         */
+/*   Updated: 2021/04/12 16:26:14 by robijnvanho   ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -19,6 +19,9 @@
 # include <memory>
 # include <limits>
 
+#include <iostream>
+
+
 namespace ft {
 
 template<class T, class Alloc = std::allocator<T> >
@@ -27,9 +30,9 @@ class list {
 	    typedef listNode<T>*										node_pointer;
         typedef listNode<T>											node;
 	    typedef BidirectionalIterator<T, node>						iterator;
-        // typedef ConstBidirectionalIterator<T, node>             const_iterator;
-        // typedef RevBidirectionalIterator<T, node>               reverse_iterator;
-        // typedef ConstRevBidirectionalIterator<T, node>          const_reverse_iterator;
+        typedef ConstBidirectionalIterator<T, node>					const_iterator;
+        typedef RevBidirectionalIterator<T, node>					reverse_iterator;
+        typedef ConstRevBidirectionalIterator<T, node>				const_reverse_iterator;
 	private:
 		Alloc			_allocator;
 		size_t			_size;
@@ -45,6 +48,7 @@ class list {
 		}
 	
 	public:
+		// CONSTRUCTORS
 		explicit	list(Alloc const& alloc = Alloc()) : // constructs empty list, no elements
 			_allocator(alloc),
 			_size(0) {
@@ -74,34 +78,57 @@ class list {
 				_last->_prev = _first;
 				assign(first, last);
 			}
-		// list(const list& other) :
-		// 	_allocator(other._allocator),
-		// 	_size(0) {
-		// 		// assign(other.begin(), other.end());
-		// 	}
+		list(list const& other) : // copy contructor
+			_allocator(other._allocator),
+			_size(0) {
+				_first = new node();
+				_last = new node();
+				_first->_next = _last;
+				_last->_prev = _first;
+				assign(other.begin(), other.end());
+			}
+		// DESTRUCTORS
 		~list() { // detroys
+			clear();
+			delete _first;
+			delete _last;
 		}
-		// list&	operator=(list const& other) {
-            // clear();
-        //     _first->_next = _last;
-        //     _last->_prev = _first;
-        //     for (; other._first != other._last; other._first++) {
-		// 		listNode<T>* new_node = new listNode<T>(*other._first);
-		// 		new_node->_next = _last;
-		// 		_last->_prev->_next = new_node;
-		// 		new_node->_prev = _last->_prev;
-		// 		_last->_prev = new_node;
-		// 		_size += 1;
-		// 	}
-        //     return(*this);
-        // }
-		
+		// ASSIGNATION OPERATOR
+		list&	operator=(list const& other) {
+			clear();
+			_allocator = other._allocator;
+			_size = 0;
+			_first = new node();
+			_last = new node();
+			_first->_next = _last;
+			_last->_prev = _first;
+			assign(other.begin(), other.end());
+			return *this;
+		}
 		// ITERATORS
 		iterator begin() {
 			return (iterator(_first->_next));
 		}
+		const_iterator begin() const {
+			return (const_iterator(_first->_next));
+		}
 		iterator end() { 
 			return (iterator(_last));
+		}
+		const_iterator end() const { 
+			return (const_iterator(_last));
+		}
+		reverse_iterator rbegin() {
+			return (reverse_iterator(_last->_prev));
+		}
+		const_reverse_iterator rbegin() const {
+			return (const_reverse_iterator(_last->_prev));
+		}
+		reverse_iterator rend() { 
+			return (reverse_iterator(_first));
+		}
+		const_reverse_iterator rend() const { 
+			return (const_reverse_iterator(_first));
 		}
 		// CAPACITY
 		size_t	size() const {
@@ -117,7 +144,13 @@ class list {
 		T&	front() {
 			return (_first->_next->_data);
 		}
+		T const&	front() const {
+			return (_first->_next->_data);
+		}
 		T&	back() {
+			return (_last->_prev->_data);
+		}
+		T const&	back() const {
 			return (_last->_prev->_data);
 		}
 		// MODIFIERS
