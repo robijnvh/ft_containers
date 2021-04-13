@@ -6,7 +6,7 @@
 /*   By: rvan-hou <rvan-hou@student.42.fr>            +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2021/04/06 16:01:46 by rvan-hou      #+#    #+#                 */
-/*   Updated: 2021/04/09 12:12:37 by robijnvanho   ########   odam.nl         */
+/*   Updated: 2021/04/13 14:23:51 by rvan-hou      ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -40,6 +40,9 @@ class listNode {
             }
             return (*this);
         }
+		// bool	operator==(listNode const& rhs) const {
+		// 	return (this->_data == rhs._data && this->_next = rhs._next && this->_prev == rhs._prev);
+		// }
         listNode *getNext() {
 			return (this->_next);
 		}

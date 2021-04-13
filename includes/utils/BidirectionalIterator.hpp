@@ -1,12 +1,12 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        ::::::::            */
-/*   BiDirectionalIterator.hpp                          :+:    :+:            */
+/*   BidirectionalIterator.hpp                          :+:    :+:            */
 /*                                                     +:+                    */
-/*   By: robijnvanhouts <robijnvanhouts@student.      +#+                     */
+/*   By: rvan-hou <rvan-hou@student.42.fr>            +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2021/04/07 13:33:51 by robijnvanho   #+#    #+#                 */
-/*   Updated: 2021/04/12 16:21:16 by robijnvanho   ########   odam.nl         */
+/*   Updated: 2021/04/13 14:32:01 by rvan-hou      ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -124,7 +124,7 @@ class ConstBidirectionalIterator {
 			_ptr = _ptr->getPrev();
 			return (tmp);
 		}
-		// OPERATORS - COMPARING
+		// OPERATORS - COMPARING		
 		friend bool	operator==(ConstBidirectionalIterator const& lhs, ConstBidirectionalIterator const& rhs) {
 			return (lhs._ptr == rhs._ptr);
 		}

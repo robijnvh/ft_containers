@@ -1,12 +1,12 @@
 /* ************************************************************************** */
 /*                                                                            */
-/*                                                        ::::::::            */
-/*   list.hpp                                           :+:    :+:            */
-/*                                                     +:+                    */
-/*   By: rvan-hou <rvan-hou@student.42.fr>            +#+                     */
-/*                                                   +#+                      */
-/*   Created: 2021/04/06 15:43:58 by rvan-hou      #+#    #+#                 */
-/*   Updated: 2021/04/12 16:26:14 by robijnvanho   ########   odam.nl         */
+/*                                                        :::      ::::::::   */
+/*   list.hpp                                           :+:      :+:    :+:   */
+/*                                                    +:+ +:+         +:+     */
+/*   By: rvan-hou <rvan-hou@student.42.fr>          +#+  +:+       +#+        */
+/*                                                +#+#+#+#+#+   +#+           */
+/*   Created: 2021/04/06 15:43:58 by rvan-hou          #+#    #+#             */
+/*   Updated: 2021/04/13 16:17:46 by rvan-hou         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -199,6 +199,47 @@ class list {
 				delete tmp;
 			}
 		}
+		iterator	insert(iterator position, T const& val) {
+			listNode<T>* tmp = new listNode<T>(val);
+			tmp->_next = position.get_ptr();
+			position.get_ptr()->_prev->_next = tmp;
+			tmp->_prev = position.get_ptr()->_prev;
+			position.get_ptr()->_prev = tmp;
+			_size += 1;
+			return iterator(tmp);
+		}
+		void	insert(iterator position, size_t n, T const& val) {
+			for (; n > 0; n--)
+				insert(position, val);
+		}
+		template <class InputIterator>
+		void	insert(iterator position, typename enable_if<is_input_iterator<InputIterator>::value, InputIterator>::type first, InputIterator last) {
+			for (; first != last; first++)
+				insert(position, *first);
+		}
+		iterator	erase(iterator position) {
+			if (position == end()) // not sure
+				return position;
+			listNode<T>* tmp = position.get_ptr();
+			tmp->_prev->_next = tmp->_next;
+			tmp->_next->_prev = tmp->_prev;
+			position++;
+			_size -= 1;
+			delete tmp;
+			return position;
+		}
+		iterator	erase(iterator first, iterator last) {
+			iterator ret(first);
+			for (; first != last; first++) {
+				erase(first);
+			}
+			return ret;
+		}
+		void	swap(list& other) { // swap lists
+			list tmp(*this);
+			*this = other;
+			other = tmp;
+		}
 		void	resize(size_t n, T val = T()) {
 			if (n < _size)
 				_size -= (_size - n);
@@ -213,6 +254,11 @@ class list {
 		// OPERATIONS
 		// OBSERVERS
 }; // class list
+
+// template <class T, class Alloc>
+// bool operator==(const ft::list<T,Alloc>& lhs, const ft::list<T,Alloc>& rhs) {
+// 	return (lhs.size() == rhs.size() && ft::equal(lhs.begin(), lhs.end(), rhs.begin()));
+// }
 
 } // namespace
 

@@ -240,7 +240,7 @@ TEST_CASE( "vector - assign(first, last)", "[vector]") { // klopt nog niet helem
     // REQUIRE(ft_test[1] == std_test[1]); // check if elements equal 1
     // REQUIRE(ft_test[3] == std_test[3]); // check if elements equal 3
 }
-TEST_CASE( "vector - assign(const first, const last)", "[vector]") { // klopt nog niet helemaal!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+TEST_CASE( "vector - assign(const first, const last)", "[vector]") {
 	ft::vector<int> ft_vector(3, 3);
 	ft::vector<int> ft_test(2, 2);
     std::vector<int> std_vector(3, 3);
@@ -281,7 +281,7 @@ TEST_CASE( "vector - pop_back", "[vector]") {
 	std_vector.pop_back();
 	REQUIRE(ft_vector.back() == std_vector.back()); // check if last element are equal
 }
-TEST_CASE( "vector - insert(pos, value)", "[value]") { // klopt nog niet helemaal!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+TEST_CASE( "vector - insert(pos, value)", "[vector]") {
 	ft::vector<int> ft_vector(3, 3);
     std::vector<int> std_vector(3, 3);
 	ft::vector<int>::iterator ft_it = ft_vector.begin();
@@ -291,7 +291,7 @@ TEST_CASE( "vector - insert(pos, value)", "[value]") { // klopt nog niet helemaa
 	REQUIRE(ft_vector[0] != 3); // check if inserted
 	REQUIRE(ft_vector[0] == std_vector[0]); // check if elements are equal
 }
-TEST_CASE( "vector - insert(pos, n, value)", "[value]") { // klopt nog niet helemaal!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+TEST_CASE( "vector - insert(pos, n, value)", "[vector]") {
 	ft::vector<int> ft_vector(3, 3);
     std::vector<int> std_vector(3, 3);
 	ft::vector<int>::iterator ft_it = ft_vector.begin();
@@ -303,7 +303,7 @@ TEST_CASE( "vector - insert(pos, n, value)", "[value]") { // klopt nog niet hele
 	REQUIRE(ft_vector[0] == std_vector[0]); // check if elements are equal
 	REQUIRE(ft_vector[1] == std_vector[1]); // check if elements are equal
 }
-TEST_CASE( "vector - insert(pos, first, last)", "[value]") { // klopt nog niet helemaal!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+TEST_CASE( "vector - insert(pos, first, last)", "[vector]") {
 	ft::vector<int> ft_vector(3, 3);
 	ft::vector<int> ft_test(2, 2);
     std::vector<int> std_vector(3, 3);
@@ -321,7 +321,7 @@ TEST_CASE( "vector - insert(pos, first, last)", "[value]") { // klopt nog niet h
 	REQUIRE(ft_vector[1] == std_vector[1]); // check if elements are equal
 	REQUIRE(ft_vector[2] == std_vector[2]); // check if elements are equal
 }
-TEST_CASE( "vector - erase(pos)", "[value]") {
+TEST_CASE( "vector - erase(pos)", "[vector]") {
 	ft::vector<int> ft_vector;
     std::vector<int> std_vector;
 	for (int i = 1; i <= 5; i++) ft_vector.push_back(i);
@@ -333,7 +333,7 @@ TEST_CASE( "vector - erase(pos)", "[value]") {
 	REQUIRE(ft_vector[0] != 1); // check if erased
 	REQUIRE(ft_vector[0] == std_vector[0]); // check if elements are equal
 }
-TEST_CASE( "vector - erase(first, last)", "[value]") {
+TEST_CASE( "vector - erase(first, last)", "[vector]") {
 	ft::vector<int> ft_vector;
     std::vector<int> std_vector;
 	for (int i = 1; i <= 5; i++) ft_vector.push_back(i);
