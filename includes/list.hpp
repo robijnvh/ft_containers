@@ -1,12 +1,12 @@
 /* ************************************************************************** */
 /*                                                                            */
-/*                                                        :::      ::::::::   */
-/*   list.hpp                                           :+:      :+:    :+:   */
-/*                                                    +:+ +:+         +:+     */
-/*   By: rvan-hou <rvan-hou@student.42.fr>          +#+  +:+       +#+        */
-/*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2021/04/06 15:43:58 by rvan-hou          #+#    #+#             */
-/*   Updated: 2021/04/13 16:17:46 by rvan-hou         ###   ########.fr       */
+/*                                                        ::::::::            */
+/*   list.hpp                                           :+:    :+:            */
+/*                                                     +:+                    */
+/*   By: rvan-hou <rvan-hou@student.42.fr>            +#+                     */
+/*                                                   +#+                      */
+/*   Created: 2021/04/06 15:43:58 by rvan-hou      #+#    #+#                 */
+/*   Updated: 2021/04/15 15:45:06 by robijnvanho   ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -39,14 +39,46 @@ class list {
 		node_pointer	_first;
 		node_pointer	_last;
 
-		template <class InputIterator>
-		size_t	distance(InputIterator first, InputIterator second) { // returns dist between first and sec ptr
-			size_t n = 0;
-			for (InputIterator it = first; it != second; it++)
-				n++;
-			return n;
+		// template <class InputIterator>
+		// size_t	distance(InputIterator first, InputIterator second) { // returns dist between first and sec ptr
+		// 	size_t n = 0;
+		// 	for (InputIterator it = first; it != second; it++)
+		// 		n++;
+		// 	return n;
+		// }
+		void	move(iterator it_list, iterator it_add) { // move element from other list into current list without copy
+			listNode<T>* list = it_list.get_ptr();
+			listNode<T>* add = it_add.get_ptr();
+			add->_prev->_next = add->_next;
+			add->_next->_prev = add->_prev;
+			add->_prev = list->_prev;
+			add->_next = list;
+			list->_prev->_next = add;
+			list->_prev = add;
 		}
-	
+		void	swap_nodes(listNode<T>* it) {
+			listNode<T>* zero = it->_prev->_prev;
+			listNode<T>* first = it->_prev;
+			listNode<T>* second = it;
+			listNode<T>* third = it->_next;
+
+			zero->_next = second;
+			first->_next = third;
+			first->_prev = second;
+			second->_next = first;
+			second->_prev = zero;
+			third->_prev = first;
+		}
+		void	print(void) {
+			iterator it = begin();
+			std::cout << "List:";
+			while (it != end()) {
+				std::cout << " " << *it;
+				it++;
+			}
+			std::cout << std::endl;
+		}
+
 	public:
 		// CONSTRUCTORS
 		explicit	list(Alloc const& alloc = Alloc()) : // constructs empty list, no elements
@@ -251,13 +283,129 @@ class list {
 				pop_back();
 			}
 		}
-		// OPERATIONS
+		// OPERATIONS	
+		void	splice(iterator position, list& x) { // takes all elements from x into list
+			for (; x._size != 0; x._size--) {
+				move(position, x.begin());
+				_size++;
+			}
+		}	
+		void	splice(iterator position, list& x, iterator i) { // takes single element i from x and moves into current list
+			move(position, i);
+			_size++;
+			x._size--;
+		}
+		void	splice(iterator position, list& x, iterator first, iterator last) { // takes range of elements from x into current list
+			list tmp(first, last);
+			splice(position, tmp);
+			_size += tmp._size;
+			x._size -= tmp._size;
+		}
+		void	remove(T const& val) { // removes elements based on value
+			iterator it = begin();
+			while (it != end()) {
+				if (*it == val)
+					erase(it);
+				it++;
+			}
+		}
+		template <class Predicate>
+		void 	remove_if(Predicate pred) { // removes if pred returns true
+			iterator it = begin();
+			while (it != end()) {
+				if (pred(*it))
+					erase(it);
+				it++;
+			}
+		}
+		void	unique(void) { // removes all but the first element in a direct row of equal elements
+			iterator it = begin();
+			it++;
+			while (it != end()) {
+				if (*it == it.get_ptr()->_prev->_data)
+					it = erase(it);
+				else
+					it++;
+			}
+		}
+		template <class BinaryPredicate>
+		void	unique(BinaryPredicate binary_pred) { // removes if bin_pred returns true
+			iterator it = begin();
+			it++;
+			while (it != end()) {
+				if (binary_pred(*it, it.get_ptr()->_prev->_data) == true)
+					it = erase(it);
+				else
+					it++;
+			}
+		}
+		void	merge(list& x) { // merge two lists and sort <
+			// if (*this != x) {
+				splice(begin(), x);
+				sort();
+			// }
+		}
+		template <class Compare>
+		void	merge(list& x, Compare comp) { // merge two lists based on comp
+		// 	if (*this != x) {
+				splice(begin(), x);
+				sort(comp);
+		// 	}	
+		}
+		void	sort(void) { // sort based on operator<
+			iterator it = begin();
+			it++;
+			while (it != end()) {
+				if (*it < it.get_ptr()->_prev->_data) {
+					swap_nodes(it.get_ptr());
+					it = begin();
+				}
+				it++;
+			}
+		}
+		template <class Compare>
+		void	sort(Compare comp) { // sort based on comp
+			iterator it = begin();
+			it++;
+			while (it != end()) {
+				if (comp(*it, it.get_ptr()->_prev->_data) == true) {
+					swap_nodes(it.get_ptr());
+					it = begin();
+				}
+				it++;
+			}
+		}
+		void	reverse() { // reverses list
+			listNode<T>* current = _first;
+			listNode<T>* tmp;
+			while (current != NULL) {
+				tmp = current->_next;
+				current->_next = current->_prev;
+				current->_prev = tmp;
+				current = tmp;
+			}
+			tmp = _first;
+			_first = _last;
+			_last = tmp;
+		}
 		// OBSERVERS
 }; // class list
+
+// template <class T>
+// void	swap(list<T> &x, list<T> &y) {
+//     list<T> tmp(y);
+//      y = x;
+//     x = tmp;
+// }
 
 // template <class T, class Alloc>
 // bool operator==(const ft::list<T,Alloc>& lhs, const ft::list<T,Alloc>& rhs) {
 // 	return (lhs.size() == rhs.size() && ft::equal(lhs.begin(), lhs.end(), rhs.begin()));
+// }
+
+// template<class T, class Alloc>
+// bool operator!= (const list<T, Alloc>& lhs, const list<T, Alloc>& rhs) {
+// 	return !(lhs == rhs);
 // }
 
 } // namespace

@@ -4,6 +4,24 @@
 #include "../includes/list.hpp"
 #include <iostream>
 
+// predicate function
+bool single_digit(const int& value) { return (value<10); }
+// predicate class
+struct is_odd {
+bool operator()(const int& value) { return (value%2)==1; }
+};
+// binary predicate function
+bool same_integral_part(double first, double second)
+{ return ( int(first)==int(second) ); }
+// binary predicate class:
+struct is_near {
+  bool operator()(double first, double second)
+  { return (fabs(first-second)<5.0); }
+};
+// compare only integral part:
+bool compare1(double first, double second)
+{ return ( int(first)<int(second) ); }
+
 // COPLIEN
 TEST_CASE( "list - default constructor", "[list]" ) {
     ft::list<int> ft_list;
@@ -457,4 +475,321 @@ TEST_CASE( "list - clear", "[list]") {
 	ft_list.clear();
 	std_list.clear();
 	REQUIRE(ft_list.size() == std_list.size()); // check if size equal
+}
+// OPERATIONS
+TEST_CASE( "list - splice(position, x)", "[list]") {
+    ft::list<int> ft_list;
+    std::list<int> std_list;
+	for (int i = 1; i <= 5; i++) ft_list.push_back(i);
+    for (int i = 1; i <= 5; i++) std_list.push_back(i);
+	ft::list<int> ft_list2;
+    std::list<int> std_list2;
+    for (int i = 6; i <= 8; i++) ft_list2.push_back(i);
+    for (int i = 6; i <= 8; i++) std_list2.push_back(i);
+	ft_list.splice(ft_list.end(), ft_list2);
+	std_list.splice(std_list.end(), std_list2);
+    ft::list<int>::iterator ft_it = ft_list.begin();
+    std::list<int>::iterator std_it = std_list.begin();
+    REQUIRE(*ft_it == 1); // check if 1
+    REQUIRE(*std_it == 1);
+    ft_it = ft_list.end();
+    std_it = std_list.end();
+    ft_it--;
+    std_it--;
+    REQUIRE(*ft_it == 8); // check if 8
+    REQUIRE(*std_it == 8);
+    REQUIRE(ft_list.size() == std_list.size()); // check size
+    REQUIRE(ft_list.empty() == std_list.empty()); // check if empty
+	REQUIRE(ft_list.front() == std_list.front()); // check if firstelement are equal
+	REQUIRE(ft_list.back() == std_list.back()); // check if last element are equal
+}
+TEST_CASE( "list - splice(position, x, i)", "[list]") {
+    ft::list<int> ft_list;
+    std::list<int> std_list;
+	for (int i = 1; i <= 5; i++) ft_list.push_back(i);
+    for (int i = 1; i <= 5; i++) std_list.push_back(i);
+	ft::list<int> ft_list2;
+    std::list<int> std_list2;
+    for (int i = 6; i <= 8; i++) ft_list2.push_back(i);
+    for (int i = 6; i <= 8; i++) std_list2.push_back(i);
+    ft::list<int>::iterator ft_it = ft_list2.begin();
+    std::list<int>::iterator std_it = std_list2.begin();
+	ft_list.splice(ft_list.end(), ft_list2, ft_it);
+	std_list.splice(std_list.end(), std_list2, std_it);
+    ft_it = ft_list.begin();
+    std_it = std_list.begin();
+    REQUIRE(*ft_it == 1); // check if 1
+    REQUIRE(*std_it == 1);
+    ft_it = ft_list.end();
+    std_it = std_list.end();
+    ft_it--;
+    std_it--;
+    REQUIRE(*ft_it == 6); // check if 6
+    REQUIRE(*std_it == 6);
+    REQUIRE(ft_list.size() == std_list.size()); // check size
+    REQUIRE(ft_list.empty() == std_list.empty()); // check if empty
+	REQUIRE(ft_list.front() == std_list.front()); // check if firstelement are equal
+	REQUIRE(ft_list.back() == std_list.back()); // check if last element are equal
+}
+TEST_CASE( "list - splice(position, x, first, last)", "[list]") {
+    ft::list<int> ft_list;
+    std::list<int> std_list;
+	for (int i = 1; i <= 5; i++) ft_list.push_back(i);
+    for (int i = 1; i <= 5; i++) std_list.push_back(i);
+	ft::list<int> ft_list2;
+    std::list<int> std_list2;
+    for (int i = 6; i <= 8; i++) ft_list2.push_back(i);
+    for (int i = 6; i <= 8; i++) std_list2.push_back(i);
+    ft::list<int>::iterator ft_first = ft_list2.begin();
+    std::list<int>::iterator std_first = std_list2.begin();
+    ft::list<int>::iterator ft_last = ft_list2.end();
+    std::list<int>::iterator std_last = std_list2.end();
+	ft_list.splice(ft_list.end(), ft_list2, ft_first, ft_last);
+	std_list.splice(std_list.end(), std_list2, std_first, std_last);
+    ft::list<int>::iterator ft_it = ft_list.begin();
+    std::list<int>::iterator std_it = std_list.begin();
+    REQUIRE(*ft_it == 1); // check if 1
+    REQUIRE(*std_it == 1);
+    ft_it = ft_list.end();
+    std_it = std_list.end();
+    ft_it--;
+    std_it--;
+    REQUIRE(*ft_it == 8); // check if 8
+    REQUIRE(*std_it == 8);
+    REQUIRE(ft_list.size() == std_list.size()); // check size
+    REQUIRE(ft_list.empty() == std_list.empty()); // check if empty
+	REQUIRE(ft_list.front() == std_list.front()); // check if firstelement are equal
+	REQUIRE(ft_list.back() == std_list.back()); // check if last element are equal
+}
+TEST_CASE( "list - remove", "[list]") {
+	ft::list<int> ft_list;
+    std::list<int> std_list;
+    for (int i = 0; i < 3; i++) {
+        ft_list.push_back(1);
+        std_list.push_back(1);
+        ft_list.push_back(2);
+        std_list.push_back(2);
+    }
+	ft::list<int>::iterator ft_pos = ft_list.begin();
+    std::list<int>::iterator std_pos = std_list.begin();
+    REQUIRE(*ft_pos == 1); // check val 1
+    REQUIRE(*std_pos == 1); // check val 1
+	ft_list.remove(1);
+	std_list.remove(1);
+    REQUIRE(*(ft_list.begin()) != 1); // check val != 1
+    REQUIRE(*(std_list.begin()) != 1); // check val != 1
+    REQUIRE(ft_list.size() == std_list.size()); // check size
+    REQUIRE(ft_list.empty() == std_list.empty()); // check if empty
+	REQUIRE(ft_list.front() == std_list.front()); // check if firstelement are equal
+	REQUIRE(ft_list.back() == std_list.back()); // check if last element are equal
+}
+TEST_CASE( "list - remove_if", "[list]") {
+    // find pred at top of file
+	ft::list<int> ft_list;
+    std::list<int> std_list;
+	for (int i = 7; i <= 17; i++) ft_list.push_back(i);
+    for (int i = 7; i <= 17; i++) std_list.push_back(i);
+	ft_list.remove_if(single_digit);
+	std_list.remove_if(single_digit);
+    REQUIRE(*(ft_list.end()--) != 17); // check val != 17
+    REQUIRE(*(std_list.end()--) != 17); // check val != 17
+    REQUIRE(ft_list.size() == std_list.size()); // check size
+    REQUIRE(ft_list.empty() == std_list.empty()); // check if empty
+	REQUIRE(ft_list.front() == std_list.front()); // check if firstelement are equal
+	REQUIRE(ft_list.back() == std_list.back()); // check if last element are equal
+    // class
+    ft_list.remove_if(is_odd());
+	std_list.remove_if(is_odd());
+    REQUIRE(*(ft_list.end()--) != 9); // check val != 9
+    REQUIRE(*(std_list.end()--) != 9); // check val != 9
+    REQUIRE(ft_list.size() == std_list.size()); // check size
+    REQUIRE(ft_list.empty() == std_list.empty()); // check if empty
+	REQUIRE(ft_list.front() == std_list.front()); // check if firstelement are equal
+	REQUIRE(ft_list.back() == std_list.back()); // check if last element are equal
+}
+TEST_CASE( "list - unique", "[list]") {
+	ft::list<int> ft_list;
+    std::list<int> std_list;
+    ft_list.push_back(1);
+    ft_list.push_back(1);
+    ft_list.push_back(1);
+    ft_list.push_back(2);
+    ft_list.push_back(2);
+    ft_list.push_back(2);
+    std_list.push_back(1);
+    std_list.push_back(1);
+    std_list.push_back(1);
+    std_list.push_back(2);
+    std_list.push_back(2);
+    std_list.push_back(2);
+	ft::list<int>::iterator ft_pos = ft_list.begin();
+    std::list<int>::iterator std_pos = std_list.begin();
+    REQUIRE(*ft_pos == 1);
+    ft_pos++;
+    REQUIRE(*ft_pos == 1); // check 1st && 2nd val 1
+    REQUIRE(*std_pos == 1);
+    std_pos++;
+    REQUIRE(*std_pos== 1); // check 1st && 2nd val 1
+	ft_list.unique();
+	std_list.unique();
+    ft_pos = ft_list.begin();
+    std_pos = std_list.begin();
+    REQUIRE(*ft_pos == 1);
+    ft_pos++;
+    REQUIRE(*ft_pos != 1); // check 1st 1 && 2nd val != 1
+    REQUIRE(*std_pos == 1);
+    std_pos++;
+    REQUIRE(*std_pos != 1); // check 1st 1 && 2nd val != 1
+    REQUIRE(ft_list.size() == std_list.size()); // check size
+    REQUIRE(ft_list.empty() == std_list.empty()); // check if empty
+	REQUIRE(ft_list.front() == std_list.front()); // check if firstelement are equal
+	REQUIRE(ft_list.back() == std_list.back()); // check if last element are equal
+}
+TEST_CASE( "list - unique(binary_pred)", "[list]") {
+    // find pred at top of file
+	ft::list<int> ft_list;
+    std::list<int> std_list;
+    ft_list.push_back(1);
+    ft_list.push_back(1);
+    ft_list.push_back(1);
+    ft_list.push_back(2);
+    ft_list.push_back(2);
+    ft_list.push_back(2);
+    std_list.push_back(1);
+    std_list.push_back(1);
+    std_list.push_back(1);
+    std_list.push_back(2);
+    std_list.push_back(2);
+    std_list.push_back(2);
+	ft_list.unique(same_integral_part);
+	std_list.unique(same_integral_part);
+    ft::list<int>::iterator ft_pos = ft_list.begin();
+    std::list<int>::iterator std_pos = std_list.begin();
+    REQUIRE(*ft_pos == 1);
+    ft_pos++;
+    REQUIRE(*ft_pos != 1); // check 1st 1 && 2nd val != 1
+    REQUIRE(*std_pos == 1);
+    std_pos++;
+    REQUIRE(*std_pos != 1); // check 1st 1 && 2nd val != 1
+    REQUIRE(ft_list.size() == std_list.size()); // check size
+    REQUIRE(ft_list.empty() == std_list.empty()); // check if empty
+	REQUIRE(ft_list.front() == std_list.front()); // check if firstelement are equal
+	REQUIRE(ft_list.back() == std_list.back()); // check if last element are equal
+    // class
+    ft_list.clear();
+    std_list.clear();
+    ft_list.push_back(1);
+    ft_list.push_back(2);
+    ft_list.push_back(3);
+    std_list.push_back(1);
+    std_list.push_back(2);
+    std_list.push_back(3);
+    ft_list.unique(is_near()); // within 5
+	std_list.unique(is_near()); // within 5
+    REQUIRE(ft_list.size() == std_list.size()); // check size
+    REQUIRE(ft_list.empty() == std_list.empty()); // check if empty
+	REQUIRE(ft_list.front() == std_list.front()); // check if firstelement are equal
+	REQUIRE(ft_list.back() == std_list.back()); // check if last element are equal
+}
+TEST_CASE( "list - merge", "[list]") {
+    // <
+	ft::list<int> ft_list;
+    std::list<int> std_list;
+    ft::list<int> ft_list2;
+    std::list<int> std_list2;
+	for (int i = 0; i != 10; i++) {
+        if (i % 2 == 0) {
+            ft_list.push_back(i);
+            std_list.push_back(i);
+        }
+        else {
+            ft_list2.push_back(i);
+            std_list.push_back(i);
+        }
+    }
+	ft_list.merge(ft_list2);
+	std_list.merge(std_list2);
+    REQUIRE(ft_list.size() == std_list.size()); // check size
+    REQUIRE(ft_list.empty() == std_list.empty()); // check if empty
+	REQUIRE(ft_list.front() == std_list.front()); // check if firstelement are equal
+	REQUIRE(ft_list.back() == std_list.back()); // check if last element are equal
+    ft_list.clear();
+    std_list.clear();
+    // Comp
+    for (int i = 0; i != 10; i++) {
+        if (i % 2 == 0) {
+            ft_list.push_back(i);
+            std_list.push_back(i);
+        }
+        else {
+            ft_list2.push_back(i);
+            std_list.push_back(i);
+        }
+    }
+	ft_list.merge(ft_list2, compare1);
+	std_list.merge(std_list2, compare1);
+    REQUIRE(ft_list.size() == std_list.size()); // check size
+    REQUIRE(ft_list.empty() == std_list.empty()); // check if empty
+	REQUIRE(ft_list.front() == std_list.front()); // check if firstelement are equal
+	REQUIRE(ft_list.back() == std_list.back()); // check if last element are equal
+}
+TEST_CASE( "list - sort", "[list]") {
+    // <
+	ft::list<int> ft_list;
+    std::list<int> std_list;
+    ft::list<int> ft_list2;
+    std::list<int> std_list2;
+	for (int i = 0; i != 20; i++) {
+        if (i % 2 == 0) {
+            ft_list.push_back(i);
+            std_list.push_back(i);
+        }
+        else {
+            ft_list2.push_back(i);
+            std_list.push_back(i);
+        }
+    }
+	ft_list.splice(ft_list.begin(), ft_list2);
+	std_list.splice(std_list.begin(), std_list2);
+    ft_list.sort();
+    std_list.sort();
+    REQUIRE(ft_list.size() == std_list.size()); // check size
+    REQUIRE(ft_list.empty() == std_list.empty()); // check if empty
+	REQUIRE(ft_list.front() == std_list.front()); // check if firstelement are equal
+	REQUIRE(ft_list.back() == std_list.back()); // check if last element are equal
+    // comp
+    ft_list.clear();
+    ft_list2.clear();
+    std_list.clear();
+    std_list2.clear();
+	for (int i = 0; i != 20; i++) {
+        if (i % 2 == 0) {
+            ft_list.push_back(i);
+            std_list.push_back(i);
+        }
+        else {
+            ft_list2.push_back(i);
+            std_list.push_back(i);
+        }
+    }
+    ft_list.splice(ft_list.begin(), ft_list2);
+	std_list.splice(std_list.begin(), std_list2);
+    ft_list.sort(compare1);
+    std_list.sort(compare1);
+    REQUIRE(ft_list.size() == std_list.size()); // check size
+    REQUIRE(ft_list.empty() == std_list.empty()); // check if empty
+	REQUIRE(ft_list.front() == std_list.front()); // check if firstelement are equal
+	REQUIRE(ft_list.back() == std_list.back()); // check if last element are equal
+}
+TEST_CASE( "list - reverse", "[list]") {
+    ft::list<int> ft_list;
+    std::list<int> std_list;
+	for (int i = 1; i <= 17; i++) ft_list.push_back(i);
+    for (int i = 1; i <= 17; i++) std_list.push_back(i);
+    ft_list.reverse();
+    std_list.reverse();
+    REQUIRE(ft_list.size() == std_list.size()); // check size
+    REQUIRE(ft_list.empty() == std_list.empty()); // check if empty
+	REQUIRE(ft_list.front() == std_list.front()); // check if firstelement are equal
+	REQUIRE(ft_list.back() == std_list.back()); // check if last element are equal
 }
