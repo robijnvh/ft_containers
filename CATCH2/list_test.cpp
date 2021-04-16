@@ -1,8 +1,9 @@
 #include "catch.hpp"
 
 #include <list>
+#include <string>
 #include "../includes/list.hpp"
-#include <iostream>
+#include <iostream> // to print
 
 // predicate function
 bool single_digit(const int& value) { return (value<10); }
@@ -29,9 +30,13 @@ TEST_CASE( "list - default constructor", "[list]" ) {
     REQUIRE(ft_list.size() == std_list.size()); // empty list
 }
 TEST_CASE( "list - fill constructor", "[list]" ) {
-    ft::list<int> ft_list(5, 100);
-    std::list<int> std_list(5, 100);
-    REQUIRE(ft_list.size() == std_list.size()); // list with n amount of value
+    // ft::list<int> ft_list(5, 100);
+    // std::list<int> std_list(5, 100);
+    // REQUIRE(ft_list.size() == std_list.size()); // list with n amount of value
+    ft::list<std::string> ft_list2(5, "xp");
+    std::list<std::string> std_list2(5, "xp");
+    REQUIRE(ft_list2.size() == std_list2.size()); // list with n amount of value
+    // REQUIRE(ft_list2.empty() == std_list2.empty());
 }
 TEST_CASE( "list - range constructor", "[list]" ) {
     ft::list<int> ft_test(5, 100);
@@ -792,4 +797,79 @@ TEST_CASE( "list - reverse", "[list]") {
     REQUIRE(ft_list.empty() == std_list.empty()); // check if empty
 	REQUIRE(ft_list.front() == std_list.front()); // check if firstelement are equal
 	REQUIRE(ft_list.back() == std_list.back()); // check if last element are equal
+}
+// OBSERVERS
+TEST_CASE("list - get_allocator", "[list]")
+{
+	ft::list<int> ft_list;
+	std::list<int> std_list;
+	int *p_ft_list;
+	int *p_std_list;
+	bool ft_list_return = false;
+	bool std_list_return = false;
+	// allocate for 5 elements using list's allocator:
+  	p_ft_list = ft_list.get_allocator().allocate(5);
+  	p_std_list = std_list.get_allocator().allocate(5);
+	if (!p_ft_list)
+		ft_list_return = false;
+	else
+		ft_list_return = true;
+	if (!p_std_list)
+		std_list_return = false;
+	else
+		std_list_return = true;
+	REQUIRE(ft_list_return == std_list_return);
+}
+// RELATIONAL OPERATORS
+TEST_CASE("list - relational operators", "[list]")
+{
+	ft::list<int> ft_list(4, 200);
+	ft::list<int> ft_list2(4, 100);
+	ft::list<int> ft_list3(4, 200);
+	std::list<int> std_list(4, 200);
+	std::list<int> std_list2(4, 100);
+	std::list<int> std_list3(4, 200);
+	REQUIRE((ft_list == ft_list3) == true); // ==
+	REQUIRE((ft_list == ft_list2) == false);
+	REQUIRE((std_list == std_list3) == true);
+	REQUIRE((std_list == std_list2) == false);
+	REQUIRE((ft_list != ft_list3) == false); // !=
+	REQUIRE((ft_list != ft_list2) == true);
+	REQUIRE((std_list != std_list3) == false);
+	REQUIRE((std_list != std_list2) == true);
+	REQUIRE((ft_list < ft_list2) == false); // <
+	REQUIRE((ft_list2 < ft_list3) == true);
+	REQUIRE((std_list < std_list2) == false);
+	REQUIRE((std_list2 < std_list3) == true);
+	REQUIRE((ft_list < ft_list3) == false);
+	REQUIRE((ft_list <= ft_list3) == true); // <=
+	REQUIRE((std_list < std_list3) == false);
+	REQUIRE((std_list <= std_list3) == true);
+	REQUIRE((ft_list > ft_list2) == true); // >
+	REQUIRE((ft_list2 > ft_list3) == false);
+	REQUIRE((std_list > std_list2) == true);
+	REQUIRE((std_list2 > std_list3) == false);
+	REQUIRE((ft_list > ft_list3) == false);
+	REQUIRE((ft_list >= ft_list3) == true);  // >=
+	REQUIRE((std_list > std_list3) == false);
+	REQUIRE((std_list >= std_list3) == true);
+}
+// SWAP
+TEST_CASE("list - swap(x, y)", "[list]")
+{
+    ft::list<int> ft_list;
+    std::list<int> std_list;
+    ft::list<int> ft_check;
+    std::list<int> std_check;
+	for (int i = 1; i <= 5; i++) ft_list.push_back(i);
+    for (int i = 1; i <= 5; i++) std_list.push_back(i);
+    ft_check = ft_list;
+    std_check = std_list;
+	ft::list<int> ft_list2;
+    std::list<int> std_list2;
+	ft::swap(ft_list, ft_list2);
+    std::swap(std_list, std_list2);
+	REQUIRE(ft_list.size() == std_list.size()); // check if size equal
+	REQUIRE(ft_list2 == ft_check); // check if equal
+	REQUIRE(std_list2 == std_check); // check if equal
 }

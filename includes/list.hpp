@@ -6,7 +6,7 @@
 /*   By: rvan-hou <rvan-hou@student.42.fr>            +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2021/04/06 15:43:58 by rvan-hou      #+#    #+#                 */
-/*   Updated: 2021/04/15 15:45:06 by robijnvanho   ########   odam.nl         */
+/*   Updated: 2021/04/16 14:09:06 by robijnvanho   ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -18,8 +18,8 @@
 # include "utils/traits.hpp"
 # include <memory>
 # include <limits>
-
-#include <iostream>
+# include <cstddef>
+# include <iostream> // to print
 
 
 namespace ft {
@@ -27,30 +27,25 @@ namespace ft {
 template<class T, class Alloc = std::allocator<T> >
 class list {
 	public:
-	    typedef listNode<T>*										node_pointer;
-        typedef listNode<T>											node;
-	    typedef BidirectionalIterator<T, node>						iterator;
-        typedef ConstBidirectionalIterator<T, node>					const_iterator;
-        typedef RevBidirectionalIterator<T, node>					reverse_iterator;
-        typedef ConstRevBidirectionalIterator<T, node>				const_reverse_iterator;
+		typedef listNode<T>*										node_pointer;
+		typedef listNode<T>											node;
+		typedef BidirectionalIterator<T, node>						iterator;
+		typedef ConstBidirectionalIterator<T, node>					const_iterator;
+		typedef RevBidirectionalIterator<T, node>					reverse_iterator;
+		typedef ConstRevBidirectionalIterator<T, node>				const_reverse_iterator;
+	
 	private:
 		Alloc			_allocator;
 		size_t			_size;
 		node_pointer	_first;
 		node_pointer	_last;
 
-		// template <class InputIterator>
-		// size_t	distance(InputIterator first, InputIterator second) { // returns dist between first and sec ptr
-		// 	size_t n = 0;
-		// 	for (InputIterator it = first; it != second; it++)
-		// 		n++;
-		// 	return n;
-		// }
 		void	move(iterator it_list, iterator it_add) { // move element from other list into current list without copy
 			listNode<T>* list = it_list.get_ptr();
 			listNode<T>* add = it_add.get_ptr();
 			add->_prev->_next = add->_next;
 			add->_next->_prev = add->_prev;
+			
 			add->_prev = list->_prev;
 			add->_next = list;
 			list->_prev->_next = add;
@@ -250,8 +245,8 @@ class list {
 				insert(position, *first);
 		}
 		iterator	erase(iterator position) {
-			if (position == end()) // not sure
-				return position;
+			// if (position == end()) // not sure
+			// 	return position;
 			listNode<T>* tmp = position.get_ptr();
 			tmp->_prev->_next = tmp->_next;
 			tmp->_next->_prev = tmp->_prev;
@@ -340,17 +335,17 @@ class list {
 			}
 		}
 		void	merge(list& x) { // merge two lists and sort <
-			// if (*this != x) {
+			if (*this != x) {
 				splice(begin(), x);
 				sort();
-			// }
+			}
 		}
 		template <class Compare>
 		void	merge(list& x, Compare comp) { // merge two lists based on comp
-		// 	if (*this != x) {
+			if (*this != x) {
 				splice(begin(), x);
 				sort(comp);
-		// 	}	
+			}	
 		}
 		void	sort(void) { // sort based on operator<
 			iterator it = begin();
@@ -389,25 +384,65 @@ class list {
 			_last = tmp;
 		}
 		// OBSERVERS
-}; // class list
+		Alloc	get_allocator() const {
+			return this->_allocator;
+		}
+	}; // class list
 
-// template <class T>
-// void	swap(list<T> &x, list<T> &y) {
-//     list<T> tmp(y);
-//      y = x;
-//     x = tmp;
-// }
+	template <class InputIterator1, class InputIterator2>
+	bool	lexicographical_compare_list(InputIterator1 first1, InputIterator1 last1, InputIterator2 first2, InputIterator2 last2) {
+		while (first1!=last1) {
+			if (first2==last2 || *first2<*first1) return false;
+			else if (*first1<*first2) return true;
+			++first1; ++first2;
+		}
+		return (first2!=last2);
+	}
 
-// template <class T, class Alloc>
-// bool operator==(const ft::list<T,Alloc>& lhs, const ft::list<T,Alloc>& rhs) {
-// 	return (lhs.size() == rhs.size() && ft::equal(lhs.begin(), lhs.end(), rhs.begin()));
-// }
+	template <class InputIterator1, class InputIterator2>
+	bool	equal(InputIterator1 first1, InputIterator1 last1, InputIterator2 first2) {
+		while (first1!=last1) {
+			if (!(*first1 == *first2))
+				return false;
+			++first1;
+			++first2;
+		}
+		return true;
+	}
 
-// template<class T, class Alloc>
-// bool operator!= (const list<T, Alloc>& lhs, const list<T, Alloc>& rhs) {
-// 	return !(lhs == rhs);
-// }
+	// RELATIONAL OPERATORS
+	template <class T, class Alloc>
+	bool	operator==(const ft::list<T,Alloc>& lhs, const ft::list<T,Alloc>& rhs) {
+		return (lhs.size() == rhs.size() && ft::equal(lhs.begin(), lhs.end(), rhs.begin()));
+	}
+	template <class T, class Alloc>
+	bool	operator!=(const ft::list<T,Alloc>& lhs, const ft::list<T,Alloc>& rhs) {
+		return !(lhs == rhs);
+	}
+	template <class T, class Alloc>
+	bool	operator<(const ft::list<T,Alloc>& lhs, const ft::list<T,Alloc>& rhs) {
+		return (ft::lexicographical_compare_list(lhs.begin(), lhs.end(), rhs.begin(), rhs.end()));
+	}
+	template <class T, class Alloc>
+	bool	operator<=(const ft::list<T,Alloc>& lhs, const ft::list<T,Alloc>& rhs) {
+		return !(rhs < lhs);
+	}
+	template <class T, class Alloc>
+	bool	operator>(const ft::list<T,Alloc>& lhs, const ft::list<T,Alloc>& rhs) {
+		return (rhs < lhs);
+	}
+	template <class T, class Alloc>
+	bool	operator>=(const ft::list<T,Alloc>& lhs, const ft::list<T,Alloc>& rhs) {
+		return !(lhs < rhs);
+	}
 
+	// SWAP 
+	template <class T, class Alloc>
+	void	swap(list<T,Alloc>& x, list<T,Alloc>& y) {
+		list<T, Alloc> tmp(y);
+		y = x;
+		x = tmp;
+	}
 } // namespace
 
 #endif

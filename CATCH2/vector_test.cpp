@@ -365,3 +365,78 @@ TEST_CASE( "vector - clear", "[vector]") {
 	std_vector.clear();
 	REQUIRE(ft_vector.size() == std_vector.size()); // check if size equal
 }
+// OBSERVERS
+TEST_CASE("vector - get_allocator", "[vector]")
+{
+	ft::vector<int> ft_vector;
+	std::vector<int> std_vector;
+	int *p_ft_vector;
+	int *p_std_vector;
+	bool ft_vector_return = false;
+	bool std_vector_return = false;
+	// allocate for 5 elements using vector's allocator:
+  	p_ft_vector = ft_vector.get_allocator().allocate(5);
+  	p_std_vector = std_vector.get_allocator().allocate(5);
+	if (!p_ft_vector)
+		ft_vector_return = false;
+	else
+		ft_vector_return = true;
+	if (!p_std_vector)
+		std_vector_return = false;
+	else
+		std_vector_return = true;
+	REQUIRE(ft_vector_return == std_vector_return);
+}
+// RELATIONAL OPERATORS
+TEST_CASE("vector - relational operators", "[vector]")
+{
+	ft::vector<int> ft_vector(4, 200);
+	ft::vector<int> ft_vector2(4, 100);
+	ft::vector<int> ft_vector3(4, 200);
+	std::vector<int> std_vector(4, 200);
+	std::vector<int> std_vector2(4, 100);
+	std::vector<int> std_vector3(4, 200);
+	REQUIRE((ft_vector == ft_vector3) == true); // ==
+	REQUIRE((ft_vector == ft_vector2) == false);
+	REQUIRE((std_vector == std_vector3) == true);
+	REQUIRE((std_vector == std_vector2) == false);
+	REQUIRE((ft_vector != ft_vector3) == false); // !=
+	REQUIRE((ft_vector != ft_vector2) == true);
+	REQUIRE((std_vector != std_vector3) == false);
+	REQUIRE((std_vector != std_vector2) == true);
+	REQUIRE((ft_vector < ft_vector2) == false); // <
+	REQUIRE((ft_vector2 < ft_vector3) == true);
+	REQUIRE((std_vector < std_vector2) == false);
+	REQUIRE((std_vector2 < std_vector3) == true);
+	REQUIRE((ft_vector < ft_vector3) == false);
+	REQUIRE((ft_vector <= ft_vector3) == true); // <=
+	REQUIRE((std_vector < std_vector3) == false);
+	REQUIRE((std_vector <= std_vector3) == true);
+	REQUIRE((ft_vector > ft_vector2) == true); // >
+	REQUIRE((ft_vector2 > ft_vector3) == false);
+	REQUIRE((std_vector > std_vector2) == true);
+	REQUIRE((std_vector2 > std_vector3) == false);
+	REQUIRE((ft_vector > ft_vector3) == false);
+	REQUIRE((ft_vector >= ft_vector3) == true);  // >=
+	REQUIRE((std_vector > std_vector3) == false);
+	REQUIRE((std_vector >= std_vector3) == true);
+}
+// SWAP
+TEST_CASE("vector - swap(x, y)", "[vector]")
+{
+    ft::vector<int> ft_vector;
+    std::vector<int> std_vector;
+    ft::vector<int> ft_check;
+    std::vector<int> std_check;
+	for (int i = 1; i <= 5; i++) ft_vector.push_back(i);
+    for (int i = 1; i <= 5; i++) std_vector.push_back(i);
+    ft_check = ft_vector;
+    std_check = std_vector;
+	ft::vector<int> ft_vector2;
+    std::vector<int> std_vector2;
+	ft::swap(ft_vector, ft_vector2);
+    std::swap(std_vector, std_vector2);
+	REQUIRE(ft_vector.size() == std_vector.size()); // check if size equal
+	REQUIRE(ft_vector2 == ft_check); // check if equal
+	REQUIRE(std_vector2 == std_check); // check if equal
+}

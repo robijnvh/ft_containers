@@ -6,7 +6,7 @@
 /*   By: rvan-hou <rvan-hou@student.42.fr>            +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2021/03/23 13:22:00 by robijnvanho   #+#    #+#                 */
-/*   Updated: 2021/04/12 12:36:28 by robijnvanho   ########   odam.nl         */
+/*   Updated: 2021/04/16 11:14:47 by robijnvanho   ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -25,9 +25,9 @@ class vector {
 	public:
 		// ALL TYPES
 		typedef RandomAccessIterator<T>	iterator;
-        typedef ConstRandomAccessIterator<T>	const_iterator;
-        typedef RevRandomAccessIterator<T>	reverse_iterator;
-        typedef ConstRevRandomAccessIterator<T>	const_reverse_iterator;
+		typedef ConstRandomAccessIterator<T>	const_iterator;
+		typedef RevRandomAccessIterator<T>	reverse_iterator;
+		typedef ConstRevRandomAccessIterator<T>	const_reverse_iterator;
 	
 	private:
 		T*		_container;
@@ -337,9 +337,9 @@ class vector {
 	// SWAP
 	template <typename T>
 	void swap(vector<T> &x, vector<T> &y) {
-		vector<T> temp(y);
+		vector<T> tmp(y);
 		y = x;
-		x = temp;
+		x = tmp;
 	}
 } // namespace
 
