@@ -6,7 +6,7 @@
 /*   By: rvan-hou <rvan-hou@student.42.fr>            +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2021/04/06 15:43:58 by rvan-hou      #+#    #+#                 */
-/*   Updated: 2021/04/16 14:09:06 by robijnvanho   ########   odam.nl         */
+/*   Updated: 2021/04/19 12:23:32 by robijnvanho   ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -16,6 +16,7 @@
 # include "utils/listNode.hpp"
 # include "utils/BidirectionalIterator.hpp"
 # include "utils/traits.hpp"
+# include "utils/utils.hpp"
 # include <memory>
 # include <limits>
 # include <cstddef>
@@ -389,27 +390,6 @@ class list {
 		}
 	}; // class list
 
-	template <class InputIterator1, class InputIterator2>
-	bool	lexicographical_compare_list(InputIterator1 first1, InputIterator1 last1, InputIterator2 first2, InputIterator2 last2) {
-		while (first1!=last1) {
-			if (first2==last2 || *first2<*first1) return false;
-			else if (*first1<*first2) return true;
-			++first1; ++first2;
-		}
-		return (first2!=last2);
-	}
-
-	template <class InputIterator1, class InputIterator2>
-	bool	equal(InputIterator1 first1, InputIterator1 last1, InputIterator2 first2) {
-		while (first1!=last1) {
-			if (!(*first1 == *first2))
-				return false;
-			++first1;
-			++first2;
-		}
-		return true;
-	}
-
 	// RELATIONAL OPERATORS
 	template <class T, class Alloc>
 	bool	operator==(const ft::list<T,Alloc>& lhs, const ft::list<T,Alloc>& rhs) {
@@ -421,7 +401,7 @@ class list {
 	}
 	template <class T, class Alloc>
 	bool	operator<(const ft::list<T,Alloc>& lhs, const ft::list<T,Alloc>& rhs) {
-		return (ft::lexicographical_compare_list(lhs.begin(), lhs.end(), rhs.begin(), rhs.end()));
+		return (ft::lexicographical_compare(lhs.begin(), lhs.end(), rhs.begin(), rhs.end()));
 	}
 	template <class T, class Alloc>
 	bool	operator<=(const ft::list<T,Alloc>& lhs, const ft::list<T,Alloc>& rhs) {
@@ -443,6 +423,6 @@ class list {
 		y = x;
 		x = tmp;
 	}
-} // namespace
+} // namespace ft
 
 #endif

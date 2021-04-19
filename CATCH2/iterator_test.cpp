@@ -12,18 +12,18 @@ TEST_CASE( "RandomAccessIterator", "[iterator]" ) {
     std::vector<int> std_vector;
 	for (int i = 1; i <= 10; i++) ft_vector.push_back(i);
     for (int i = 1; i <= 10; i++) std_vector.push_back(i);
-    ft::vector<std::string> ft_vector2;
-    std::vector<std::string> std_vector2;
-    ft_vector2.push_back("hi");
-    std_vector2.push_back("hi");
-    ft_vector2.push_back("hi");
-    std_vector2.push_back("hi");
-    ft_vector2.push_back("hi");
-    std_vector2.push_back("hi");
+    // ft::vector<std::string> ft_vector2;
+    // std::vector<std::string> std_vector2;
+    // ft_vector2.push_back("hi");
+    // std_vector2.push_back("hi");
+    // ft_vector2.push_back("hi");
+    // std_vector2.push_back("hi");
+    // ft_vector2.push_back("hi");
+    // std_vector2.push_back("hi");
 	ft::vector<int>::iterator ft_it_begin = ft_vector.begin();
 	std::vector<int>::iterator std_it_begin = std_vector.begin();
-    ft::vector<std::string>::iterator ft_it2 = ft_vector2.begin();
-	std::vector<std::string>::iterator std_it2 = std_vector2.begin();
+    // ft::vector<std::string>::iterator ft_it2 = ft_vector2.begin();
+	// std::vector<std::string>::iterator std_it2 = std_vector2.begin();
 	ft::vector<int>::iterator ft_it_end = ft_vector.end();
 	std::vector<int>::iterator std_it_end = std_vector.end();
 	ft::vector<int>::iterator ft_check = ft_vector.begin() + 1;
@@ -51,11 +51,11 @@ TEST_CASE( "RandomAccessIterator", "[iterator]" ) {
         std_it_begin++;
         REQUIRE(*ft_it_begin == *std_it_begin);
     }
-	SECTION("-> overload") {
-		ft_it2++;
-		std_it2++;
-		REQUIRE(*ft_it2->data() == *std_it2->data());
-    }
+	// SECTION("-> overload") {
+	// 	ft_it2++;
+	// 	std_it2++;
+	// 	REQUIRE(*ft_it2->data() == *std_it2->data());
+    // }
 	SECTION("[]") {
         REQUIRE(ft_it_begin[3] == 4);
         REQUIRE(ft_it_begin[3] == std_it_begin[3]);

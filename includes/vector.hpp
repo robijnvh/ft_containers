@@ -6,7 +6,7 @@
 /*   By: rvan-hou <rvan-hou@student.42.fr>            +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2021/03/23 13:22:00 by robijnvanho   #+#    #+#                 */
-/*   Updated: 2021/04/16 11:14:47 by robijnvanho   ########   odam.nl         */
+/*   Updated: 2021/04/19 12:37:28 by robijnvanho   ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -15,6 +15,7 @@
 
 # include "utils/RandomAccessIterator.hpp"
 # include "utils/traits.hpp"
+# include "utils/utils.hpp"
 # include <limits>
 # include <memory>
 
@@ -288,49 +289,29 @@ class vector {
 		};
 	}; // class vector
 
-	template <class InputIterator1, class InputIterator2>
-	bool	lexicographical_compare(InputIterator1 first1, InputIterator1 last1, InputIterator2 first2, InputIterator2 last2) {
-		while (first1!=last1) {
-			if (first2==last2 || *first2<*first1) return false;
-			else if (*first1<*first2) return true;
-			++first1; ++first2;
-		}
-		return (first2!=last2);
-	}
-
 	// RELATIONAL OPERATORS
 	template <class T, class Alloc>
-	bool	operator==(vector<T, Alloc> const& lhs, vector<T, Alloc> const& rhs) {
-		typename ft::vector<T>::const_iterator it_lhs = lhs.begin();
-		typename ft::vector<T>::const_iterator it_rhs = rhs.begin();
-		if (lhs.size() != rhs.size())
-			return (false);
-		while (*it_lhs != *lhs.end()) {
-			if (*it_lhs != *it_rhs)
-				return (false);
-			it_lhs++;
-			it_rhs++;
-		}
-		return (true);
+	bool	operator==(ft::vector<T, Alloc> const& lhs, ft::vector<T, Alloc> const& rhs) {
+		return (lhs.size() == rhs.size() && ft::equal(lhs.begin(), lhs.end(), rhs.begin()));
 	}
 	template <class T, class Alloc>
-	bool	operator!=(vector<T, Alloc> const& lhs, vector<T, Alloc> const& rhs) {
+	bool	operator!=(ft::vector<T, Alloc> const& lhs, ft::vector<T, Alloc> const& rhs) {
 		return !(lhs == rhs);
 	}
 	template <class T, class Alloc>
-	bool	operator<(vector<T, Alloc> const& lhs, vector<T, Alloc> const& rhs) {
+	bool	operator<(ft::vector<T, Alloc> const& lhs, ft::vector<T, Alloc> const& rhs) {
 		return (ft::lexicographical_compare(lhs.begin(), lhs.end(), rhs.begin(), rhs.end()));
 	}
 	template <class T, class Alloc>
-	bool	operator<=(vector<T, Alloc> const& lhs, vector<T, Alloc> const& rhs) {
+	bool	operator<=(ft::vector<T, Alloc> const& lhs, ft::vector<T, Alloc> const& rhs) {
 		return !(rhs < lhs);
 	}
 	template <class T, class Alloc>
-	bool	operator>(vector<T, Alloc> const& lhs, vector<T, Alloc> const& rhs) {
+	bool	operator>(ft::vector<T, Alloc> const& lhs, ft::vector<T, Alloc> const& rhs) {
 		return (rhs < lhs);
 	}
 	template <class T, class Alloc>
-	bool	operator>=(vector<T, Alloc> const& lhs, vector<T, Alloc> const& rhs) {
+	bool	operator>=(ft::vector<T, Alloc> const& lhs, ft::vector<T, Alloc> const& rhs) {
 		return !(lhs < rhs);
 	}
 
@@ -341,6 +322,5 @@ class vector {
 		y = x;
 		x = tmp;
 	}
-} // namespace
-
+} // namespace ft
 #endif
