@@ -6,7 +6,7 @@
 /*   By: rvan-hou <rvan-hou@student.42.fr>            +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2021/04/07 13:33:51 by robijnvanho   #+#    #+#                 */
-/*   Updated: 2021/04/13 14:32:01 by rvan-hou      ########   odam.nl         */
+/*   Updated: 2021/04/20 14:24:06 by rvan-hou      ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -20,8 +20,8 @@ namespace ft {
 template<typename T, typename Node>
 class BidirectionalIterator {
 	public:
-		typedef std::bidirectional_iterator_tag		iterator_category;
-		typedef Node								*iterator_type;
+		typedef std::bidirectional_iterator_tag	iterator_category;
+		typedef Node	*iterator_type;
 	private:
 		Node*	_ptr;
 	public:

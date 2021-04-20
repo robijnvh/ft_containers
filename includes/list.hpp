@@ -1,12 +1,12 @@
 /* ************************************************************************** */
 /*                                                                            */
-/*                                                        ::::::::            */
-/*   list.hpp                                           :+:    :+:            */
-/*                                                     +:+                    */
-/*   By: rvan-hou <rvan-hou@student.42.fr>            +#+                     */
-/*                                                   +#+                      */
-/*   Created: 2021/04/06 15:43:58 by rvan-hou      #+#    #+#                 */
-/*   Updated: 2021/04/19 12:23:32 by robijnvanho   ########   odam.nl         */
+/*                                                        :::      ::::::::   */
+/*   list.hpp                                           :+:      :+:    :+:   */
+/*                                                    +:+ +:+         +:+     */
+/*   By: rvan-hou <rvan-hou@student.42.fr>          +#+  +:+       +#+        */
+/*                                                +#+#+#+#+#+   +#+           */
+/*   Created: 2021/04/06 15:43:58 by rvan-hou          #+#    #+#             */
+/*   Updated: 2021/04/20 14:23:57 by rvan-hou         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -28,12 +28,12 @@ namespace ft {
 template<class T, class Alloc = std::allocator<T> >
 class list {
 	public:
-		typedef listNode<T>*										node_pointer;
-		typedef listNode<T>											node;
-		typedef BidirectionalIterator<T, node>						iterator;
-		typedef ConstBidirectionalIterator<T, node>					const_iterator;
-		typedef RevBidirectionalIterator<T, node>					reverse_iterator;
-		typedef ConstRevBidirectionalIterator<T, node>				const_reverse_iterator;
+		typedef listNode<T>*	node_pointer;
+		typedef listNode<T>	node;
+		typedef BidirectionalIterator<T, node>	iterator;
+		typedef ConstBidirectionalIterator<T, node>	const_iterator;
+		typedef RevBidirectionalIterator<T, node>	reverse_iterator;
+		typedef ConstRevBidirectionalIterator<T, node>	const_reverse_iterator;
 	
 	private:
 		Alloc			_allocator;

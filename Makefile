@@ -6,7 +6,7 @@
 #    By: rvan-hou <rvan-hou@student.42.fr>            +#+                      #
 #                                                    +#+                       #
 #    Created: 2021/03/15 15:36:52 by robijnvanho   #+#    #+#                  #
-#    Updated: 2021/04/19 14:16:19 by robijnvanho   ########   odam.nl          #
+#    Updated: 2021/04/20 15:05:31 by rvan-hou      ########   odam.nl          #
 #                                                                              #
 # **************************************************************************** #
 
@@ -19,6 +19,7 @@ SOURCES			= 	CATCH2/main.cpp \
 					CATCH2/list_test.cpp \
 					CATCH2/stack_test.cpp \
 					CATCH2/queue_test.cpp \
+					CATCH2/map_test.cpp \
 					# CATCH2/vector_test_roy.cpp \
 					CATCH2/vector_test_tim.cpp \
 
