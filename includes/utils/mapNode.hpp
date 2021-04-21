@@ -1,12 +1,12 @@
 /* ************************************************************************** */
 /*                                                                            */
-/*                                                        :::      ::::::::   */
-/*   mapNode.hpp                                        :+:      :+:    :+:   */
-/*                                                    +:+ +:+         +:+     */
-/*   By: rvan-hou <rvan-hou@student.42.fr>          +#+  +:+       +#+        */
-/*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2021/04/20 12:15:30 by rvan-hou          #+#    #+#             */
-/*   Updated: 2021/04/20 13:07:29 by rvan-hou         ###   ########.fr       */
+/*                                                        ::::::::            */
+/*   mapNode.hpp                                        :+:    :+:            */
+/*                                                     +:+                    */
+/*   By: rvan-hou <rvan-hou@student.42.fr>            +#+                     */
+/*                                                   +#+                      */
+/*   Created: 2021/04/20 12:15:30 by rvan-hou      #+#    #+#                 */
+/*   Updated: 2021/04/21 16:40:35 by robijnvanho   ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -24,14 +24,14 @@ class mapNode {
 		T			_data;
 
 		explicit mapNode() : // constructs empty node
-			_parent(),
-			_left(),
-			_right(),
+			_parent(NULL),
+			_left(NULL),
+			_right(NULL),
 			_data() {}
 		explicit mapNode(const T &data) : // constructs node with data
-			_parent(),
-			_left(),
-			_right(),
+			_parent(NULL),
+			_left(NULL),
+			_right(NULL),
 			_data(data) {}
 		mapNode(const mapNode &other) : // constructs node as copy of other
 			_parent(other._parent),

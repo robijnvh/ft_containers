@@ -6,7 +6,7 @@
 /*   By: robijnvanhouts <robijnvanhouts@student.      +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2021/04/19 12:58:02 by robijnvanho   #+#    #+#                 */
-/*   Updated: 2021/04/19 14:35:38 by robijnvanho   ########   odam.nl         */
+/*   Updated: 2021/04/21 12:06:11 by robijnvanho   ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -58,25 +58,37 @@ class queue {
 			_container.pop_front();
 		}
 		// RELATIONAL OPERATORS
-		friend bool	operator==(const queue<T,Container>& lhs, const queue<T,Container>& rhs)  {
-			return (lhs._container == rhs._container);
-		}
-		friend bool	operator!=(const queue<T,Container>& lhs, const queue<T,Container>& rhs) {
-			return (lhs._container != rhs._container);
-		}
-		friend bool	operator<(const queue<T,Container>& lhs, const queue<T,Container>& rhs) {
-			return (lhs._container < rhs._container);
-		}
-		friend bool	operator<=(const queue<T,Container>& lhs, const queue<T,Container>& rhs) {
-			return (lhs._container <= rhs._container);
-		}
-		friend bool	operator>(const queue<T,Container>& lhs, const queue<T,Container>& rhs) {
-			return (lhs._container > rhs._container);
-		}
-		friend bool	operator>=(const queue<T,Container>& lhs, const queue<T,Container>& rhs) {
-			return (lhs._container >= rhs._container);
-		}
+		template <class T2, class Contain>
+		friend bool	operator==(const queue<T2,Contain>& lhs, const queue<T2,Contain>& rhs);
+		template <class T2, class Contain>
+		friend bool	operator<(const queue<T2,Contain>& lhs, const queue<T2,Contain>& rhs);
 	}; // class queue
+	
+	// RELATIONAL OPERATORS
+	template <class T, class Container>
+	bool	operator==(const queue<T,Container>& lhs, const queue<T,Container>& rhs)  {
+		return (lhs._container == rhs._container);
+	}
+	template <class T, class Container>
+	bool	operator!=(const queue<T,Container>& lhs, const queue<T,Container>& rhs) {
+		return (!(lhs == rhs));
+	}
+	template <class T, class Container>
+	bool	operator<(const queue<T,Container>& lhs, const queue<T,Container>& rhs) {
+		return (lhs._container < rhs._container);
+	}
+	template <class T, class Container>
+	bool	operator<=(const queue<T,Container>& lhs, const queue<T,Container>& rhs) {
+		return (lhs < rhs || lhs == rhs);
+	}
+	template <class T, class Container>
+	bool	operator>(const queue<T,Container>& lhs, const queue<T,Container>& rhs) {
+		return (!(lhs <= rhs));
+	}
+	template <class T, class Container>
+	bool	operator>=(const queue<T,Container>& lhs, const queue<T,Container>& rhs) {
+		return (!(lhs < rhs));
+	}
 } // namespace ft
 
 #endif
