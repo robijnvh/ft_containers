@@ -6,7 +6,7 @@
 /*   By: rvan-hou <rvan-hou@student.42.fr>            +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2021/04/19 14:31:50 by robijnvanho   #+#    #+#                 */
-/*   Updated: 2021/04/22 16:22:29 by robijnvanho   ########   odam.nl         */
+/*   Updated: 2021/04/22 23:45:07 by robijnvanho   ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -76,46 +76,52 @@ class map {
 			return (new_leaf);
 		}
 		// ROTATIONS
-		void rotateLeft(node_pointer& parent){
-			std::cout << "rotateleft" << std::endl;
-			// node_pointer temp = parent->_right;
-			// parent->_right = temp->_left;
-			// temp->_left = parent;
-			// parent = temp;
-			// std::cout << "parent";
-			node_pointer t;
-			t = parent->_left;
-			parent->_left = t->_right;
-			t->_right = parent;
-			return;
+		void	rotateLeft(node_pointer& parent) {
+			std::cout << "rotateleft" << std::endl << std::endl;
+			node_pointer child = parent->_right;
+			node_pointer GP = parent->_parent;
+			std::cout << "child: " << child->_data.first << std::endl;
+			std::cout << "parent: " << parent->_data.first << std::endl;
+			if (parent != _root)
+				std::cout << "GP: " << GP->_data.first << std::endl;
+			if (_root == GP) {
+				GP->_parent = parent;
+				GP->_right = NULL;
+				parent->_left = GP;
+				parent->_parent = NULL;
+				_root = parent;
+			}
+			else {
+				parent->_parent = GP->_parent;
+				GP->_parent->_right = parent;
+				GP->_parent = parent;
+				parent->_left = GP;
+				GP->_right = NULL;
+			}
 		}
-		// void rotateLeft(node_pointer& node){
-		// 	node_pointer otherNode;
+		void	rotateLeftDouble(node_pointer& parent) {
+			std::cout << "rotateLeftDouble" << std::endl << std::endl;
+			node_pointer child = parent->_right;
+			node_pointer GP = parent->_parent;
+			std::cout << "child: " << child->_data.first << std::endl;
+			std::cout << "parent: " << parent->_data.first << std::endl;
+			std::cout << "GP: " << GP->_data.first << std::endl;
+			
+			parent->_parent = GP->_parent; // 2 -> 8
+			if (GP->_parent)
+				GP->_parent->_right = parent; // 8 -> 2
+				
+			GP->_parent = parent;
+			GP->_right = parent->_left;
+			
+			parent->_left->_parent = GP;
+			parent->_left = GP;
 
-		// 	otherNode = node->_left;
-		// 	node->_left = otherNode->_right;
-		// 	otherNode->_right = node;
-		// 	node = otherNode;
-		// }
-		void rotateLeftDouble(node_pointer& node){
-			std::cout << "rotateleftdouble" << std::endl;
-			rotateRight(node->_left);
-			rotateLeft(node);
+			if (_root == GP)
+				_root = parent;
 		}
-		// void rotateRight(node_pointer& node){
-		// 	node_pointer otherNode;
-
-		// 	otherNode = node->_right;
-		// 	node->_right = otherNode->_left;
-		// 	otherNode->_left = node;
-		// 	node = otherNode;
-		// }
-		 void rotateRight(node_pointer& parent){
-			std::cout << "rotateright" << std::endl << std::endl;
-			// node_pointer temp = n->_left;
-			// n->_left = temp->_right;
-			// temp->_right = n;
-			// n = temp;
+		void	rotateRightDouble(node_pointer& parent){
+			std::cout << "rotateRightDouble" << std::endl << std::endl;
 			node_pointer child = parent->_left;
 			node_pointer GP = parent->_parent;
 			std::cout << "child: " << child->_data.first << std::endl;
@@ -134,16 +140,29 @@ class map {
 
 			if (_root == GP)
 				_root = parent;
-
-			
-			// t = parent->_right;
-			// parent->_right = t->_left;
-			// t->_left = parent;
 		}
-		void rotateRightDouble(node_pointer& node){
-			std::cout << "rotaterightdouble" << std::endl;
-			rotateLeft(node->_right);
-			rotateRight(node);
+		void	rotateRight(node_pointer& parent) {
+			std::cout << "rotateright" << std::endl << std::endl;
+			node_pointer child = parent->_left;
+			node_pointer GP = parent->_parent;
+			std::cout << "child: " << child->_data.first << std::endl;
+			std::cout << "parent: " << parent->_data.first << std::endl;
+			if (parent != _root)
+				std::cout << "GP: " << GP->_data.first << std::endl;
+			if (_root == GP) {
+				GP->_parent = parent;
+				GP->_left = NULL;
+				parent->_right = GP;
+				parent->_parent = NULL;
+				_root = parent;
+			}
+			else {
+				parent->_parent = GP->_parent;
+				GP->_parent->_left = parent;
+				GP->_parent = parent;
+				parent->_right = GP;
+				GP->_left = NULL;
+			}
 		}
 		// BALANCING
 		int height(node_pointer tmp) { // returns height from node
@@ -169,6 +188,7 @@ class map {
 		void	balance(node_pointer parent, node_pointer newNode) { // balances tree
 			int B;
 
+			(void)newNode;
 			B = getBalance(_root);
 			std::cout << B << std::endl;
 			if (B >= -1 && B <= 1) {
@@ -176,25 +196,26 @@ class map {
 				return; // balanced
 			}
 			else {
-				if (B < -1) {
+				if (B == -2) { // < -1
 					std::cout << "right_heavy" << std::endl;
-					if (newNode->_data.first < parent->_data.first)
-						rotateLeft(parent);
+					if (getBalance(parent->_parent) == 0) {
+						std::cout << "node: " << parent->_parent->_data.first << std::endl;
+						rotateLeft(parent->_parent);
+					}
 					else
 						rotateLeftDouble(parent);
 				}
-				else {
+				else if (B == 2) { // > 1
 					std::cout << "left_heavy" << std::endl;
-					if (newNode->_data.first < parent->_data.first) {
-						// std::cout << "test";
-						// std::cout << "GP: " << parent->_parent->_data.first << std::endl;
-						rotateRight(parent->_parent);
+					// if (newNode->_data.first < parent->_data.first) {
+					if (getBalance(parent->_parent) == 0) { // right_exists
+						std::cout << "node: " << parent->_parent->_data.first << std::endl;
+						rotateRightDouble(parent->_parent);
 					}
 					else
-						rotateRightDouble(parent);
+						rotateRight(parent);
 				}
 			}
-			print_tree();
 		}
 	public:
 		// PRINT
