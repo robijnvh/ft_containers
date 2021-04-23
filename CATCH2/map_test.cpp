@@ -23,23 +23,36 @@ TEST_CASE( "map - default constructor", "[map]" ) {
     REQUIRE(ft_map.empty() == true); // empty map
     // TEST1
     // ft_map.insert(ft::pair<int,int>(8,800));
+    // // ft_map.print_tree();
     // ft_map.insert(ft::pair<int,int>(5,500));
-    // ft_map.insert(ft::pair<int,int>(6,600));
+    // // ft_map.print_tree();
     // ft_map.insert(ft::pair<int,int>(10,1000));
+    // // ft_map.print_tree();
+    // ft_map.insert(ft::pair<int,int>(6,600));
+    // // ft_map.print_tree();
     // ft_map.insert(ft::pair<int,int>(2,200));
-    // ft_map.print_tree();
-    // std::cout << "Insert 1 to cause imbalance:" << std::endl;
+    // // ft_map.print_tree();
+    // // std::cout << "Insert 1 to cause imbalance:" << std::endl;
     // ft_map.insert(ft::pair<int,int>(1,100));
+    // ft_map.print_tree();
     // TEST2
-    // ft_map.insert(ft::pair<int,int>(4,400));
-    // ft_map.insert(ft::pair<int,int>(5,500));
-    // ft_map.insert(ft::pair<int,int>(3,300));
-    // ft_map.insert(ft::pair<int,int>(2,200));
-    // std::cout << "Insert 1 to cause imbalance:" << std::endl;
-    // ft_map.insert(ft::pair<int,int>(1,100));
+    ft_map.insert(ft::pair<int,int>(28,2800));
     // ft_map.print_tree();
+    ft_map.insert(ft::pair<int,int>(30,3000));
+    // ft_map.print_tree();
+    ft_map.insert(ft::pair<int,int>(16,1600));
+    ft_map.insert(ft::pair<int,int>(18,1800));
+    // ft_map.print_tree();
+    // ft_map.print_tree();
+    std::cout << "Insert 10 to cause imbalance:" << std::endl;
+    ft_map.insert(ft::pair<int,int>(19,1900));
+    ft_map.insert(ft::pair<int,int>(50,5000));
+    ft_map.insert(ft::pair<int,int>(10,1000));
+    ft_map.insert(ft::pair<int,int>(2,200));
+    ft_map.insert(ft::pair<int,int>(17,1700));
+    ft_map.insert(ft::pair<int,int>(20,2000));
+    ft_map.print_tree();
     // TEST3
-    // ft_map.insert(ft::pair<int,int>(2,200));
     // ft_map.insert(ft::pair<int,int>(3,300));
     // ft_map.insert(ft::pair<int,int>(1,100));
     // ft_map.insert(ft::pair<int,int>(4,400));
@@ -47,13 +60,13 @@ TEST_CASE( "map - default constructor", "[map]" ) {
     // ft_map.insert(ft::pair<int,int>(5,500));
     // ft_map.print_tree();
     // TEST4
-    ft_map.insert(ft::pair<int,int>(4,400));
-    ft_map.insert(ft::pair<int,int>(2,200));
-    ft_map.insert(ft::pair<int,int>(5,500));
-    ft_map.insert(ft::pair<int,int>(8,800));
-    // ft_map.insert(ft::pair<int,int>(7,700));
-    std::cout << "Insert 10 to cause imbalance:" << std::endl;
-    ft_map.insert(ft::pair<int,int>(10,1000));
-    ft_map.print_tree();
+    // ft_map.insert(ft::pair<int,int>(4,400));
+    // ft_map.insert(ft::pair<int,int>(2,200));
+    // ft_map.insert(ft::pair<int,int>(5,500));
+    // ft_map.insert(ft::pair<int,int>(8,800));
+    // // ft_map.insert(ft::pair<int,int>(7,700));
+    // std::cout << "Insert 10 to cause imbalance:" << std::endl;
+    // ft_map.insert(ft::pair<int,int>(10,1000));
+    // ft_map.print_tree();
 }
 
