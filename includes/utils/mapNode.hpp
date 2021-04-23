@@ -6,7 +6,7 @@
 /*   By: rvan-hou <rvan-hou@student.42.fr>            +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2021/04/20 12:15:30 by rvan-hou      #+#    #+#                 */
-/*   Updated: 2021/04/22 16:10:43 by robijnvanho   ########   odam.nl         */
+/*   Updated: 2021/04/23 16:34:58 by robijnvanho   ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -40,15 +40,15 @@ class mapNode {
 			_data(other._data) {}
 		~mapNode() {
 		} // destructor
-        mapNode& operator=(mapNode const& other) {
-            if (this != other) {
-                this->_parent = other._parent;
-                this->_left = other._next;
-                this->_right = other._right;
-                this->_data = other._data;
-            }
-            return (*this);
-        }
+		mapNode& operator=(mapNode const& other) {
+			if (this != other) {
+				this->_parent = other._parent;
+				this->_left = other._next;
+				this->_right = other._right;
+				this->_data = other._data;
+			}
+			return (*this);
+		}
 		mapNode*	getNext() {
 			mapNode*	tmp;
 			mapNode*	move;
