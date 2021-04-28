@@ -6,7 +6,7 @@
 /*   By: rvan-hou <rvan-hou@student.42.fr>            +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2021/04/07 13:33:51 by robijnvanho   #+#    #+#                 */
-/*   Updated: 2021/04/20 14:24:06 by rvan-hou      ########   odam.nl         */
+/*   Updated: 2021/04/26 12:54:05 by robijnvanho   ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -41,10 +41,10 @@ class BidirectionalIterator {
 		~BidirectionalIterator() {}
 		// OPERATORS - DEREFERENCE
 		T&	operator*() {
-			return _ptr->_data;
+			return (this->_ptr->_data);
 		}
 		T*	operator->() {
-			return &_ptr->_data;
+			return (&(this->_ptr->_data));
 		}
 		BidirectionalIterator&	operator++() {
 			_ptr = _ptr->getNext();
@@ -157,10 +157,10 @@ class RevBidirectionalIterator {
 		~RevBidirectionalIterator() {}
 		// OPERATORS - DEREFERENCE
 		T&	operator*() {
-			return _ptr->_data;
+			return (this->_ptr->_data);
 		}
 		T*	operator->() {
-			return &_ptr->_data;
+			return (&(this->_ptr->_data));
 		}
 		RevBidirectionalIterator&	operator++() {
 			_ptr = _ptr->getPrev();

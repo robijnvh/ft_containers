@@ -6,7 +6,7 @@
 /*   By: rvan-hou <rvan-hou@student.42.fr>            +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2021/04/19 14:31:50 by robijnvanho   #+#    #+#                 */
-/*   Updated: 2021/04/23 17:01:50 by robijnvanho   ########   odam.nl         */
+/*   Updated: 2021/04/26 13:05:41 by robijnvanho   ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -31,10 +31,10 @@ class map {
 		typedef ft::pair<const Key, T>                              value_type;
 		typedef mapNode<value_type>*	node_pointer;
 		typedef mapNode<value_type>	node;
-		typedef BidirectionalIterator<T, node>	iterator;
-		typedef ConstBidirectionalIterator<T, node>	const_iterator;
-		typedef RevBidirectionalIterator<T, node>	reverse_iterator;
-		typedef ConstRevBidirectionalIterator<T, node>	const_reverse_iterator;
+		typedef BidirectionalIterator<value_type, node>	iterator;
+		typedef ConstBidirectionalIterator<value_type, node>	const_iterator;
+		typedef RevBidirectionalIterator<value_type, node>	reverse_iterator;
+		typedef ConstRevBidirectionalIterator<value_type, node>	const_reverse_iterator;
 
 	private:
 		node_pointer	_root;
@@ -163,6 +163,59 @@ class map {
 				GP->_left = NULL;
 			}
 		}
+		// TEST!!!!!!!!!!!!!!!
+		// node_pointer llrotation(node_pointer n){
+		// 	node_pointer p;
+		// 	node_pointer tp;
+		// 	p = n;
+		// 	tp = p->_left;
+
+		// 	p->_left = tp->_right;
+		// 	tp->_right = p;
+
+		// 	return tp; 
+		// }
+		// node_pointer rrrotation(node_pointer n){
+		// 	node_pointer p;
+		// 	node_pointer tp;
+		// 	p = n;
+		// 	tp = p->_right;
+
+		// 	p->_right = tp->_left;
+		// 	tp->_left = p;
+
+		// 	return tp; 
+		// }
+		// node_pointer rlrotation(node_pointer n){
+		// 	node_pointer p;
+		// 	node_pointer tp;
+		// 	node_pointer tp2;
+		// 	p = n;
+		// 	tp = p->_right;
+		// 	tp2 =p->_right->_left;
+
+		// 	p -> _right = tp2->_left;
+		// 	tp ->_left = tp2->_right;
+		// 	tp2 ->_left = p;
+		// 	tp2->_right = tp; 
+			
+		// 	return tp2; 
+		// }
+		// node_pointer lrrotation(node_pointer n){
+		// 	node_pointer p;
+		// 	node_pointer tp;
+		// 	node_pointer tp2;
+		// 	p = n;
+		// 	tp = p->_left;
+		// 	tp2 =p->_left->_right;
+
+		// 	p -> _left = tp2->_right;
+		// 	tp ->_right = tp2->_left;
+		// 	tp2 ->_right = p;
+		// 	tp2->_left = tp; 
+			
+		// 	return tp2; 
+		// }
 		// BALANCE
 		int height(node_pointer tmp) { // returns height from node
 			int left;
@@ -206,38 +259,31 @@ class map {
 				balance = getBalance(move);
 				if (balance == -2 || balance == 2) {
 					std::cout << "imblance at node: " << move->_data.first << " balance_factor: " << balance << std::endl;
-					if (balance == 2) {
+					if (balance == 2 && getBalance(move->_left) > 0) {
 						std::cout << "left_heavy" << std::endl;
-						if (getBalance(move->_left) > 0) {
-							// std::cout << "node: " << move->_left->_data.first << std::endl;
-							print_tree();
-							rotateRightDouble(move->_left);
-						}
-						else if (getBalance(move->_left) < 0) {
-							// std::cout << "node: " << move->_left->_data.first << std::endl;
-							print_tree();
-							rotateLeft(move->_left);
-							print_tree();
-							rotateRightDouble(move->_left);
-							print_tree();
-						}
+						print_tree();
+						rotateRightDouble(move->_left);
+						// move = llrotation(move);
 					}
-					else if (balance == -2) {
+					else if (balance == -2 && getBalance(move->_right) < 0) {
 						std::cout << "right_heavy" << std::endl;
-						if (getBalance(move->_right) > 0) {
-							// std::cout << "node: " << move->_right->_data.first << std::endl;
-							print_tree();
-							rotateRight(move->_right);
-							print_tree();
-							rotateLeftDouble(move->_right);
-							print_tree();
-						}
-						else if (getBalance(move->_right) < 0) {
-							// std::cout << "node: " << move->_right->_data.first << std::endl;
-							print_tree();
-							rotateLeftDouble(move->_right);
-							print_tree();
-						}
+						print_tree();
+						rotateLeftDouble(move->_right);
+						// move = rrrotation(move);
+					}
+					else if (balance == -2 && getBalance(move->_right) > 0) {
+						std::cout << "right_heavy" << std::endl;
+						print_tree();
+						rotateRight(move->_right);
+						rotateLeftDouble(move->_right);
+						// move = rlrotation(move);
+					}
+					else if (balance == 2 && getBalance(move->_left) < 0) {
+						std::cout << "left_heavy" << std::endl;
+						print_tree();
+						rotateLeft(move->_left);
+						rotateRightDouble(move->_left);
+						// move = lrrotation(move);
 					}
 					move = begin;
 				}
@@ -338,33 +384,33 @@ class map {
 				_root->_left = _first;
 				_root->_right = _last;
 			}	
-		// template <class InputIterator>
-		// map(typename enable_if<is_input_iterator<InputIterator>::value, InputIterator>::type first, InputIterator last, const Key& comp = Key(), const Alloc& alloc = Alloc()) : // fill with range
-		// 	_allocator(alloc),
-		// 	_size(0),
-		// 	_comp(comp) {
-		// 		_root = new node();
-		// 		_first = new node();
-		// 		_last = new node();
-		// 		_first->_parent = _root;
-		// 		_last->_parent = _root;
-		// 		_root->_left = _first;
-		// 		_root->_right = _last;
-		// 		// insert(first, last);
-		// 	}	
-		// map(const map& x) : // copy
-		// 	_allocator(x._allocator),
-		// 	_size(x._size),
-		// 	_comp(x._comp) {
-		// 		_root = new node();
-		// 		_first = new node();
-		// 		_last = new node();
-		// 		_first->_parent = _root;
-		// 		_last->_parent = _root;
-		// 		_root->_left = _first;
-		// 		_root->_right = _last;
-		// 		// insert(x.begin(), x.end());
-		// 	}
+		template <class InputIterator>
+		map(typename enable_if<is_input_iterator<InputIterator>::value, InputIterator>::type first, InputIterator last, const Compare& comp = Compare(), const Alloc& alloc = Alloc()) : // fill with range
+			_allocator(alloc),
+			_size(0),
+			_comp(comp) {
+				_root = new node();
+				_first = new node();
+				_last = new node();
+				_first->_parent = _root;
+				_last->_parent = _root;
+				_root->_left = _first;
+				_root->_right = _last;
+				insert(first, last);
+			}	
+		map(const map& x) : // copy
+			_allocator(x._allocator),
+			_size(x._size),
+			_comp(x._comp) {
+				_root = new node();
+				_first = new node();
+				_last = new node();
+				_first->_parent = _root;
+				_last->_parent = _root;
+				_root->_left = _first;
+				_root->_right = _last;
+				insert(x.begin(), x.end());
+			}
 		// DESTRUCTORS
 		~map() {
 			// clear();
@@ -384,7 +430,7 @@ class map {
 			_last->_parent = _root;
 			_root->_left = _first;
 			_root->_right = _last;;
-			// insert(other.begin(), other.end());
+			insert(other.begin(), other.end());
 			return *this;
 		}
 		// ITERATORS
@@ -421,6 +467,7 @@ class map {
 		}
 		size_t	max_size() const {
 			return (std::numeric_limits<size_t>::max() / sizeof(mapNode<value_type>));
+			// return this->_allocator.max_size() / 2;
 		}
 		// MODIFIERS
 		pair<iterator,bool>	insert(const value_type& val) {
@@ -466,7 +513,42 @@ class map {
 			}
 			return (ft::make_pair(iterator(move), true));
 		}
+		iterator	insert(iterator position, const value_type& val) { // insert val with hint position
+			(void)position;
+			insert(val);
+		}
+		template <class InputIterator> 
+		void insert (typename enable_if<is_input_iterator<InputIterator>::value, InputIterator>::type first, InputIterator last) { // insert range
+			for (; first != last; first++)
+				insert(*first);
+		}
 	}; // class map
+
+// RELATIONAL OPERATORS
+// template < class Key, class T, class Compare, class Alloc>
+// bool operator== (const ft::map<Key,T,ft::pair<const Key,T>, Compare, Alloc>& lhs, const ft::map<Key,T,ft::pair<const Key,T>, Compare, Alloc>& rhs) {
+// 	return (lhs.size() == rhs.size() && ft::equal(lhs.begin(), lhs.end(), rhs.begin()));
+// }
+// template < class Key, class T, class Compare, class Alloc>
+// bool operator!= (const map<Key,T,ft::pair<const Key,T>, Compare, Alloc>& lhs, const map<Key,T,ft::pair<const Key,T>, Compare, Alloc>& rhs) {
+// 	return !(lhs == rhs);
+// }
+// template < class Key, class T, class Compare, class Alloc>
+// bool operator<  (const map<Key,T,ft::pair<const Key,T>, Compare, Alloc>& lhs, const map<Key,T,ft::pair<const Key,T>, Compare, Alloc>& rhs) {
+// 	return ft::lexicographical_compare(lhs.begin(), lhs.end(), rhs.begin(), rhs.end());
+// }
+// template < class Key, class T, class Compare, class Alloc>
+// bool operator>  (const map<Key,T,ft::pair<const Key,T>, Compare, Alloc>& lhs, const map<Key,T,ft::pair<const Key,T>, Compare, Alloc>& rhs) {
+// 	return (rhs < lhs);
+// }
+// template < class Key, class T, class Compare, class Alloc>
+// bool operator<= (const map<Key,T,ft::pair<const Key,T>, Compare, Alloc>& lhs, const map<Key,T,ft::pair<const Key,T>, Compare, Alloc>& rhs) {
+// 	return !(lhs > rhs);
+// }
+// template < class Key, class T, class Compare, class Alloc>
+// bool operator>= (const map<Key,T,ft::pair<const Key,T>, Compare, Alloc>& lhs, const map<Key,T,ft::pair<const Key,T>, Compare, Alloc>& rhs) {
+// 	return !(lhs < rhs);
+// }
 } // namespace ft
 
 #endif
