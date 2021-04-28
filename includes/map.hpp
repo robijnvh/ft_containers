@@ -6,7 +6,7 @@
 /*   By: rvan-hou <rvan-hou@student.42.fr>            +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2021/04/19 14:31:50 by robijnvanho   #+#    #+#                 */
-/*   Updated: 2021/04/26 13:05:41 by robijnvanho   ########   odam.nl         */
+/*   Updated: 2021/04/28 15:19:11 by robijnvanho   ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -24,11 +24,11 @@
 # include <iostream> // to print
 
 namespace ft {
-template < class Key, class T, class Compare = std::less<Key>, class Alloc = std::allocator<pair<const Key,T> > >
+template < class Key, class T, class Compare = std::less<Key>, class Alloc = std::allocator<ft::pair<const Key,T> > >
 class map {
 	public:
 		// TYPES
-		typedef ft::pair<const Key, T>                              value_type;
+		typedef ft::pair<const Key, T>	value_type;
 		typedef mapNode<value_type>*	node_pointer;
 		typedef mapNode<value_type>	node;
 		typedef BidirectionalIterator<value_type, node>	iterator;
@@ -57,6 +57,18 @@ class map {
 				temp = temp->_right;
 			temp->_right = _last;
 			_last->_parent = temp;
+		}
+		//SEARCH
+		node_pointer	searchNode(node_pointer root, Key key) const { // search specific node and ret pointer to equal
+			if (!root || root == _last)
+				return 0;
+			if (!_comp(root->_data.first, key) && !_comp(key, root->_data.first))
+				return root;
+			if (root->_data.first > key && root->_left && root->_left != _last)
+				return searchNode(root->_left, key);
+			else if (root->_data.first < key && root->_right && root->_right != _last)
+				return searchNode(root->_right, key);
+			return 0;
 		}
 		// INSERT
 		node_pointer insert_left(const value_type& val, node_pointer position) {
@@ -163,59 +175,6 @@ class map {
 				GP->_left = NULL;
 			}
 		}
-		// TEST!!!!!!!!!!!!!!!
-		// node_pointer llrotation(node_pointer n){
-		// 	node_pointer p;
-		// 	node_pointer tp;
-		// 	p = n;
-		// 	tp = p->_left;
-
-		// 	p->_left = tp->_right;
-		// 	tp->_right = p;
-
-		// 	return tp; 
-		// }
-		// node_pointer rrrotation(node_pointer n){
-		// 	node_pointer p;
-		// 	node_pointer tp;
-		// 	p = n;
-		// 	tp = p->_right;
-
-		// 	p->_right = tp->_left;
-		// 	tp->_left = p;
-
-		// 	return tp; 
-		// }
-		// node_pointer rlrotation(node_pointer n){
-		// 	node_pointer p;
-		// 	node_pointer tp;
-		// 	node_pointer tp2;
-		// 	p = n;
-		// 	tp = p->_right;
-		// 	tp2 =p->_right->_left;
-
-		// 	p -> _right = tp2->_left;
-		// 	tp ->_left = tp2->_right;
-		// 	tp2 ->_left = p;
-		// 	tp2->_right = tp; 
-			
-		// 	return tp2; 
-		// }
-		// node_pointer lrrotation(node_pointer n){
-		// 	node_pointer p;
-		// 	node_pointer tp;
-		// 	node_pointer tp2;
-		// 	p = n;
-		// 	tp = p->_left;
-		// 	tp2 =p->_left->_right;
-
-		// 	p -> _left = tp2->_right;
-		// 	tp ->_right = tp2->_left;
-		// 	tp2 ->_right = p;
-		// 	tp2->_left = tp; 
-			
-		// 	return tp2; 
-		// }
 		// BALANCE
 		int height(node_pointer tmp) { // returns height from node
 			int left;
@@ -263,27 +222,23 @@ class map {
 						std::cout << "left_heavy" << std::endl;
 						print_tree();
 						rotateRightDouble(move->_left);
-						// move = llrotation(move);
 					}
 					else if (balance == -2 && getBalance(move->_right) < 0) {
 						std::cout << "right_heavy" << std::endl;
 						print_tree();
 						rotateLeftDouble(move->_right);
-						// move = rrrotation(move);
 					}
 					else if (balance == -2 && getBalance(move->_right) > 0) {
 						std::cout << "right_heavy" << std::endl;
 						print_tree();
 						rotateRight(move->_right);
 						rotateLeftDouble(move->_right);
-						// move = rlrotation(move);
 					}
 					else if (balance == 2 && getBalance(move->_left) < 0) {
 						std::cout << "left_heavy" << std::endl;
 						print_tree();
 						rotateLeft(move->_left);
 						rotateRightDouble(move->_left);
-						// move = lrrotation(move);
 					}
 					move = begin;
 				}
@@ -296,6 +251,85 @@ class map {
 			}
 			return (0);
 		}
+		// ERASE
+		bool deleteNode(node_pointer position, Key key)
+		{
+			node_pointer tmp = 0;
+			node_pointer del = searchNode(position, key);
+			if (!del)
+				return false;
+			if (!del->_parent) { // if del == _root
+				if (del->_left == _first && del->_right == _last) {
+					_root->_left = _first;
+					_root->_right = _last;
+					_first->_parent = _root;
+					_last->_parent = _root;
+				}
+				else if (del->_left && del->_right == _last) { // left_heavy
+					tmp = del->_parent;
+					_root = del->_left;
+					del->_left->_parent = 0;
+					_first = del->_left;
+					del->_left->_right = _first;
+				}
+				else if (del->_left == _first && del->_right) { // right_heavy
+					tmp = del->_parent;
+					_root = del->_right;
+					del->_right->_parent = 0;
+					_last = del->_right;
+					del->_right->_left = _last;
+				}
+				// else {
+					// node_pointer maxNode = searchMaxNode(del->_left);
+					// _allocPair.destroy(&del->content);
+					// _allocPair.construct(&del->content, maxNode->content);
+					// return deleteNode(del->_left, maxNode->content.first);
+				// }
+			}
+			// else if ((!del->left || del->left == _lastElem) && (!del->_right || del->right == _lastElem)) {
+			// 	balanceNode = del->parent;
+			// 	Node* linkToParent = 0;
+			// 	if (del->left == _lastElem || del->right == _lastElem) {
+			// 		linkToParent = _lastElem;
+			// 		del->content.first <= del->parent->content.first ?
+			// 			_lastElem->right = del->parent : _lastElem->left = del->parent;
+			// 	}
+			// 	del->content.first <= del->parent->content.first ?
+			// 		del->parent->left = linkToParent : del->parent->right = linkToParent;
+			// }
+			// else if ((del->left && del->left != _lastElem) && (!del->right || del->right == _lastElem)) {
+			// 	balanceNode = del->parent;
+			// 	del->content.first <= del->parent->content.first ?
+			// 		del->parent->left = del->left : del->parent->right = del->left;
+			// 	del->left->parent = del->parent;
+			// 	if (del->right == _lastElem) {
+			// 		_lastElem->left = del->left;
+			// 		del->left->right = _lastElem;
+			// 	}
+			// }
+			// else if ((!del->left || del->left == _lastElem) && del->right && del->right != _lastElem) {
+			// 	balanceNode = del->parent;
+			// 	del->content.first <= del->parent->content.first ?
+			// 		del->parent->left = del->right : del->parent->right = del->right;
+			// 	del->right->parent = del->parent;
+			// 	if (del->left == _lastElem) {
+			// 		_lastElem->right = del->right;
+			// 		del->right->left = _lastElem;
+			// 	}
+			// }
+			// else {
+			// 	Node* maxNode = searchMaxNode(del->left);
+			// 	_allocPair.destroy(&del->content);
+			// 	_allocPair.construct(&del->content, maxNode->content);
+			// 	return deleteNode(del->left, maxNode->content.first);
+			// }
+			// balanceTheTree(&_root, balanceNode);
+			// balance(_first->_parent);
+			// balance(_last->_parent);
+			// deallocateNode(del);
+			return true;
+		}
+		
 	public:
 		// PRINT
 		void	print_node(std::string root_path) {
@@ -400,7 +434,7 @@ class map {
 			}	
 		map(const map& x) : // copy
 			_allocator(x._allocator),
-			_size(x._size),
+			_size(0),
 			_comp(x._comp) {
 				_root = new node();
 				_first = new node();
@@ -469,6 +503,13 @@ class map {
 			return (std::numeric_limits<size_t>::max() / sizeof(mapNode<value_type>));
 			// return this->_allocator.max_size() / 2;
 		}
+		// ELEMENTS ACCESS
+		T& operator[] (const Key& k) { // access value or insert if not excist
+			node* tmp = searchNode(_root, k);
+			if (tmp)
+				return tmp->_data.second;
+			return insert(ft::make_pair(k, T())).first->second;
+		}
 		// MODIFIERS
 		pair<iterator,bool>	insert(const value_type& val) {
 			_first->_parent->_left = NULL;
@@ -522,6 +563,16 @@ class map {
 			for (; first != last; first++)
 				insert(*first);
 		}
+		// void	erase(iterator position) {
+			
+		// }
+		size_t	erase(const Key& k) {
+			node_pointer tmp = searchNode(_root, k);
+			deleteNode(tmp, k);
+			return (0);
+		}
+		// template <class InputIterator> 
+		// void	erase(typename enable_if<is_input_iterator<InputIterator>::value, InputIterator>::type first, iterator last);
 	}; // class map
 
 // RELATIONAL OPERATORS
