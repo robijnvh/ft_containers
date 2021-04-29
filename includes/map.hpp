@@ -6,7 +6,7 @@
 /*   By: rvan-hou <rvan-hou@student.42.fr>            +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2021/04/19 14:31:50 by robijnvanho   #+#    #+#                 */
-/*   Updated: 2021/04/29 13:39:15 by robijnvanho   ########   odam.nl         */
+/*   Updated: 2021/04/29 16:37:00 by robijnvanho   ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -45,10 +45,10 @@ class map {
 		size_t				_size;
 		Compare				_comp;
 
-		void deallocateNode(node_pointer del) { // del node
-			_allocatorPair.destroy(&del->_data); // not right allocator?
-			_allocatorNode.deallocate(del, 1);
-		}
+		// void deallocateNode(node_pointer del) { // del node
+		// 	_allocatorPair.destroy(&del->_data); // not right allocator?
+		// 	_allocatorNode.deallocate(del, 1);
+		// }
 		// LIMITS
 		void	set_limits() {
 			node_pointer temp = _root;
@@ -222,26 +222,26 @@ class map {
 			while (move != end) {
 				balance = getBalance(move);
 				if (balance == -2 || balance == 2) {
-					std::cout << "imblance at node: " << move->_data.first << " balance_factor: " << balance << std::endl;
+					// std::cout << "imblance at node: " << move->_data.first << " balance_factor: " << balance << std::endl;
 					if (balance == 2 && getBalance(move->_left) > 0) {
 						std::cout << "left_heavy" << std::endl;
-						print_tree();
+						// print_tree();
 						rotateRightDouble(move->_left);
 					}
 					else if (balance == -2 && getBalance(move->_right) < 0) {
 						std::cout << "right_heavy" << std::endl;
-						print_tree();
+						// print_tree();
 						rotateLeftDouble(move->_right);
 					}
 					else if (balance == -2 && getBalance(move->_right) > 0) {
 						std::cout << "right_heavy" << std::endl;
-						print_tree();
+						// print_tree();
 						rotateRight(move->_right);
 						rotateLeftDouble(move->_right);
 					}
 					else if (balance == 2 && getBalance(move->_left) < 0) {
 						std::cout << "left_heavy" << std::endl;
-						print_tree();
+						// print_tree();
 						rotateLeft(move->_left);
 						rotateRightDouble(move->_left);
 					}
@@ -265,7 +265,7 @@ class map {
 				return false;
 			if (!del->_parent) { // if del == _root
 				if (del->_left == _first && del->_right == _last) {
-					std::cout << "TEST1\n";
+					std::cout << "del root\n";
 					_root = new node(); // ????
 					_root->_left = _first;
 					_root->_right = _last;
@@ -273,7 +273,7 @@ class map {
 					_last->_parent = _root;
 				}
 				else if (del->_left && del->_right == _last) { // left_heavy
-					std::cout << "TEST2\n";
+					std::cout << "del root left_heavy\n";
 					tmp = del->_parent;
 					_root = del->_left;
 					del->_left->_parent = tmp; // NULL
@@ -281,7 +281,7 @@ class map {
 					del->_left->_right = _first;
 				}
 				else if (del->_left == _first && del->_right) { // right_heavy
-					std::cout << "TEST3\n";
+					std::cout << "del root right_heavy\n";
 					tmp = del->_parent;
 					_root = del->_right;
 					del->_right->_parent = tmp; // NULL
@@ -289,16 +289,15 @@ class map {
 					del->_right->_left = _last;
 				}
 				else { // both _left and _right child
-					std::cout << "TEST4\n";
+					std::cout << "del root both sides\n";
 					node_pointer maxNode = _root->getPrev();
 					_allocatorPair.destroy(&del->_data);
-					// std::cout << "del: " << del->_data.first << " " << del->_data.second << std::endl;
 					_allocatorPair.construct(&del->_data, maxNode->_data);
-					// std::cout << "del: " << del->_data.first << " " << del->_data.second << std::endl;
 					return deleteNode(del->_left, maxNode->_data.first);
 				}
 			}
 			else if ((!del->_left || del->_left == _first) && (!del->_right || del->_right == _last)) { // LEAF node aka pointing to NULL or Last/First
+				std::cout << "del leaf node\n";
 				tmp = del->_parent;
 				node_pointer linkToLimit = 0;
 				if (del->_left == _first || del->_right == _last) {
@@ -313,37 +312,35 @@ class map {
 					del->_parent->_left = linkToLimit : del->_parent->_right = linkToLimit;
 			}
 			else if ((del->_left && del->_left != _first) && (!del->_right || del->_right == _last)) { // no leafs but only left
+				std::cout << "del node left\n";
 				tmp = del->_parent;
 				del->_data.first <= del->_parent->_data.first ?
 					del->_parent->_left = del->_left : del->_parent->_right = del->_left;
 				del->_left->_parent = del->_parent;
 				if (del->_right == _last) {
-					_last = del->_left;
+					_last->_parent = del->_left;
 					del->_left->_right = _last;
 				}
 			}
 			else if ((!del->_left || del->_left == _first) && del->_right && del->_right != _last) { // no leafs but only _right
+				std::cout << "del node right\n";
 				tmp = del->_parent;
 				del->_data.first <= del->_parent->_data.first ?
 					del->_parent->_left = del->_right : del->_parent->_right = del->_right;
 				del->_right->_parent = del->_parent;
 				if (del->_left == _first) {
-					_first = del->_right;
+					_first->_parent = del->_right;
 					del->_right->_left = _first;
 				}
 			}
 			else {
+				std::cout << "del node both\n";
 				node_pointer maxNode = del->getPrev();
 				_allocatorPair.destroy(&del->_data);
 				_allocatorPair.construct(&del->_data, maxNode->_data);
 				return deleteNode(del->_left, maxNode->_data.first);
 			}
-			// balanceTheTree(&_root, balanceNode);
-			// if (del != _root && del->_data.first < _root->_data.first)
-			// 	balance(_first->_parent);
-			// else
-			// 	balance(_last->_parent);
-			// deallocateNode(del);
+			balance(del);
 			delete del;
 			return true;
 		}

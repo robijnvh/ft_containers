@@ -191,85 +191,270 @@ TEST_CASE( "map - operator[]", "[map]" ) {
 TEST_CASE( "map - insert(val)", "[map]" ) {
   // MY MAP
   ft::map<int, int> ft_map;
-  ft_map.insert(ft::pair<int,int>(3,300));
-  ft_map.insert(ft::pair<int,int>(1,100));
-  ft_map.insert(ft::pair<int,int>(8,800));
-  ft_map.insert(ft::pair<int,int>(5,500));
-  ft_map.insert(ft::pair<int,int>(9,900));
-  ft_map.insert(ft::pair<int,int>(10,1000));
-  ft_map.insert(ft::pair<int,int>(2,200));
-  ft_map.insert(ft::pair<int,int>(6,600));
-  ft_map.print_tree();
-  std::cout << "Insert 7 to cause imbalance:" << std::endl;
-  ft_map.insert(ft::pair<int,int>(7,700));
-  ft_map.print_tree();
-  std::cout << "Insert 11 to cause imbalance:" << std::endl;
-  ft_map.print_tree();
-  ft_map.insert(ft::pair<int,int>(11,1100));
-  ft_map.print_tree();
-  ft_map.insert(ft::pair<int,int>(12,1200));
-  std::cout << "Insert 13 to cause imbalance:" << std::endl;
-  ft_map.print_tree();
-  ft_map.insert(ft::pair<int,int>(13,1300));
-  ft_map.print_tree();
-  // STD MAP
   std::map<int, int> std_map;
-  std_map.insert(std::pair<int,int>(3,300));
-  std_map.insert(std::pair<int,int>(1,100));
-  std_map.insert(std::pair<int,int>(8,800));
-  std_map.insert(std::pair<int,int>(5,500));
-  std_map.insert(std::pair<int,int>(9,900));
-  std_map.insert(std::pair<int,int>(10,1000));
-  std_map.insert(std::pair<int,int>(2,200));
-  std_map.insert(std::pair<int,int>(6,600));
-  std_map.insert(std::pair<int,int>(7,700));
-  std_map.insert(std::pair<int,int>(11,1100));
-  std_map.insert(std::pair<int,int>(12,1200));
-  std_map.insert(std::pair<int,int>(13,1300));
-  REQUIRE(ft_map.empty() == std_map.empty());
-  REQUIRE(ft_map.size() == std_map.size());
+
+  SECTION ("tests") {
+    ft_map.insert(ft::pair<int,int>(3,300));
+    ft_map.insert(ft::pair<int,int>(1,100));
+    ft_map.insert(ft::pair<int,int>(8,800));
+    ft_map.insert(ft::pair<int,int>(5,500));
+    ft_map.insert(ft::pair<int,int>(9,900));
+    ft_map.insert(ft::pair<int,int>(10,1000));
+    ft_map.insert(ft::pair<int,int>(2,200));
+    ft_map.insert(ft::pair<int,int>(6,600));
+    ft_map.print_tree();
+    std::cout << "Insert 7 to cause imbalance:" << std::endl;
+    ft_map.insert(ft::pair<int,int>(7,700));
+    ft_map.print_tree();
+    std::cout << "Insert 11 to cause imbalance:" << std::endl;
+    ft_map.print_tree();
+    ft_map.insert(ft::pair<int,int>(11,1100));
+    ft_map.print_tree();
+    ft_map.insert(ft::pair<int,int>(12,1200));
+    std::cout << "Insert 13 to cause imbalance:" << std::endl;
+    ft_map.print_tree();
+    ft_map.insert(ft::pair<int,int>(13,1300));
+    ft_map.print_tree();
+    // STD MAP
+    std::map<int, int> std_map;
+    std_map.insert(std::pair<int,int>(3,300));
+    std_map.insert(std::pair<int,int>(1,100));
+    std_map.insert(std::pair<int,int>(8,800));
+    std_map.insert(std::pair<int,int>(5,500));
+    std_map.insert(std::pair<int,int>(9,900));
+    std_map.insert(std::pair<int,int>(10,1000));
+    std_map.insert(std::pair<int,int>(2,200));
+    std_map.insert(std::pair<int,int>(6,600));
+    std_map.insert(std::pair<int,int>(7,700));
+    std_map.insert(std::pair<int,int>(11,1100));
+    std_map.insert(std::pair<int,int>(12,1200));
+    std_map.insert(std::pair<int,int>(13,1300));
+    REQUIRE(ft_map.empty() == std_map.empty());
+    REQUIRE(ft_map.size() == std_map.size());
+  }
+  // check double
+  SECTION ("check double") {
+    ft_map.insert(ft::pair<int,int>(40,1));
+    std_map.insert(std::pair<int,int>(40,1));
+    ft_map.print_tree();
+    ft_map.insert(ft::pair<int,int>(40,300));
+    std_map.insert(std::pair<int,int>(40,300));
+    ft_map.print_tree();
+    REQUIRE(ft_map.size() == std_map.size()); // size
+    REQUIRE(ft_map.empty() == std_map.empty()); // empty
+	}
 }
+
 TEST_CASE( "map - erase(key)", "[map]" ) {
-  // del _root only
-  // ft::map<int, int> ft_map;
-  // ft_map.print_tree();
-  // ft_map.insert(ft::pair<int,int>(2,1));
-  // ft_map.print_tree();
-  // ft_map.erase(2);
-  // ft_map.print_tree();
-  // REQUIRE(ft_map.size() == 0); // size not correct
-  // REQUIRE(ft_map.empty() == true); // not empty
-
-  // del _root with left_heavy
-  // ft::map<int, int> ft_map;
-  // ft_map.insert(ft::pair<int,int>(2,1));
-  // ft_map.insert(ft::pair<int,int>(1,1));
-  // ft_map.print_tree();
-  // ft_map.erase(2);
-  // ft_map.print_tree();
-  // REQUIRE(ft_map.size() == 1);
-  // REQUIRE(ft_map.empty() == false);
-
-  // del _root with right_heavy
-  // ft::map<int, int> ft_map;
-  // ft_map.insert(ft::pair<int,int>(1,1));
-  // ft_map.insert(ft::pair<int,int>(2,1));
-  // ft_map.print_tree();
-  // ft_map.erase(1);
-  // ft_map.print_tree();
-  // REQUIRE(ft_map.size() == 1);
-  // REQUIRE(ft_map.empty() == false);
-  // system("leaks ft_containers");
-
-  // del _root both
   ft::map<int, int> ft_map;
-  ft_map.insert(ft::pair<int,int>(2,1));
-  ft_map.insert(ft::pair<int,int>(1,1));
-  ft_map.insert(ft::pair<int,int>(3,1));
-  ft_map.print_tree();
-  ft_map.erase(2);
-  ft_map.print_tree();
-  REQUIRE(ft_map.size() == 2);
-  REQUIRE(ft_map.empty() == false);
+  std::map<int, int> std_map;
+
+  SECTION ("del _root only") {
+    ft_map.insert(ft::pair<int,int>(40,1));
+    std_map.insert(std::pair<int,int>(40,1));
+    ft_map.print_tree();
+    ft_map.erase(40);
+    std_map.erase(40);
+    ft_map.print_tree();
+    REQUIRE(ft_map.size() == std_map.size()); // size
+    REQUIRE(ft_map.empty() == std_map.empty()); // empty
+	}
+
+  SECTION ("del _root with left_heavy") {
+    ft_map.insert(ft::pair<int,int>(40,1));
+    std_map.insert(std::pair<int,int>(40,1));
+    ft_map.insert(ft::pair<int,int>(20,1));
+    std_map.insert(std::pair<int,int>(20,1));
+    ft_map.print_tree();
+    ft_map.erase(40);
+    std_map.erase(40);
+    ft_map.print_tree();
+    REQUIRE(ft_map.size() == std_map.size()); // size
+    REQUIRE(ft_map.empty() == std_map.empty()); // empty
+	}
+
+  SECTION ("del _root with right_heavy") {
+    ft_map.insert(ft::pair<int,int>(40,1));
+    std_map.insert(std::pair<int,int>(40,1));
+    ft_map.insert(ft::pair<int,int>(60,1));
+    std_map.insert(std::pair<int,int>(60,1));
+    ft_map.print_tree();
+    ft_map.erase(40);
+    std_map.erase(40);
+    ft_map.print_tree();
+    REQUIRE(ft_map.size() == std_map.size()); // size
+    REQUIRE(ft_map.empty() == std_map.empty()); // empty
+	}
+
+  SECTION ("del _root both") {
+    ft_map.insert(ft::pair<int,int>(40,1));
+    std_map.insert(std::pair<int,int>(40,1));
+    ft_map.insert(ft::pair<int,int>(20,1));
+    std_map.insert(std::pair<int,int>(20,1));
+    ft_map.insert(ft::pair<int,int>(60,1));
+    std_map.insert(std::pair<int,int>(60,1));
+    ft_map.print_tree();
+    ft_map.erase(40);
+    std_map.erase(40);
+    ft_map.print_tree();
+    REQUIRE(ft_map.size() == std_map.size()); // size
+    REQUIRE(ft_map.empty() == std_map.empty()); // empty
+	}
+
+  SECTION ("del LEAF node") {
+    ft_map.insert(ft::pair<int,int>(40,1));
+    std_map.insert(std::pair<int,int>(40,1));
+    ft_map.insert(ft::pair<int,int>(20,1));
+    std_map.insert(std::pair<int,int>(20,1));
+    ft_map.insert(ft::pair<int,int>(60,1));
+    std_map.insert(std::pair<int,int>(60,1));
+    ft_map.insert(ft::pair<int,int>(10,1));
+    std_map.insert(std::pair<int,int>(10,1));
+    ft_map.insert(ft::pair<int,int>(70,1));
+    std_map.insert(std::pair<int,int>(70,1));
+    ft_map.insert(ft::pair<int,int>(25,1));
+    std_map.insert(std::pair<int,int>(25,1));
+    ft_map.insert(ft::pair<int,int>(55,1));
+    std_map.insert(std::pair<int,int>(55,1));
+    ft_map.insert(ft::pair<int,int>(5,1));
+    std_map.insert(std::pair<int,int>(5,1));
+    ft_map.insert(ft::pair<int,int>(30,1));
+    std_map.insert(std::pair<int,int>(30,1));
+    ft_map.insert(ft::pair<int,int>(50,1));
+    std_map.insert(std::pair<int,int>(50,1));
+    ft_map.insert(ft::pair<int,int>(75,1));
+    std_map.insert(std::pair<int,int>(75,1));
+    ft_map.print_tree();
+    // del LEAF ll
+    ft_map.erase(5);
+    std_map.erase(5);
+    ft_map.print_tree();
+    REQUIRE(ft_map.size() == std_map.size()); // size
+    REQUIRE(ft_map.empty() == std_map.empty()); // empty
+    // del LEAF lr
+    ft_map.erase(30);
+    std_map.erase(30);
+    ft_map.print_tree();
+    REQUIRE(ft_map.size() == std_map.size()); // size
+    REQUIRE(ft_map.empty() == std_map.empty()); // empty
+    // del LEAF rr
+    ft_map.erase(75);
+    std_map.erase(75);
+    ft_map.print_tree();
+    REQUIRE(ft_map.size() == std_map.size()); // size
+    REQUIRE(ft_map.empty() == std_map.empty()); // empty
+    // del LEAF rl
+    ft_map.erase(50);
+    std_map.erase(50);
+    ft_map.print_tree();
+    REQUIRE(ft_map.size() == std_map.size()); // size
+    REQUIRE(ft_map.empty() == std_map.empty()); // empty
+    // del node with both sides children
+    ft_map.erase(20);
+    std_map.erase(20);
+    ft_map.print_tree();
+    REQUIRE(ft_map.size() == std_map.size()); // size
+    REQUIRE(ft_map.empty() == std_map.empty()); // empty
+    // del node with right child
+    ft_map.erase(10);
+    std_map.erase(10);
+    ft_map.print_tree();
+    REQUIRE(ft_map.size() == std_map.size()); // size
+    REQUIRE(ft_map.empty() == std_map.empty()); // empty
+    // del LEAF rr
+    ft_map.erase(70);
+    std_map.erase(70);
+    ft_map.print_tree();
+    REQUIRE(ft_map.size() == std_map.size()); // size
+    REQUIRE(ft_map.empty() == std_map.empty()); // empty
+    // del node with left child
+    ft_map.erase(60);
+    std_map.erase(60);
+    ft_map.print_tree();
+    REQUIRE(ft_map.size() == std_map.size()); // size
+    REQUIRE(ft_map.empty() == std_map.empty()); // empty
+    // system("leaks ft_containers");
+	}
+}
+
+TEST_CASE( "map - go crazy", "[map]" ) {
+  ft::map<int, int> ft_map;
+  std::map<int, int> std_map;
+  // ft_map.insert(ft::pair<int,int>(40,1));
+  // std_map.insert(std::pair<int,int>(40,1));
+  // ft_map.insert(ft::pair<int,int>(20,1));
+  // std_map.insert(std::pair<int,int>(20,1));
+  // ft_map.insert(ft::pair<int,int>(60,1));
+  // std_map.insert(std::pair<int,int>(60,1));
+  // ft_map.insert(ft::pair<int,int>(10,1));
+  // std_map.insert(std::pair<int,int>(10,1));
+  // ft_map.insert(ft::pair<int,int>(70,1));
+  // std_map.insert(std::pair<int,int>(70,1));
+  // ft_map.insert(ft::pair<int,int>(25,1));
+  // std_map.insert(std::pair<int,int>(25,1));
+  // ft_map.insert(ft::pair<int,int>(55,1));
+  // std_map.insert(std::pair<int,int>(55,1));
+  // ft_map.insert(ft::pair<int,int>(5,1));
+  // std_map.insert(std::pair<int,int>(5,1));
+  // ft_map.insert(ft::pair<int,int>(30,1));
+  // std_map.insert(std::pair<int,int>(30,1));
+  // ft_map.insert(ft::pair<int,int>(50,1));
+  // std_map.insert(std::pair<int,int>(50,1));
+  // ft_map.insert(ft::pair<int,int>(75,1));
+  // std_map.insert(std::pair<int,int>(75,1));
+  // ft_map.print_tree();
+  // REQUIRE(ft_map.size() == std_map.size()); // size
+  // REQUIRE(ft_map.empty() == std_map.empty()); // empty
+
+  // ft_map.insert(ft::pair<int,int>(21,1));
+  // std_map.insert(std::pair<int,int>(21,1));
+  // ft_map.insert(ft::pair<int,int>(5,1));
+  // std_map.insert(std::pair<int,int>(5,1));
+  // ft_map.insert(ft::pair<int,int>(77,1));
+  // std_map.insert(std::pair<int,int>(77,1));
+  // ft_map.insert(ft::pair<int,int>(56,1));
+  // std_map.insert(std::pair<int,int>(56,1));
+  // ft_map.insert(ft::pair<int,int>(61,1));
+  // std_map.insert(std::pair<int,int>(61,1));
+  // ft_map.print_tree();
+  // REQUIRE(ft_map.size() == std_map.size()); // size
+  // REQUIRE(ft_map.empty() == std_map.empty()); // empty
+
+  // ft_map.erase(20);
+  // std_map.erase(20);
+  // ft_map.print_tree();
+  // REQUIRE(ft_map.size() == std_map.size()); // size
+  // REQUIRE(ft_map.empty() == std_map.empty()); // empty
+  // ft_map.erase(25);
+  // std_map.erase(25);
+  // ft_map.print_tree();
+  // REQUIRE(ft_map.size() == std_map.size()); // size
+  // REQUIRE(ft_map.empty() == std_map.empty()); // empty
+  // ft_map.erase(30);
+  // std_map.erase(30);
+  // ft_map.print_tree();
+  // REQUIRE(ft_map.size() == std_map.size()); // size
+  // REQUIRE(ft_map.empty() == std_map.empty()); // empty
+
+  // PART TWO
+  // for (int i = 0; i != 31; i++) ft_map.insert(ft::pair<int,int>(i,1));
+  // for (int i = 0; i != 31; i++) std_map.insert(std::pair<int,int>(i,1));
+  // ft_map.print_tree();
+
+  ft::map<int, int>  own;
+    int sum = 1;
+    for (int i = 0; i < 6; ++i)
+    {
+        own.insert(ft::pair<int, int>(sum, sum));
+        sum += 1;
+    }
+    own.print_tree();
+    ft::map<int, int>::iterator it = own.begin();
+    ft::map<int, int>::iterator ite = own.end();
+    while(it != own.end())
+    {
+        // std::cout << it->first << std::endl;
+        ++it;
+    }
 
 }
