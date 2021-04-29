@@ -230,10 +230,46 @@ TEST_CASE( "map - insert(val)", "[map]" ) {
   REQUIRE(ft_map.size() == std_map.size());
 }
 TEST_CASE( "map - erase(key)", "[map]" ) {
+  // del _root only
+  // ft::map<int, int> ft_map;
+  // ft_map.print_tree();
+  // ft_map.insert(ft::pair<int,int>(2,1));
+  // ft_map.print_tree();
+  // ft_map.erase(2);
+  // ft_map.print_tree();
+  // REQUIRE(ft_map.size() == 0); // size not correct
+  // REQUIRE(ft_map.empty() == true); // not empty
+
+  // del _root with left_heavy
+  // ft::map<int, int> ft_map;
+  // ft_map.insert(ft::pair<int,int>(2,1));
+  // ft_map.insert(ft::pair<int,int>(1,1));
+  // ft_map.print_tree();
+  // ft_map.erase(2);
+  // ft_map.print_tree();
+  // REQUIRE(ft_map.size() == 1);
+  // REQUIRE(ft_map.empty() == false);
+
+  // del _root with right_heavy
+  // ft::map<int, int> ft_map;
+  // ft_map.insert(ft::pair<int,int>(1,1));
+  // ft_map.insert(ft::pair<int,int>(2,1));
+  // ft_map.print_tree();
+  // ft_map.erase(1);
+  // ft_map.print_tree();
+  // REQUIRE(ft_map.size() == 1);
+  // REQUIRE(ft_map.empty() == false);
+  // system("leaks ft_containers");
+
+  // del _root both
   ft::map<int, int> ft_map;
-  for (int i = 0; i != 4; i++) ft_map.insert(ft::pair<int,int>(i,1));
+  ft_map.insert(ft::pair<int,int>(2,1));
+  ft_map.insert(ft::pair<int,int>(1,1));
+  ft_map.insert(ft::pair<int,int>(3,1));
   ft_map.print_tree();
   ft_map.erase(2);
   ft_map.print_tree();
   REQUIRE(ft_map.size() == 2);
+  REQUIRE(ft_map.empty() == false);
+
 }

@@ -6,7 +6,7 @@
 #    By: rvan-hou <rvan-hou@student.42.fr>            +#+                      #
 #                                                    +#+                       #
 #    Created: 2021/03/15 15:36:52 by robijnvanho   #+#    #+#                  #
-#    Updated: 2021/04/22 23:10:39 by robijnvanho   ########   odam.nl          #
+#    Updated: 2021/04/29 13:11:01 by robijnvanho   ########   odam.nl          #
 #                                                                              #
 # **************************************************************************** #
 
@@ -25,7 +25,7 @@ SOURCES			= 	CATCH2/main.cpp \
 
 OBJECTS 		=	${SOURCES:%.c=%.o}
 
-FLAGS 			=	-Wall -Wextra -Werror
+FLAGS 			=	-Wall -Wextra -Werror -g3
 INCLUDES 		=	-Iincludes/
 UTILS			=	-Iincludes/utils/
 CATCH2			=	-ICATCH2/
