@@ -6,7 +6,7 @@
 /*   By: rvan-hou <rvan-hou@student.42.fr>            +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2021/04/19 14:31:50 by robijnvanho   #+#    #+#                 */
-/*   Updated: 2021/04/30 11:29:31 by robijnvanho   ########   odam.nl         */
+/*   Updated: 2021/05/04 13:20:33 by rvan-hou      ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -45,10 +45,6 @@ class map {
 		size_t				_size;
 		Compare				_comp;
 
-		// void deallocateNode(node_pointer del) { // del node
-		// 	_allocatorPair.destroy(&del->_data); // not right allocator?
-		// 	_allocatorNode.deallocate(del, 1);
-		// }
 		// LIMITS
 		void	set_limits() {
 			node_pointer temp = _root;
@@ -93,92 +89,38 @@ class map {
 			return (new_leaf);
 		}
 		// ROTATIONS
-		void	rotateLeft(node_pointer parent) {
-			std::cout << "rotateleft" << std::endl << std::endl;
-			node_pointer child = parent->_right;
-			node_pointer GP = parent->_parent;
-			// std::cout << "child: " << child->_data.first << std::endl;
-			// std::cout << "parent: " << parent->_data.first << std::endl;
-			// if (parent != _root)
-				// std::cout << "GP: " << GP->_data.first << std::endl;
-			GP->_left = child;
-			child->_parent = GP;
-			parent->_parent = child;
-			parent->_right = NULL;
-			child->_left = parent;
+		void	rotateRight(node_pointer root, node_pointer nodeDown) {
+			(void)root;
+			node_pointer nodeUp = nodeDown->_left;
+			nodeDown->_left = nodeUp->_right;
+			if (nodeUp->_right) // in case right child NULL
+				nodeUp->_right->_parent = nodeDown;
+			nodeUp->_right = nodeDown;
+			nodeUp->_parent = nodeDown->_parent;
+			if (nodeDown->_parent && nodeDown->_parent->_left == nodeDown) // check if root and which child
+				nodeDown->_parent->_left = nodeUp;
+			else if (nodeDown->_parent)
+				nodeDown->_parent->_right = nodeUp;
+			nodeDown->_parent = nodeUp;
+			if (!nodeUp->_parent) // check if root and set root
+				_root = nodeUp;
+			
 		}
-		void	rotateLeftDouble(node_pointer parent) {
-			std::cout << "rotateLeftDouble" << std::endl << std::endl;
-			// node_pointer child = parent->_right;
-			node_pointer GP = parent->_parent;
-			// std::cout << "child: " << child->_data.first << std::endl;
-			// std::cout << "parent: " << parent->_data.first << std::endl;
-			// std::cout << "GP: " << GP->_data.first << std::endl;
-			
-			if (_root == GP)
-				_root = parent;
-			parent->_parent = GP->_parent; // 2 -> 8
-			if (GP->_parent){
-				if (GP == GP->_parent->_right)
-					GP->_parent->_right = parent; // 8 -> 2
-				else 
-					GP->_parent->_left = parent; // 8 -> 2
-			}
-			GP->_parent = parent;
-			GP->_right = parent->_left;
-			
-			if (parent->_left)
-				parent->_left->_parent = GP;
-			parent->_left = GP;
-		}
-		void	rotateRightDouble(node_pointer parent){
-			std::cout << "rotateRightDouble" << std::endl << std::endl;
-			// node_pointer child = parent->_left;
-			node_pointer GP = parent->_parent;
-			// std::cout << "root: " << _root->_data.first << std::endl;
-			// std::cout << "child: " << child->_data.first << std::endl;
-			// std::cout << "parent: " << parent->_data.first << std::endl;
-			// std::cout << "GP: " << GP->_data.first << std::endl;
-			
-			if (_root == GP)
-				_root = parent;
-			parent->_parent = GP->_parent; // 2 -> 8
-			if (GP->_parent){
-				if (GP == GP->_parent->_left)
-					GP->_parent->_left = parent; // 8 -> 2
-				else 
-					GP->_parent->_right = parent; // 8 -> 2
-			}
-			GP->_parent = parent;
-			GP->_left = parent->_right;
-			
-			if (parent->_right)
-				parent->_right->_parent = GP;
-			parent->_right = GP;
-
-		}
-		void	rotateRight(node_pointer parent) {
-			std::cout << "rotateright" << std::endl << std::endl;
-			// node_pointer child = parent->_left;
-			node_pointer GP = parent->_parent;
-			// std::cout << "child: " << child->_data.first << std::endl;
-			// std::cout << "parent: " << parent->_data.first << std::endl;
-			// if (parent != _root)
-				// std::cout << "GP: " << GP->_data.first << std::endl;
-			if (_root == GP) {
-				GP->_parent = parent;
-				GP->_left = NULL;
-				parent->_right = GP;
-				parent->_parent = NULL;
-				_root = parent;
-			}
-			else {
-				parent->_parent = GP->_parent;
-				GP->_parent->_left = parent;
-				GP->_parent = parent;
-				parent->_right = GP;
-				GP->_left = NULL;
-			}
+		void	rotateLeft(node_pointer root, node_pointer nodeDown) {
+			(void)root;
+			node_pointer nodeUp = nodeDown->_right;
+			nodeDown->_right = nodeUp->_left;
+			if (nodeUp->_left) // in case left child NULL
+				nodeUp->_left->_parent = nodeDown;
+			nodeUp->_left = nodeDown;
+			nodeUp->_parent = nodeDown->_parent;
+			if (nodeDown->_parent && nodeDown->_parent->_left == nodeDown) // check if root and which child
+				nodeDown->_parent->_left = nodeUp;
+			else if (nodeDown->_parent)
+				nodeDown->_parent->_right = nodeUp;
+			nodeDown->_parent = nodeUp;
+			if (!nodeUp->_parent) // check if root and set root
+				_root = nodeUp;
 		}
 		// BALANCE
 		int height(node_pointer tmp) { // returns height from node
@@ -202,57 +144,31 @@ class map {
 			return ret;
 		}
 		// BALANCE!
-		int	balance(node_pointer start) { // finds imbalance while iterating through tree
-			node_pointer move;
-			node_pointer end;
-			node_pointer begin;
+		int	balance(node_pointer move) { // finds imbalance while iterating through tree
 			int	balance;
-
-			std::cout << "start: " << start->_data.first << std::endl;
-			if (start->_data.first < _root->_data.first) { // left
-				move = _first;
-				begin = _first;
-				end = _last;
-			}
-			else {
-				move = _last; // right
-				begin = _last;
-				end = _first;
-			}
-			while (move != end) {
+			std::cout << "BALANCE" << std::endl;
+			while (move) {
 				balance = getBalance(move);
-				if (balance == -2 || balance == 2) {
-					// std::cout << "imblance at node: " << move->_data.first << " balance_factor: " << balance << std::endl;
-					if (balance == 2 && getBalance(move->_left) > 0) {
-						std::cout << "left_heavy" << std::endl;
-						// print_tree();
-						rotateRightDouble(move->_left);
-					}
-					else if (balance == -2 && getBalance(move->_right) < 0) {
-						std::cout << "right_heavy" << std::endl;
-						// print_tree();
-						rotateLeftDouble(move->_right);
-					}
-					else if (balance == -2 && getBalance(move->_right) > 0) {
-						std::cout << "right_heavy" << std::endl;
-						// print_tree();
-						rotateRight(move->_right);
-						rotateLeftDouble(move->_right);
-					}
-					else if (balance == 2 && getBalance(move->_left) < 0) {
-						std::cout << "left_heavy" << std::endl;
-						// print_tree();
-						rotateLeft(move->_left);
-						rotateRightDouble(move->_left);
-					}
-					move = begin;
+				// std::cout << "imblance at node: " << move->_data.first << " balance_factor: " << balance << std::endl;
+				if (balance > 1 && getBalance(move->_left) > 0) {
+					// std::cout << "left_heavy" << std::endl;
+					rotateRight(_root, move);
 				}
-				else {
-					if (start->_data.first < _root->_data.first)
-						move = move->getNext();
-					else
-						move = move->getPrev();
+				else if (balance < -1 && getBalance(move->_right) < 0) {
+					// std::cout << "right_heavy" << std::endl;
+					rotateLeft(_root, move);
 				}
+				else if (balance < -1 && getBalance(move->_right) >= 0) {
+					// std::cout << "right_heavy" << std::endl;
+					rotateRight(_root, move->_right);
+					rotateLeft(_root, move);
+				}
+				else if (balance > 1 && getBalance(move->_left) <= 0) {
+					// std::cout << "left_heavy" << std::endl;
+					rotateLeft(_root, move->_left);
+					rotateRight(_root, move);
+				}
+				move = move->_parent;
 			}
 			return (0);
 		}
@@ -340,7 +256,8 @@ class map {
 				_allocatorPair.construct(&del->_data, maxNode->_data);
 				return deleteNode(del->_left, maxNode->_data.first);
 			}
-			balance(del);
+			if (tmp)
+				balance(tmp);
 			delete del;
 			return true;
 		}
