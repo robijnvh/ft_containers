@@ -85,37 +85,42 @@ TEST_CASE( "map - assignation operator", "[map]" ) {
   REQUIRE(ft_map.empty() == ft_test.empty()); 
 }
 // ITERATORS
-TEST_CASE( "map - begin", "[map]" ) {
-  ft::map<int, int> ft_map;
-	for (int i = 1; i <= 7; i++) ft_map.insert(ft::pair<int,int>(i,1));
-  // REQUIRE(*ft_map.begin() == ); // it_ptr to _next first element
-}
-TEST_CASE( "map - const begin", "[map]" ) {
-  ft::map<int, int> ft_map;
-	for (int i = 1; i <= 7; i++) ft_map.insert(ft::pair<int,int>(i,1));
-	ft::map<int, int>::const_iterator ft_it = ft_map.begin();
-  // REQUIRE(*ft_it == *std_it); // it_ptr to _next first element
-}
-TEST_CASE( "map - end", "[map]" ) {
-  ft::map<int, int> ft_map;
-	for (int i = 1; i <= 7; i++) ft_map.insert(ft::pair<int,int>(i,1));
-  ft::map<int, int>::iterator ft_it = ft_map.end();
-  ft_it--;
-  // REQUIRE(*(ft_it) == *(std_it)); // it_ptr to element preceding .end()
-}
-TEST_CASE( "map - const end", "[map]" ) {
-  ft::map<int, int> ft_map;
-	for (int i = 1; i <= 7; i++) ft_map.insert(ft::pair<int,int>(i,1));
-	ft::map<int, int>::const_iterator ft_it = ft_map.end();
-	ft_it--;
-  // REQUIRE(*ft_it == *std_it); // it_ptr to element preceding .end()
-}
+// TEST_CASE( "map - begin", "[map]" ) {
+//   ft::map<int, int> ft_map;
+// 	for (int i = 1; i <= 7; i++) ft_map.insert(ft::pair<int,int>(i,1));
+//   // REQUIRE(*ft_map.begin() == ); // it_ptr to _next first element
+// }
+// TEST_CASE( "map - const begin", "[map]" ) {
+//   ft::map<int, int> ft_map;
+// 	for (int i = 1; i <= 7; i++) ft_map.insert(ft::pair<int,int>(i,1));
+// 	ft::map<int, int>::const_iterator ft_it = ft_map.begin();
+//   // REQUIRE(*ft_it == *std_it); // it_ptr to _next first element
+// }
+// TEST_CASE( "map - end", "[map]" ) {
+//   ft::map<int, int> ft_map;
+// 	for (int i = 1; i <= 7; i++) ft_map.insert(ft::pair<int,int>(i,1));
+//   ft::map<int, int>::iterator ft_it = ft_map.end();
+//   ft_it--;
+//   // REQUIRE(*(ft_it) == *(std_it)); // it_ptr to element preceding .end()
+// }
+// TEST_CASE( "map - const end", "[map]" ) {
+//   ft::map<int, int> ft_map;
+// 	for (int i = 1; i <= 7; i++) ft_map.insert(ft::pair<int,int>(i,1));
+// 	ft::map<int, int>::const_iterator ft_it = ft_map.end();
+// 	ft_it--;
+//   // REQUIRE(*ft_it == *std_it); // it_ptr to element preceding .end()
+// }
 // TEST_CASE( "map - rbegin", "[map]" ) {
 //     ft::map<int, int> ft_map;
 //     std::map<int, int> std_map;
-//     for (int i = 1; i <= 7; i++) ft_map.insert(ft::pair<int,int>(i,1));
-//     for (int i = 1; i <= 7; i++) std_map.insert(std::pair<int,int>(i,1));
-//     REQUIRE(*ft_map.rbegin() == *std_map.rbegin()); // it_ptr to element preceding _last
+//     for (int i = 1; i <= 7; i++) ft_map.insert(ft::pair<int,int>(i,100));
+//     for (int i = 1; i <= 7; i++) std_map.insert(std::pair<int,int>(i,100));
+//     ft::map<int, int>::iterator ft_it = ft_map.begin();
+//     std::map<int, int>::iterator std_it = std_map.begin();
+//     REQUIRE(ft_it->first == 1);
+//     REQUIRE(ft_it->second == 100);
+//     REQUIRE(std_it->first == 1);
+//     REQUIRE(std_it->second == 100);
 // }
 // TEST_CASE( "map - const rbegin", "[map]" ) {
 //     ft::map<int, int> ft_map;
@@ -172,26 +177,27 @@ TEST_CASE( "map - max_size", "[map]" ) {
   // REQUIRE(ft_map.max_size() == std_map.max_size()); // 10
 }
 // ELEMENT ACCESS
-TEST_CASE( "map - operator[]", "[map]" ) {
-  ft::map<int, int> ft_map;
-  std::map<int, int> std_map;
-  REQUIRE(ft_map.empty() == std_map.empty()); // true
-  for (int i = 0; i != 10; i++) ft_map.insert(ft::pair<int,int>(i,1));
-  for (int i = 0; i != 10; i++) std_map.insert(std::pair<int,int>(i,1));
-  REQUIRE(ft_map.empty() == std_map.empty()); // false
-  REQUIRE(ft_map[1] == std_map[1]);
-  REQUIRE(ft_map[6] == std_map[6]);
-  REQUIRE(ft_map[9] == std_map[9]);
-  ft_map.print_tree();
-  REQUIRE(ft_map[10] == std_map[10]);
-  ft_map.print_tree();
-  REQUIRE(ft_map.size() == std_map.size());
-}
+// TEST_CASE( "map - operator[]", "[map]" ) {
+//   ft::map<int, int> ft_map;
+//   std::map<int, int> std_map;
+//   REQUIRE(ft_map.empty() == std_map.empty()); // true
+//   for (int i = 0; i != 10; i++) ft_map.insert(ft::pair<int,int>(i,1));
+//   for (int i = 0; i != 10; i++) std_map.insert(std::pair<int,int>(i,1));
+//   REQUIRE(ft_map.empty() == std_map.empty()); // false
+//   REQUIRE(ft_map[1] == std_map[1]);
+//   REQUIRE(ft_map[6] == std_map[6]);
+//   REQUIRE(ft_map[9] == std_map[9]);
+//   ft_map.print_tree();
+//   REQUIRE(ft_map[10] == std_map[10]);
+//   ft_map.print_tree();
+//   REQUIRE(ft_map.size() == std_map.size());
+// }
 // MODIFIERS
 TEST_CASE( "map - insert(val)", "[map]" ) {
   // MY MAP
   ft::map<int, int> ft_map;
   std::map<int, int> std_map;
+
 
   SECTION ("tests") {
     ft_map.insert(ft::pair<int,int>(3,300));
@@ -377,9 +383,9 @@ TEST_CASE( "map - erase(key)", "[map]" ) {
 	}
 }
 
-TEST_CASE( "map - go crazy", "[map]" ) {
-  ft::map<int, int> ft_map;
-  std::map<int, int> std_map;
+// TEST_CASE( "map - go crazy", "[map]" ) {
+//   ft::map<int, int> ft_map;
+//   std::map<int, int> std_map;
   // ft_map.insert(ft::pair<int,int>(40,1));
   // std_map.insert(std::pair<int,int>(40,1));
   // ft_map.insert(ft::pair<int,int>(20,1));
@@ -440,21 +446,4 @@ TEST_CASE( "map - go crazy", "[map]" ) {
   // for (int i = 0; i != 31; i++) ft_map.insert(ft::pair<int,int>(i,1));
   // for (int i = 0; i != 31; i++) std_map.insert(std::pair<int,int>(i,1));
   // ft_map.print_tree();
-
-  ft::map<int, int>  own;
-    int sum = 1;
-    for (int i = 0; i < 6; ++i)
-    {
-        own.insert(ft::pair<int, int>(sum, sum));
-        sum += 1;
-    }
-    own.print_tree();
-    ft::map<int, int>::iterator it = own.begin();
-    ft::map<int, int>::iterator ite = own.end();
-    while(it != own.end())
-    {
-        // std::cout << it->first << std::endl;
-        ++it;
-    }
-
-}
+// }

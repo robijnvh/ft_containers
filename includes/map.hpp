@@ -6,7 +6,7 @@
 /*   By: rvan-hou <rvan-hou@student.42.fr>            +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2021/04/19 14:31:50 by robijnvanho   #+#    #+#                 */
-/*   Updated: 2021/04/29 16:37:00 by robijnvanho   ########   odam.nl         */
+/*   Updated: 2021/04/30 11:29:31 by robijnvanho   ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -499,7 +499,7 @@ class map {
 			return (reverse_iterator(_last->_parent));
 		}
 		const_reverse_iterator rbegin() const {
-			return (const_reverse_iterator(_last));
+			return (const_reverse_iterator(_last->_parent));
 		}
 		reverse_iterator rend() {
 			return (reverse_iterator(_first));
