@@ -6,7 +6,7 @@
 /*   By: rvan-hou <rvan-hou@student.42.fr>            +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2021/04/19 14:31:50 by robijnvanho   #+#    #+#                 */
-/*   Updated: 2021/05/04 13:20:33 by rvan-hou      ########   odam.nl         */
+/*   Updated: 2021/05/04 15:01:08 by rvan-hou      ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -175,6 +175,7 @@ class map {
 		// ERASE
 		bool deleteNode(node_pointer position, Key key)
 		{
+			std::cout << "key: " << key << std::endl;
 			node_pointer tmp = 0;
 			node_pointer del = searchNode(position, key);
 			if (!del)
@@ -188,21 +189,22 @@ class map {
 					_first->_parent = _root;
 					_last->_parent = _root;
 				}
-				else if (del->_left && del->_right == _last) { // left_heavy
+				else if (del->_left != _first && del->_right == _last) { // left_heavy
 					std::cout << "del root left_heavy\n";
+					std::cout << "check: " << del->_left->_data.first << std::endl;
 					tmp = del->_parent;
 					_root = del->_left;
-					del->_left->_parent = tmp; // NULL
+					del->_left->_parent = 0; // NULL
 					_last->_parent = del->_left;
-					del->_left->_right = _first;
+					del->_left->_right = _last;
 				}
-				else if (del->_left == _first && del->_right) { // right_heavy
+				else if (del->_left == _first && del->_right != _last) { // right_heavy
 					std::cout << "del root right_heavy\n";
 					tmp = del->_parent;
 					_root = del->_right;
-					del->_right->_parent = tmp; // NULL
+					del->_right->_parent = 0; // NULL
 					_first->_parent = del->_right;
-					del->_right->_left = _last;
+					del->_right->_left = _first;
 				}
 				else { // both _left and _right child
 					std::cout << "del root both sides\n";
@@ -495,19 +497,23 @@ class map {
 			for (; first != last; first++)
 				insert(*first);
 		}
-		// void	erase(iterator position) {
-			
-		// }
-		size_t	erase(const Key& k) {
-			node_pointer tmp = searchNode(_root, k);
-			if (tmp && deleteNode(tmp, k) == true) {
-				_size -= 1;	
-				return (1);
-			}
-			return (0);
+		void	erase(iterator position) {
+			deleteNode(position.get_ptr(), position->first);
+				_size -= 1;
 		}
-		// template <class InputIterator> 
-		// void	erase(typename enable_if<is_input_iterator<InputIterator>::value, InputIterator>::type first, iterator last);
+		size_t	erase(const Key& key) {
+			size_t ret = deleteNode(_root, key);
+			_size -= ret;
+			return ret;
+		}
+		template <class InputIterator> 
+		void	erase(typename enable_if<is_input_iterator<InputIterator>::value, InputIterator>::type first, InputIterator last) {
+			while (first != last) {
+				iterator tmp(first);
+				++first;
+				erase(tmp);
+			}
+		}
 	}; // class map
 
 // RELATIONAL OPERATORS
