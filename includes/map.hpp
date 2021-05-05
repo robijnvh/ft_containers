@@ -6,7 +6,7 @@
 /*   By: rvan-hou <rvan-hou@student.42.fr>            +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2021/04/19 14:31:50 by robijnvanho   #+#    #+#                 */
-/*   Updated: 2021/05/05 15:15:03 by robijnvanho   ########   odam.nl         */
+/*   Updated: 2021/05/05 17:35:01 by robijnvanho   ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -72,7 +72,7 @@ class map {
 			b = tmp;
 		}
 		//SEARCH
-		node_pointer	searchNode(node_pointer root, Key key) const { // search specific node and ret pointer to equal
+		node_pointer	searchNode(node_pointer root, Key key) const { // search specific node and ret pointer if found
 			if (!root || root == _last)
 				return 0;
 			if (!_comp(root->_data.first, key) && !_comp(key, root->_data.first))
@@ -152,119 +152,110 @@ class map {
 			int ret;
 
 			ret = (height(node->_left) - height(node->_right));
-			// std::cout << "height_left: " << height(node->_left) << " height_right: " << height(node->_right) << std::endl;
 			return ret;
 		}
-		// BALANCE!
-		int	balance(node_pointer move) { // finds imbalance while iterating through tree
+		void	balance(node_pointer move) { // finds imbalance while iterating through tree
 			int	balance;
-			// std::cout << "BALANCE" << std::endl;
 			while (move) {
 				balance = getBalance(move);
 				// std::cout << "imblance at node: " << move->_data.first << " balance_factor: " << balance << std::endl;
-				if (balance > 1 && getBalance(move->_left) > 0) {
-					// std::cout << "left_heavy" << std::endl;
+				if (balance > 1 && getBalance(move->_left) > 0) // left_heavy
 					rotateRight(_root, move);
-				}
-				else if (balance < -1 && getBalance(move->_right) < 0) {
-					// std::cout << "right_heavy" << std::endl;
+				else if (balance < -1 && getBalance(move->_right) < 0) // left_heavy
 					rotateLeft(_root, move);
-				}
-				else if (balance < -1 && getBalance(move->_right) >= 0) {
-					// std::cout << "right_heavy" << std::endl;
+				else if (balance < -1 && getBalance(move->_right) >= 0) { // right_heavy
 					rotateRight(_root, move->_right);
 					rotateLeft(_root, move);
 				}
-				else if (balance > 1 && getBalance(move->_left) <= 0) {
-					// std::cout << "left_heavy" << std::endl;
+				else if (balance > 1 && getBalance(move->_left) <= 0) { // left_heavy
 					rotateLeft(_root, move->_left);
 					rotateRight(_root, move);
 				}
 				move = move->_parent;
 			}
-			return (0);
 		}
 		// ERASE
-		bool deleteNode(node_pointer position, Key key)
-		{
-			// std::cout << "key: " << key << std::endl;
+		bool	deleteRoot(node_pointer del, node_pointer tmp) {
+			if (del->_left == _first && del->_right == _last) { // single root
+				_root = new node();
+				_root->_left = _first;
+				_root->_right = _last;
+				_first->_parent = _root;
+				_last->_parent = _root;
+			}
+			else if (del->_left != _first && del->_right == _last) { // left_heavy
+				tmp = del->_parent;
+				_root = del->_left;
+				del->_left->_parent = 0;
+				_last->_parent = del->_left;
+				del->_left->_right = _last;
+			}
+			else if (del->_left == _first && del->_right != _last) { // right_heavy
+				tmp = del->_parent;
+				_root = del->_right;
+				del->_right->_parent = 0;
+				_first->_parent = del->_right;
+				del->_right->_left = _first;
+			}
+			return true;
+		}
+		bool	deleteLeafNode(node_pointer del, node_pointer tmp) { // delete single leaf node
+			tmp = del->_parent;
+			node_pointer linkToLimit = NULL;
+			if (del->_left == _first || del->_right == _last) {
+				if (del->_left == _first && del->_right != _last) {
+					linkToLimit = _first;
+				}
+				else
+					linkToLimit = _last;
+				del->_data.first <= del->_parent->_data.first ?
+					_first->_parent = del->_parent : _last->_parent = del->_parent;
+			}
+			del->_data.first <= del->_parent->_data.first ?
+				del->_parent->_left = linkToLimit : del->_parent->_right = linkToLimit;
+			return true;
+		}
+		bool	deleteNodeWithChildren(node_pointer del, node_pointer tmp, node_pointer set, char side) {
+			tmp = del->_parent;
+			del->_data.first <= del->_parent->_data.first ?
+				del->_parent->_left = set : del->_parent->_right = set;
+			set->_parent = del->_parent;
+			if (side == 'L') {
+				if (del->_right == _last) {
+					_last->_parent = set;
+					set->_right = _last;
+				}
+			}
+			else if (side == 'R') {
+				if (del->_left == _first) {
+					_first->_parent = set;
+					set->_left = _first;
+				}
+			}
+			return true;
+		}
+		bool	deleteNode(node_pointer position, Key key) { // main deleteNode function
 			node_pointer tmp = 0;
 			node_pointer del = searchNode(position, key);
 			if (!del)
 				return false;
 			if (!del->_parent) { // if del == _root
-				if (del->_left == _first && del->_right == _last) {
-					// std::cout << "del root\n";
-					_root = new node(); // ????
-					_root->_left = _first;
-					_root->_right = _last;
-					_first->_parent = _root;
-					_last->_parent = _root;
-				}
-				else if (del->_left != _first && del->_right == _last) { // left_heavy
-					// std::cout << "del root left_heavy\n";
-					tmp = del->_parent;
-					_root = del->_left;
-					del->_left->_parent = 0; // NULL
-					_last->_parent = del->_left;
-					del->_left->_right = _last;
-				}
-				else if (del->_left == _first && del->_right != _last) { // right_heavy
-					// std::cout << "del root right_heavy\n";
-					tmp = del->_parent;
-					_root = del->_right;
-					del->_right->_parent = 0; // NULL
-					_first->_parent = del->_right;
-					del->_right->_left = _first;
-				}
+				if (del->_left == _first || del->_right == _last) // root with 0 or 1 child
+					deleteRoot(del, tmp);
 				else { // both _left and _right child
-					// std::cout << "del root both sides\n";
 					node_pointer maxNode = _root->getPrev();
 					_allocatorPair.destroy(&del->_data);
 					_allocatorPair.construct(&del->_data, maxNode->_data);
 					return deleteNode(del->_left, maxNode->_data.first);
 				}
 			}
-			else if ((!del->_left || del->_left == _first) && (!del->_right || del->_right == _last)) { // LEAF node aka pointing to NULL or Last/First
-				// std::cout << "del leaf node\n";
-				tmp = del->_parent;
-				node_pointer linkToLimit = NULL;
-				if (del->_left == _first || del->_right == _last) {
-					if (del->_left == _first && del->_right != _last) {
-						linkToLimit = _first;
-					}
-					else
-						linkToLimit = _last;
-					del->_data.first <= del->_parent->_data.first ?
-						_first->_parent = del->_parent : _last->_parent = del->_parent;
-				}
-				del->_data.first <= del->_parent->_data.first ?
-					del->_parent->_left = linkToLimit : del->_parent->_right = linkToLimit;
-			}
-			else if ((del->_left && del->_left != _first) && (!del->_right || del->_right == _last)) { // no leafs but only left
-				// std::cout << "del node left\n";
-				tmp = del->_parent;
-				del->_data.first <= del->_parent->_data.first ?
-					del->_parent->_left = del->_left : del->_parent->_right = del->_left;
-				del->_left->_parent = del->_parent;
-				if (del->_right == _last) {
-					_last->_parent = del->_left;
-					del->_left->_right = _last;
-				}
-			}
-			else if ((!del->_left || del->_left == _first) && del->_right && del->_right != _last) { // no leafs but only _right
-				// std::cout << "del node right\n";
-				tmp = del->_parent;
-				del->_data.first <= del->_parent->_data.first ?
-					del->_parent->_left = del->_right : del->_parent->_right = del->_right;
-				del->_right->_parent = del->_parent;
-				if (del->_left == _first) {
-					_first->_parent = del->_right;
-					del->_right->_left = _first;
-				}
-			}
-			else {
-				// std::cout << "del node both\n";
+			else if ((!del->_left || del->_left == _first) && (!del->_right || del->_right == _last)) // LEAF node aka pointing to NULL or Last/First
+				deleteLeafNode(del, tmp);
+			else if ((del->_left && del->_left != _first) && (!del->_right || del->_right == _last)) // no leafs but only left child
+				deleteNodeWithChildren(del, tmp, del->_left, 'L');
+			else if ((!del->_left || del->_left == _first) && del->_right && del->_right != _last) // no leafs but only _right child
+				deleteNodeWithChildren(del, tmp, del->_right, 'R');
+			else { // del node with children on both sides
 				node_pointer maxNode = del->getPrev();
 				_allocatorPair.destroy(&del->_data);
 				_allocatorPair.construct(&del->_data, maxNode->_data);
@@ -272,7 +263,6 @@ class map {
 			}
 			if (tmp)
 				balance(tmp);
-			// delete del;
 			deallocateNode(del);
 			return true;
 		}

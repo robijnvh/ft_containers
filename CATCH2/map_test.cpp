@@ -418,7 +418,7 @@ TEST_CASE( "map - erase(key)", "[map]" ) {
     ft_map.print_tree();
     for (int i = 60; i >= 41; i--) ft_map.erase(i);
 	  for (int i = 60; i >= 41; i--) std_map.erase(i);
-    std::cout << "Erase 21-40:" << std::endl;
+    std::cout << "Erase 41-60:" << std::endl;
     ft_map.print_tree();
   }
   SECTION ("erase all") {
