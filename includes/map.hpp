@@ -6,7 +6,7 @@
 /*   By: rvan-hou <rvan-hou@student.42.fr>            +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2021/04/19 14:31:50 by robijnvanho   #+#    #+#                 */
-/*   Updated: 2021/05/04 15:01:08 by rvan-hou      ########   odam.nl         */
+/*   Updated: 2021/05/05 15:15:03 by robijnvanho   ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -58,6 +58,18 @@ class map {
 				temp = temp->_right;
 			temp->_right = _last;
 			_last->_parent = temp;
+		}
+		// DEL
+		void deallocateNode(node_pointer del) {
+			_allocatorPair.destroy(&del->_data);
+			_allocatorNode.deallocate(del, 1);
+		}
+		// SWAP
+		template <typename U>
+		void swap(U& a, U& b) {
+			U tmp = a;
+			a = b;
+			b = tmp;
 		}
 		//SEARCH
 		node_pointer	searchNode(node_pointer root, Key key) const { // search specific node and ret pointer to equal
@@ -146,7 +158,7 @@ class map {
 		// BALANCE!
 		int	balance(node_pointer move) { // finds imbalance while iterating through tree
 			int	balance;
-			std::cout << "BALANCE" << std::endl;
+			// std::cout << "BALANCE" << std::endl;
 			while (move) {
 				balance = getBalance(move);
 				// std::cout << "imblance at node: " << move->_data.first << " balance_factor: " << balance << std::endl;
@@ -175,14 +187,14 @@ class map {
 		// ERASE
 		bool deleteNode(node_pointer position, Key key)
 		{
-			std::cout << "key: " << key << std::endl;
+			// std::cout << "key: " << key << std::endl;
 			node_pointer tmp = 0;
 			node_pointer del = searchNode(position, key);
 			if (!del)
 				return false;
 			if (!del->_parent) { // if del == _root
 				if (del->_left == _first && del->_right == _last) {
-					std::cout << "del root\n";
+					// std::cout << "del root\n";
 					_root = new node(); // ????
 					_root->_left = _first;
 					_root->_right = _last;
@@ -190,8 +202,7 @@ class map {
 					_last->_parent = _root;
 				}
 				else if (del->_left != _first && del->_right == _last) { // left_heavy
-					std::cout << "del root left_heavy\n";
-					std::cout << "check: " << del->_left->_data.first << std::endl;
+					// std::cout << "del root left_heavy\n";
 					tmp = del->_parent;
 					_root = del->_left;
 					del->_left->_parent = 0; // NULL
@@ -199,7 +210,7 @@ class map {
 					del->_left->_right = _last;
 				}
 				else if (del->_left == _first && del->_right != _last) { // right_heavy
-					std::cout << "del root right_heavy\n";
+					// std::cout << "del root right_heavy\n";
 					tmp = del->_parent;
 					_root = del->_right;
 					del->_right->_parent = 0; // NULL
@@ -207,7 +218,7 @@ class map {
 					del->_right->_left = _first;
 				}
 				else { // both _left and _right child
-					std::cout << "del root both sides\n";
+					// std::cout << "del root both sides\n";
 					node_pointer maxNode = _root->getPrev();
 					_allocatorPair.destroy(&del->_data);
 					_allocatorPair.construct(&del->_data, maxNode->_data);
@@ -215,12 +226,13 @@ class map {
 				}
 			}
 			else if ((!del->_left || del->_left == _first) && (!del->_right || del->_right == _last)) { // LEAF node aka pointing to NULL or Last/First
-				std::cout << "del leaf node\n";
+				// std::cout << "del leaf node\n";
 				tmp = del->_parent;
-				node_pointer linkToLimit = 0;
+				node_pointer linkToLimit = NULL;
 				if (del->_left == _first || del->_right == _last) {
-					if (del->_left == _first && del->_right != _last)
+					if (del->_left == _first && del->_right != _last) {
 						linkToLimit = _first;
+					}
 					else
 						linkToLimit = _last;
 					del->_data.first <= del->_parent->_data.first ?
@@ -230,7 +242,7 @@ class map {
 					del->_parent->_left = linkToLimit : del->_parent->_right = linkToLimit;
 			}
 			else if ((del->_left && del->_left != _first) && (!del->_right || del->_right == _last)) { // no leafs but only left
-				std::cout << "del node left\n";
+				// std::cout << "del node left\n";
 				tmp = del->_parent;
 				del->_data.first <= del->_parent->_data.first ?
 					del->_parent->_left = del->_left : del->_parent->_right = del->_left;
@@ -241,7 +253,7 @@ class map {
 				}
 			}
 			else if ((!del->_left || del->_left == _first) && del->_right && del->_right != _last) { // no leafs but only _right
-				std::cout << "del node right\n";
+				// std::cout << "del node right\n";
 				tmp = del->_parent;
 				del->_data.first <= del->_parent->_data.first ?
 					del->_parent->_left = del->_right : del->_parent->_right = del->_right;
@@ -252,7 +264,7 @@ class map {
 				}
 			}
 			else {
-				std::cout << "del node both\n";
+				// std::cout << "del node both\n";
 				node_pointer maxNode = del->getPrev();
 				_allocatorPair.destroy(&del->_data);
 				_allocatorPair.construct(&del->_data, maxNode->_data);
@@ -260,7 +272,8 @@ class map {
 			}
 			if (tmp)
 				balance(tmp);
-			delete del;
+			// delete del;
+			deallocateNode(del);
 			return true;
 		}
 		
@@ -327,7 +340,6 @@ class map {
 				layer++;
 			}
 		}
-	// public:
 		// VALUE_COMPARE
 		class value_compare {
 			friend class map;
@@ -388,7 +400,7 @@ class map {
 		}
 		// ASSIGNATION OPERATOR
 		map&	operator=(map const& other) {
-			// clear();
+			clear();
 			_allocatorPair = other._allocatorPair;
 			_size = 0;
 			_root = new node();
@@ -513,6 +525,101 @@ class map {
 				++first;
 				erase(tmp);
 			}
+		}
+		void	swap(map& x) {
+			swap(_root, x._root);
+			swap(_last, x._last);
+			swap(_size, x._size);
+			swap(_comp, x._comp);
+			swap(_allocatorPair, x._allocatorPair);
+			swap(_allocatorNode, x._allocatorNode);
+		}
+		void	clear() {
+			erase(begin(), end());
+		}
+		// OBSERVERS
+		Compare	key_comp() const {
+			return _comp;
+		}
+		value_compare	value_comp() const {
+			return value_compare(_comp);
+		}
+		// OPERATIONS
+		iterator	find(const Key& k) {
+			node_pointer tmp = searchNode(_root, k);
+
+			if (tmp)
+				return iterator(tmp);
+			return end();
+		}
+		const_iterator	find(const Key& k) const {
+			node_pointer tmp = searchNode(_root, k);
+
+			if (tmp)
+				return const_iterator(tmp);
+			return end();
+		}
+		size_t	count(const Key& k) const {
+			node_pointer tmp = searchNode(_root, k);
+			return tmp ? true: false;
+		}
+		iterator	lower_bound(const Key& k) {
+			iterator it = begin();
+
+			for (; it != end(); ++it)
+				if (!_comp(it->first, k))
+					break;
+			return it; 
+		}
+		const_iterator	lower_bound(const Key& k) const {
+			const_iterator it = begin();
+
+			for (; it != end(); ++it)
+				if (!_comp(it->first, k))
+					break;
+			return it; 
+		}
+		iterator	upper_bound(const Key& k) {
+			iterator it = begin();
+
+			for (; it != end(); ++it)
+				if (_comp(k, it->first))
+					break;
+			return it; 
+		}
+		const_iterator	upper_bound(const Key& k) const {
+			const_iterator it = begin();
+
+			for (; it != end(); ++it)
+				if (_comp(k, it->first))
+					break;
+			return it; 
+		}
+		pair<const_iterator, const_iterator>	equal_range(const Key& k) const {
+			const_iterator it = upper_bound(k);
+
+			if (it != begin()) {
+				--it;
+				if (_comp(it->first, k) || _comp(k, it->first))
+					++it;
+			}
+			const_iterator next(it);
+			if (it != end())
+				++next;
+			return make_pair<const_iterator, const_iterator>(it, next);
+		}
+		pair<iterator, iterator>	equal_range(const Key& k) {
+			iterator it = upper_bound(k);
+
+			if (it != begin()) {
+				--it;
+				if (_comp(it->first, k) || _comp(k, it->first))
+					++it;
+			}
+			iterator next(it);
+			if (it != end())
+				++next;
+			return make_pair<iterator, iterator>(it, next);
 		}
 	}; // class map
 

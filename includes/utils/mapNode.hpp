@@ -6,13 +6,13 @@
 /*   By: rvan-hou <rvan-hou@student.42.fr>            +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2021/04/20 12:15:30 by rvan-hou      #+#    #+#                 */
-/*   Updated: 2021/04/23 16:34:58 by robijnvanho   ########   odam.nl         */
+/*   Updated: 2021/05/05 13:55:29 by robijnvanho   ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
 #ifndef MAPNODE_HPP
 # define MAPNODE_HPP
-
+#include <iostream> //
 namespace ft {
 
 template<typename T>
@@ -56,6 +56,7 @@ class mapNode {
 			move = this;
 			if (move->_right) { // one step right and left as far as possible
 				move = move->_right;
+				// while (move->_left && move->_data.first < move->_left->_data.first) { // kan dit?
 				while (move->_left)
 					move = move->_left;
 				return (move);
@@ -79,6 +80,7 @@ class mapNode {
 			move = this;
 			if (move->_left) { // one step left and right as far as possible
 				move = move->_left;
+				// while (move->_right && move->_data.first > move->_right->_data.first) // kan dit????
 				while (move->_right)
 					move = move->_right;
 				return (move);

@@ -6,7 +6,7 @@
 /*   By: rvan-hou <rvan-hou@student.42.fr>            +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2021/04/20 14:08:18 by rvan-hou      #+#    #+#                 */
-/*   Updated: 2021/04/30 11:41:56 by robijnvanho   ########   odam.nl         */
+/*   Updated: 2021/05/05 11:41:47 by robijnvanho   ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -23,20 +23,27 @@ struct pair {
 	T1 first;
 	T2 second;
 
+	// DEFAULT
 	pair() : // constructs empty pair
-		first(),
-		second() {}
+		first(T1()),
+		second(T2()) {}
+	// COPY
+	template< class U, class V > // constructs from U and V MINE
+	pair(const pair<U, V>& p) :
+		first(p.first),
+		second(p.second) {}
+	template< class U, class V > // constructs from U and V REAL
+	pair(pair<U, V>& p) :
+		first(p.first),
+		second(p.second) {}
+	pair(const pair &p) :
+		first(p.first),
+		second(p.second) {}
+	// CONSTRUCTOR
 	pair(const T1& x, const T2& y) : // constructs from x and y
 		first(x),
 		second(y) {}
-	template< class U1, class U2 > // constructs from U1 and U2 MINE
-	pair(const pair<U1, U2>& p) :
-		first(p.first),
-		second(p.second) {}
-	template< class U1, class U2 > // constructs from U1 and U2 REAL
-	pair(const std::pair<U1, U2>& p) :
-		first(p.first),
-		second(p.second) {}
+	// OPERATOR=
 	pair& operator=( const pair& other ) { // assignation operator
 		if (&other != this) {
 			first = other.first;
@@ -49,7 +56,11 @@ struct pair {
 // MAKE PAIR
 template<class T1, class T2>
 pair<T1, T2> make_pair(T1 x, T2 y) {
-	return (pair<T1, T2>(x, y));
+	pair<T1, T2> new_pair;
+
+	new_pair.first = x;
+	new_pair.second = y;
+	return (new_pair);
 }
 
 // RELATIONAL OPERATORS
