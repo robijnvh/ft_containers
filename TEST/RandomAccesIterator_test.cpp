@@ -3,10 +3,10 @@
 /*                                                        ::::::::            */
 /*   RandomAccesIterator_test.cpp                       :+:    :+:            */
 /*                                                     +:+                    */
-/*   By: timvancitters <timvancitters@student.co      +#+                     */
+/*   By: rvan-hou <rvan-hou@student.42.fr>            +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2021/04/22 11:03:00 by timvancitte   #+#    #+#                 */
-/*   Updated: 2021/05/07 13:54:15 by robijnvanho   ########   odam.nl         */
+/*   Updated: 2021/05/12 14:09:59 by rvan-hou      ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -24,12 +24,13 @@ TEST_CASE( "RandomAccesIterator-tests", "[RandomAccesIterator]")
 	std::vector<std::string> real_vector_string;
 
 	own_vector_string.push_back("my");
-	real_vector_string.push_back("my");
 	own_vector_string.push_back("name");
-	real_vector_string.push_back("name");
 	own_vector_string.push_back("is");
-	real_vector_string.push_back("is");
 	own_vector_string.push_back("Tim");
+
+	real_vector_string.push_back("my");
+	real_vector_string.push_back("name");
+	real_vector_string.push_back("is");
 	real_vector_string.push_back("Tim");
 
 	ft::vector<std::string>::iterator own_it = own_vector_string.begin();

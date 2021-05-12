@@ -1,12 +1,12 @@
 /* ************************************************************************** */
 /*                                                                            */
-/*                                                        ::::::::            */
-/*   list.hpp                                           :+:    :+:            */
-/*                                                     +:+                    */
-/*   By: rvan-hou <rvan-hou@student.42.fr>            +#+                     */
-/*                                                   +#+                      */
-/*   Created: 2021/04/06 15:43:58 by rvan-hou      #+#    #+#                 */
-/*   Updated: 2021/05/07 14:53:59 by robijnvanho   ########   odam.nl         */
+/*                                                        :::      ::::::::   */
+/*   list.hpp                                           :+:      :+:    :+:   */
+/*                                                    +:+ +:+         +:+     */
+/*   By: rvan-hou <rvan-hou@student.42.fr>          +#+  +:+       +#+        */
+/*                                                +#+#+#+#+#+   +#+           */
+/*   Created: 2021/04/06 15:43:58 by rvan-hou          #+#    #+#             */
+/*   Updated: 2021/05/12 12:19:42 by rvan-hou         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -74,7 +74,12 @@ class list {
 			}
 			std::cout << std::endl;
 		}
-
+		template <typename U>
+		void swap(U& a, U& b) {
+			U tmp = a;
+			a = b;
+			b = tmp;
+		}
 	public:
 		// CONSTRUCTORS
 		explicit	list(Alloc const& alloc = Alloc()) : // constructs empty list, no elements
@@ -264,13 +269,17 @@ class list {
 			return ret;
 		}
 		void	swap(list& other) { // swap lists
-			list tmp(*this);
-			*this = other;
-			other = tmp;
+			// list tmp(*this);
+			// *this = other;
+			// other = tmp;
+			swap(_allocator, other._allocator);
+			swap(_size, other._size);
+			swap(_first, other._first);
+			swap(_last, other._last);
 		}
-		void	resize(size_t n, T val = T()) {
-			if (n < _size)
-				_size -= (_size - n);
+		void	resize(size_t n, T val = T()) { // CHECK
+			while (n < _size)
+				pop_back();
 			while (n > _size)
 				push_back(val);
 		}
@@ -292,10 +301,13 @@ class list {
 			x._size--;
 		}
 		void	splice(iterator position, list& x, iterator first, iterator last) { // takes range of elements from x into current list
-			list tmp(first, last);
-			splice(position, tmp);
-			_size += tmp._size;
-			x._size -= tmp._size;
+			while (first != last) {
+				iterator tmp = iterator(first.get_ptr()->_next);
+				move(position, first);
+				x._size -= 1;
+				_size += 1;
+				first = tmp;
+			}
 		}
 		void	remove(T const& val) { // removes elements based on value
 			iterator it = begin();
@@ -349,10 +361,15 @@ class list {
 		}
 		template <class Compare>
 		void	merge(list& x, Compare comp) { // merge two lists based on comp
-			if (*this != x)
-				while (!x.empty())
-					splice(begin(), x);
-			sort(comp);	
+			if (*this != x) {
+				iterator it = begin();
+				while (!x.empty()) {
+					if (it == end() || comp(*(x.begin()), *it))
+						splice(it, x, x.begin());
+					else
+						++it;
+				}
+			}
 		}
 		void	sort(void) { // sort based on operator<
 			iterator it = begin();
