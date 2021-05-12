@@ -1,12 +1,12 @@
 /* ************************************************************************** */
 /*                                                                            */
-/*                                                        :::      ::::::::   */
-/*   list.hpp                                           :+:      :+:    :+:   */
-/*                                                    +:+ +:+         +:+     */
-/*   By: rvan-hou <rvan-hou@student.42.fr>          +#+  +:+       +#+        */
-/*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2021/04/06 15:43:58 by rvan-hou          #+#    #+#             */
-/*   Updated: 2021/04/20 14:23:57 by rvan-hou         ###   ########.fr       */
+/*                                                        ::::::::            */
+/*   list.hpp                                           :+:    :+:            */
+/*                                                     +:+                    */
+/*   By: rvan-hou <rvan-hou@student.42.fr>            +#+                     */
+/*                                                   +#+                      */
+/*   Created: 2021/04/06 15:43:58 by rvan-hou      #+#    #+#                 */
+/*   Updated: 2021/05/07 14:53:59 by robijnvanho   ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -316,6 +316,9 @@ class list {
 		}
 		void	unique(void) { // removes all but the first element in a direct row of equal elements
 			iterator it = begin();
+
+			if (size() <= 1)
+				return;
 			it++;
 			while (it != end()) {
 				if (*it == it.get_ptr()->_prev->_data)
@@ -327,6 +330,9 @@ class list {
 		template <class BinaryPredicate>
 		void	unique(BinaryPredicate binary_pred) { // removes if bin_pred returns true
 			iterator it = begin();
+
+			if (this->size() <= 1)
+				return;
 			it++;
 			while (it != end()) {
 				if (binary_pred(*it, it.get_ptr()->_prev->_data) == true)
@@ -336,17 +342,17 @@ class list {
 			}
 		}
 		void	merge(list& x) { // merge two lists and sort <
-			if (*this != x) {
-				splice(begin(), x);
-				sort();
-			}
+			if (*this != x)
+				while (!x.empty())
+					splice(begin(), x);
+			sort();
 		}
 		template <class Compare>
 		void	merge(list& x, Compare comp) { // merge two lists based on comp
-			if (*this != x) {
-				splice(begin(), x);
-				sort(comp);
-			}	
+			if (*this != x)
+				while (!x.empty())
+					splice(begin(), x);
+			sort(comp);	
 		}
 		void	sort(void) { // sort based on operator<
 			iterator it = begin();

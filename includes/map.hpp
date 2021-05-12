@@ -6,7 +6,7 @@
 /*   By: rvan-hou <rvan-hou@student.42.fr>            +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2021/04/19 14:31:50 by robijnvanho   #+#    #+#                 */
-/*   Updated: 2021/05/05 17:35:01 by robijnvanho   ########   odam.nl         */
+/*   Updated: 2021/05/07 13:18:08 by robijnvanho   ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -101,8 +101,7 @@ class map {
 			return (new_leaf);
 		}
 		// ROTATIONS
-		void	rotateRight(node_pointer root, node_pointer nodeDown) {
-			(void)root;
+		void	rotateRight(node_pointer* root, node_pointer nodeDown) {
 			node_pointer nodeUp = nodeDown->_left;
 			nodeDown->_left = nodeUp->_right;
 			if (nodeUp->_right) // in case right child NULL
@@ -115,11 +114,10 @@ class map {
 				nodeDown->_parent->_right = nodeUp;
 			nodeDown->_parent = nodeUp;
 			if (!nodeUp->_parent) // check if root and set root
-				_root = nodeUp;
+				*root = nodeUp;
 			
 		}
-		void	rotateLeft(node_pointer root, node_pointer nodeDown) {
-			(void)root;
+		void	rotateLeft(node_pointer* root, node_pointer nodeDown) {
 			node_pointer nodeUp = nodeDown->_right;
 			nodeDown->_right = nodeUp->_left;
 			if (nodeUp->_left) // in case left child NULL
@@ -132,7 +130,7 @@ class map {
 				nodeDown->_parent->_right = nodeUp;
 			nodeDown->_parent = nodeUp;
 			if (!nodeUp->_parent) // check if root and set root
-				_root = nodeUp;
+				*root = nodeUp;
 		}
 		// BALANCE
 		int height(node_pointer tmp) { // returns height from node
@@ -154,28 +152,28 @@ class map {
 			ret = (height(node->_left) - height(node->_right));
 			return ret;
 		}
-		void	balance(node_pointer move) { // finds imbalance while iterating through tree
+		void	balance(node_pointer* root, node_pointer move) { // finds imbalance while iterating through tree
 			int	balance;
 			while (move) {
 				balance = getBalance(move);
 				// std::cout << "imblance at node: " << move->_data.first << " balance_factor: " << balance << std::endl;
 				if (balance > 1 && getBalance(move->_left) > 0) // left_heavy
-					rotateRight(_root, move);
+					rotateRight(root, move);
 				else if (balance < -1 && getBalance(move->_right) < 0) // left_heavy
-					rotateLeft(_root, move);
+					rotateLeft(root, move);
 				else if (balance < -1 && getBalance(move->_right) >= 0) { // right_heavy
-					rotateRight(_root, move->_right);
-					rotateLeft(_root, move);
+					rotateRight(root, move->_right);
+					rotateLeft(root, move);
 				}
 				else if (balance > 1 && getBalance(move->_left) <= 0) { // left_heavy
-					rotateLeft(_root, move->_left);
-					rotateRight(_root, move);
+					rotateLeft(root, move->_left);
+					rotateRight(root, move);
 				}
 				move = move->_parent;
 			}
 		}
 		// ERASE
-		bool	deleteRoot(node_pointer del, node_pointer tmp) {
+		bool	deleteRoot(node_pointer del, node_pointer* tmp) {
 			if (del->_left == _first && del->_right == _last) { // single root
 				_root = new node();
 				_root->_left = _first;
@@ -184,14 +182,14 @@ class map {
 				_last->_parent = _root;
 			}
 			else if (del->_left != _first && del->_right == _last) { // left_heavy
-				tmp = del->_parent;
+				*tmp = del->_parent;
 				_root = del->_left;
 				del->_left->_parent = 0;
 				_last->_parent = del->_left;
 				del->_left->_right = _last;
 			}
 			else if (del->_left == _first && del->_right != _last) { // right_heavy
-				tmp = del->_parent;
+				*tmp = del->_parent;
 				_root = del->_right;
 				del->_right->_parent = 0;
 				_first->_parent = del->_right;
@@ -199,8 +197,8 @@ class map {
 			}
 			return true;
 		}
-		bool	deleteLeafNode(node_pointer del, node_pointer tmp) { // delete single leaf node
-			tmp = del->_parent;
+		bool	deleteLeafNode(node_pointer del, node_pointer* tmp) { // delete single leaf node
+			*tmp = del->_parent;
 			node_pointer linkToLimit = NULL;
 			if (del->_left == _first || del->_right == _last) {
 				if (del->_left == _first && del->_right != _last) {
@@ -215,8 +213,8 @@ class map {
 				del->_parent->_left = linkToLimit : del->_parent->_right = linkToLimit;
 			return true;
 		}
-		bool	deleteNodeWithChildren(node_pointer del, node_pointer tmp, node_pointer set, char side) {
-			tmp = del->_parent;
+		bool	deleteNodeWithChildren(node_pointer del, node_pointer* tmp, node_pointer set, char side) {
+			*tmp = del->_parent;
 			del->_data.first <= del->_parent->_data.first ?
 				del->_parent->_left = set : del->_parent->_right = set;
 			set->_parent = del->_parent;
@@ -241,7 +239,7 @@ class map {
 				return false;
 			if (!del->_parent) { // if del == _root
 				if (del->_left == _first || del->_right == _last) // root with 0 or 1 child
-					deleteRoot(del, tmp);
+					deleteRoot(del, &tmp);
 				else { // both _left and _right child
 					node_pointer maxNode = _root->getPrev();
 					_allocatorPair.destroy(&del->_data);
@@ -250,19 +248,18 @@ class map {
 				}
 			}
 			else if ((!del->_left || del->_left == _first) && (!del->_right || del->_right == _last)) // LEAF node aka pointing to NULL or Last/First
-				deleteLeafNode(del, tmp);
+				deleteLeafNode(del, &tmp);
 			else if ((del->_left && del->_left != _first) && (!del->_right || del->_right == _last)) // no leafs but only left child
-				deleteNodeWithChildren(del, tmp, del->_left, 'L');
+				deleteNodeWithChildren(del, &tmp, del->_left, 'L');
 			else if ((!del->_left || del->_left == _first) && del->_right && del->_right != _last) // no leafs but only _right child
-				deleteNodeWithChildren(del, tmp, del->_right, 'R');
+				deleteNodeWithChildren(del, &tmp, del->_right, 'R');
 			else { // del node with children on both sides
 				node_pointer maxNode = del->getPrev();
 				_allocatorPair.destroy(&del->_data);
 				_allocatorPair.construct(&del->_data, maxNode->_data);
 				return deleteNode(del->_left, maxNode->_data.first);
 			}
-			if (tmp)
-				balance(tmp);
+			balance(&_root, tmp);
 			deallocateNode(del);
 			return true;
 		}
@@ -482,11 +479,11 @@ class map {
 			}
 			if (value_compare(_comp)( val, move->_data)) {
 				move = insert_left(val, move);
-				balance(move);
+				balance(&_root, move);
 			}
 			else {
 				move = insert_right(val, move);
-				balance(move);
+				balance(&_root, move);
 			}
 			return (ft::make_pair(iterator(move), true));
 		}
