@@ -6,7 +6,7 @@
 /*   By: rvan-hou <rvan-hou@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/04/06 15:43:58 by rvan-hou          #+#    #+#             */
-/*   Updated: 2021/05/12 12:19:42 by rvan-hou         ###   ########.fr       */
+/*   Updated: 2021/05/12 15:37:46 by rvan-hou         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -20,7 +20,7 @@
 # include <memory>
 # include <limits>
 # include <cstddef>
-# include <iostream> // to print
+// # include <iostream> // to print
 
 
 namespace ft {
@@ -251,8 +251,6 @@ class list {
 				insert(position, *first);
 		}
 		iterator	erase(iterator position) {
-			// if (position == end()) // not sure
-			// 	return position;
 			listNode<T>* tmp = position.get_ptr();
 			tmp->_prev->_next = tmp->_next;
 			tmp->_next->_prev = tmp->_prev;
@@ -269,15 +267,12 @@ class list {
 			return ret;
 		}
 		void	swap(list& other) { // swap lists
-			// list tmp(*this);
-			// *this = other;
-			// other = tmp;
 			swap(_allocator, other._allocator);
 			swap(_size, other._size);
 			swap(_first, other._first);
 			swap(_last, other._last);
 		}
-		void	resize(size_t n, T val = T()) { // CHECK
+		void	resize(size_t n, T val = T()) {
 			while (n < _size)
 				pop_back();
 			while (n > _size)

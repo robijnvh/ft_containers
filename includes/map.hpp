@@ -6,7 +6,7 @@
 /*   By: rvan-hou <rvan-hou@student.42.fr>            +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2021/04/19 14:31:50 by robijnvanho   #+#    #+#                 */
-/*   Updated: 2021/05/07 13:18:08 by robijnvanho   ########   odam.nl         */
+/*   Updated: 2021/05/12 15:39:17 by rvan-hou      ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -434,7 +434,6 @@ class map {
 		}
 		size_t	max_size() const {
 			return (std::numeric_limits<size_t>::max() / sizeof(mapNode<value_type>));
-			// return this->_allocator.max_size() / 2;
 		}
 		// ELEMENTS ACCESS
 		T& operator[] (const Key& k) { // access value or insert if not excist
@@ -609,32 +608,6 @@ class map {
 			return make_pair<iterator, iterator>(it, next);
 		}
 	}; // class map
-
-// RELATIONAL OPERATORS
-// template < class Key, class T, class Compare, class Alloc>
-// bool operator== (const ft::map<Key,T,ft::pair<const Key,T>, Compare, Alloc>& lhs, const ft::map<Key,T,ft::pair<const Key,T>, Compare, Alloc>& rhs) {
-// 	return (lhs.size() == rhs.size() && ft::equal(lhs.begin(), lhs.end(), rhs.begin()));
-// }
-// template < class Key, class T, class Compare, class Alloc>
-// bool operator!= (const map<Key,T,ft::pair<const Key,T>, Compare, Alloc>& lhs, const map<Key,T,ft::pair<const Key,T>, Compare, Alloc>& rhs) {
-// 	return !(lhs == rhs);
-// }
-// template < class Key, class T, class Compare, class Alloc>
-// bool operator<  (const map<Key,T,ft::pair<const Key,T>, Compare, Alloc>& lhs, const map<Key,T,ft::pair<const Key,T>, Compare, Alloc>& rhs) {
-// 	return ft::lexicographical_compare(lhs.begin(), lhs.end(), rhs.begin(), rhs.end());
-// }
-// template < class Key, class T, class Compare, class Alloc>
-// bool operator>  (const map<Key,T,ft::pair<const Key,T>, Compare, Alloc>& lhs, const map<Key,T,ft::pair<const Key,T>, Compare, Alloc>& rhs) {
-// 	return (rhs < lhs);
-// }
-// template < class Key, class T, class Compare, class Alloc>
-// bool operator<= (const map<Key,T,ft::pair<const Key,T>, Compare, Alloc>& lhs, const map<Key,T,ft::pair<const Key,T>, Compare, Alloc>& rhs) {
-// 	return !(lhs > rhs);
-// }
-// template < class Key, class T, class Compare, class Alloc>
-// bool operator>= (const map<Key,T,ft::pair<const Key,T>, Compare, Alloc>& lhs, const map<Key,T,ft::pair<const Key,T>, Compare, Alloc>& rhs) {
-// 	return !(lhs < rhs);
-// }
 } // namespace ft
 
 #endif

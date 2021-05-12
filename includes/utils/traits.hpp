@@ -6,7 +6,7 @@
 /*   By: rvan-hou <rvan-hou@student.42.fr>            +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2021/03/30 13:54:58 by robijnvanho   #+#    #+#                 */
-/*   Updated: 2021/04/12 11:08:54 by robijnvanho   ########   odam.nl         */
+/*   Updated: 2021/05/12 15:42:09 by rvan-hou      ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -40,4 +40,4 @@ namespace ft {
     };
 }
 
-#endif //FT_CONTAINERS_TRAITS_HPP
+#endif

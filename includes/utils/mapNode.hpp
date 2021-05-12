@@ -6,7 +6,7 @@
 /*   By: rvan-hou <rvan-hou@student.42.fr>            +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2021/04/20 12:15:30 by rvan-hou      #+#    #+#                 */
-/*   Updated: 2021/05/05 13:55:29 by robijnvanho   ########   odam.nl         */
+/*   Updated: 2021/05/12 15:41:35 by rvan-hou      ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -97,7 +97,7 @@ class mapNode {
 			}
 			return (tmp);
 		}
-    }; // class mapNode
+	}; // class mapNode
 } // namespace
 
 #endif

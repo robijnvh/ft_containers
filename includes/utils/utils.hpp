@@ -3,10 +3,10 @@
 /*                                                        ::::::::            */
 /*   utils.hpp                                          :+:    :+:            */
 /*                                                     +:+                    */
-/*   By: robijnvanhouts <robijnvanhouts@student.      +#+                     */
+/*   By: rvan-hou <rvan-hou@student.42.fr>            +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2021/04/19 12:21:26 by robijnvanho   #+#    #+#                 */
-/*   Updated: 2021/04/29 12:43:28 by robijnvanho   ########   odam.nl         */
+/*   Updated: 2021/05/12 15:44:10 by rvan-hou      ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -50,14 +50,22 @@ namespace ft {
 			typedef long int	difference_type;
 
 		// COPLIEN
-		allocator() throw() {};
-		allocator(const allocator&) throw() {};
+		allocator() throw() {
+		}
+		allocator(const allocator&) throw() {
+		}
 		template <class U>
-		allocator(const allocator<U>&) throw() {};
-		~allocator() throw() {};
-		// MEM FUNCTIONS
-		pointer	address(reference x) const { return &x; }
-		const_pointer	address(const_reference x) const { return &x; }
+		allocator(const allocator<U>&) throw() {
+		}
+		~allocator() throw() {
+		}
+		// MEMBER FUNCTIONS
+		pointer	address(reference x) const {
+			return &x;
+		}
+		const_pointer	address(const_reference x) const {
+			return &x;
+		}
 		pointer	allocate(size_type n) {
 			pointer ret;
 			size_t size = n * sizeof(value_type);
@@ -73,10 +81,13 @@ namespace ft {
 			(void)n;
 			::operator delete(p);
 		}
-		void	construct(pointer p, const T& v) { new((void*)p)T(v); }
-		void	destroy(pointer p) { p->~T(); }
+		void	construct(pointer p, const T& v) {
+			new((void*)p)T(v);
+		}
+		void	destroy(pointer p) {
+			p->~T();
+		}
 	}; // allocator
-
 } // namespace ft
 
 

@@ -6,7 +6,7 @@
 /*   By: rvan-hou <rvan-hou@student.42.fr>            +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2021/03/23 20:02:35 by robijnvanho   #+#    #+#                 */
-/*   Updated: 2021/05/07 14:43:01 by robijnvanho   ########   odam.nl         */
+/*   Updated: 2021/05/12 15:41:59 by rvan-hou      ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -108,41 +108,11 @@ class RandomAccessIterator {
 		bool	operator==(const RandomAccessIterator &rhs) {
 			return (this->_ptr == rhs._ptr);
 		}
-		// template <class T2, class Alloc2>
-		// friend bool operator==(RandomAccessIterator<T2> const& lhs, RandomAccessIterator<T2> const& rhs);
-		// template <class T2, class Alloc2>
-		// friend bool operator<(RandomAccessIterator<T2> const& lhs, RandomAccessIterator<T2> const& rhs);
 		// GETTER
 		T* const&	get_ptr() const {
 			return _ptr;
 		}
 	}; // class RandomAccessIterator
-
-	// // RELATIONAL OPERATORS
-	// template <class T, class Alloc>
-	// bool operator<(RandomAccessIterator<T> const& lhs, RandomAccessIterator<T> const& rhs) {
-	// 	return (lhs._ptr < rhs._ptr);
-	// }
-	// template <class T, class Alloc>
-	// bool operator>(RandomAccessIterator<T> const& lhs, RandomAccessIterator<T> const& rhs) {
-	// 	return (rhs < lhs);
-	// }
-	// template <class T, class Alloc>
-	// bool operator<=(RandomAccessIterator<T> const& lhs, RandomAccessIterator<T> const& rhs) {
-	// 	return !(rhs < lhs);
-	// }
-	// template <class T, class Alloc>
-	// bool operator>=(RandomAccessIterator<T> const& lhs, RandomAccessIterator<T> const& rhs) {
-	// 	return !(lhs < rhs);
-	// }
-	// template <class T, class Alloc>
-	// bool operator==(RandomAccessIterator<T> const& lhs, RandomAccessIterator<T> const& rhs) {
-	// 	return (lhs._ptr == rhs._ptr);
-	// }
-	// template <class T, class Alloc>
-	// bool operator!=(RandomAccessIterator<T> const& lhs, RandomAccessIterator<T> const& rhs) {
-	// 	return !(lhs == rhs);
-	// }
 
 	template<typename T>
 	class ConstRandomAccessIterator {
@@ -186,7 +156,7 @@ class RandomAccessIterator {
 		}
 		ConstRandomAccessIterator	operator++(int) {
 			ConstRandomAccessIterator tmp(*this);
-			_ptr++;
+			++(*this);
 			return tmp;
 		}
 		ConstRandomAccessIterator&	operator--() {
@@ -195,7 +165,7 @@ class RandomAccessIterator {
 		}
 		ConstRandomAccessIterator	operator--(int) {
 			ConstRandomAccessIterator tmp(*this);
-			_ptr--;
+			--(*this);
 			return tmp;
 		}
 		// OPERATORS - ARITHMETIC
@@ -203,13 +173,13 @@ class RandomAccessIterator {
 			return _ptr + other._ptr;
 		}
 		ConstRandomAccessIterator	operator+(std::ptrdiff_t const& other) {
-			return _ptr + other;
+			return ConstRandomAccessIterator<T>(_ptr + other);
 		}
 		std::ptrdiff_t	operator-(ConstRandomAccessIterator<T> const& other) {
 			return _ptr - other;
 		}
 		ConstRandomAccessIterator	operator-(std::ptrdiff_t const& other) {
-			return _ptr - other;
+			return ConstRandomAccessIterator<T>(_ptr - other);
 		}
 		ConstRandomAccessIterator&	operator+=(std::ptrdiff_t const& other) {
 			_ptr += other;
@@ -300,13 +270,13 @@ class RandomAccessIterator {
 			return _ptr - other._ptr;
 		}
 		RevRandomAccessIterator	operator+(std::ptrdiff_t const& other) {
-			return _ptr - other;
+			return RevRandomAccessIterator<T>(_ptr - other);
 		}
 		std::ptrdiff_t	operator-(RevRandomAccessIterator<T> const& other) {
 			return _ptr + other;
 		}
 		RevRandomAccessIterator	operator-(std::ptrdiff_t const& other) {
-			return _ptr + other;
+			return RevRandomAccessIterator<T>(_ptr + other);
 		}
 		RevRandomAccessIterator&	operator+=(std::ptrdiff_t const& other) {
 			_ptr -= other;
@@ -397,13 +367,13 @@ class RandomAccessIterator {
 			return _ptr - other._ptr;
 		}
 		ConstRevRandomAccessIterator	operator+(std::ptrdiff_t const& other) {
-			return _ptr - other;
+			return ConstRevRandomAccessIterator<T>(_ptr - other);
 		}
 		std::ptrdiff_t	operator-(ConstRevRandomAccessIterator<T> const& other) {
 			return _ptr + other;
 		}
 		ConstRevRandomAccessIterator	operator-(std::ptrdiff_t const& other) {
-			return _ptr + other;
+			return ConstRevRandomAccessIterator<T>(_ptr + other);
 		}
 		ConstRevRandomAccessIterator&	operator+=(std::ptrdiff_t const& other) {
 			_ptr -= other;

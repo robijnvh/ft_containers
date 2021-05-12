@@ -6,14 +6,12 @@
 /*   By: rvan-hou <rvan-hou@student.42.fr>            +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2021/04/07 13:33:51 by robijnvanho   #+#    #+#                 */
-/*   Updated: 2021/05/05 11:09:39 by robijnvanho   ########   odam.nl         */
+/*   Updated: 2021/05/12 15:40:42 by rvan-hou      ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
 #ifndef BIDIRECTIONALITERATOR_HPP
 # define BIDIRECTIONALITERATOR_HPP
-// # include "listNode.hpp"
-// # include "mapNode.hpp"
 # include <cstddef>
 
 namespace ft {
@@ -72,12 +70,6 @@ class BidirectionalIterator {
 		bool	operator!=(const BidirectionalIterator&rhs) const {
 			return !(*this == rhs);
 		}
-		// friend bool	operator==(BidirectionalIterator const& lhs, BidirectionalIterator const& rhs) {
-		// 	return (lhs._ptr == rhs._ptr);
-		// }
-		// friend bool	operator!=(BidirectionalIterator const& lhs, BidirectionalIterator const& rhs) {
-		// 	return !(lhs == rhs);
-		// }
 		// GETTER
 		Node*	get_ptr() const {
 			return _ptr;
@@ -138,12 +130,6 @@ class ConstBidirectionalIterator {
 		bool	operator!=(const ConstBidirectionalIterator&rhs) const {
 			return !(*this == rhs);
 		}	
-		// friend bool	operator==(ConstBidirectionalIterator const& lhs, ConstBidirectionalIterator const& rhs) {
-		// 	return (lhs._ptr == rhs._ptr);
-		// }
-		// friend bool	operator!=(ConstBidirectionalIterator const& lhs, ConstBidirectionalIterator const& rhs) {
-		// 	return !(lhs == rhs);
-		// }
 		const Node*	get_ptr() const {
 			return (this->_ptr);
 		}
@@ -203,12 +189,6 @@ class RevBidirectionalIterator {
 		bool	operator!=(const RevBidirectionalIterator&rhs) const {
 			return !(*this == rhs);
 		}
-		// friend bool	operator==(RevBidirectionalIterator const& lhs, RevBidirectionalIterator const& rhs) {
-		// 	return (lhs._ptr == rhs._ptr);
-		// }
-		// friend bool	operator!=(RevBidirectionalIterator const& lhs, RevBidirectionalIterator const& rhs) {
-		// 	return !(lhs == rhs);
-		// }
 		// GETTER
 		Node*	get_ptr() const {
 			return _ptr;
@@ -269,12 +249,6 @@ class ConstRevBidirectionalIterator {
 		bool	operator!=(const ConstRevBidirectionalIterator&rhs) const {
 			return !(*this == rhs);
 		}
-		// friend bool	operator==(ConstRevBidirectionalIterator const& lhs, ConstRevBidirectionalIterator const& rhs) {
-		// 	return (lhs._ptr == rhs._ptr);
-		// }
-		// friend bool	operator!=(ConstRevBidirectionalIterator const& lhs, ConstRevBidirectionalIterator const& rhs) {
-		// 	return !(lhs == rhs);
-		// }
 		const Node*	get_ptr() const {
 			return (this->_ptr);
 		}

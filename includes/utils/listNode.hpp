@@ -1,12 +1,12 @@
 /* ************************************************************************** */
 /*                                                                            */
-/*                                                        ::::::::            */
-/*   listNode.hpp                                       :+:    :+:            */
-/*                                                     +:+                    */
-/*   By: rvan-hou <rvan-hou@student.42.fr>            +#+                     */
-/*                                                   +#+                      */
-/*   Created: 2021/04/06 16:01:46 by rvan-hou      #+#    #+#                 */
-/*   Updated: 2021/04/16 14:08:49 by robijnvanho   ########   odam.nl         */
+/*                                                        :::      ::::::::   */
+/*   listNode.hpp                                       :+:      :+:    :+:   */
+/*                                                    +:+ +:+         +:+     */
+/*   By: rvan-hou <rvan-hou@student.42.fr>          +#+  +:+       +#+        */
+/*                                                +#+#+#+#+#+   +#+           */
+/*   Created: 2021/04/06 16:01:46 by rvan-hou          #+#    #+#             */
+/*   Updated: 2021/05/12 15:41:16 by rvan-hou         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -32,27 +32,27 @@ class listNode {
 			_data(data) {}
 		~listNode() {
 		} // destructor
-        listNode& operator=(listNode const &other) {
-            if (this != other) {
-                this->_prev = other._prev;
-                this->_next = other._next;
-                this->_data = other._data;
-            }
-            return (*this);
-        }
+		listNode& operator=(listNode const &other) {
+			if (this != other) {
+				this->_prev = other._prev;
+				this->_next = other._next;
+				this->_data = other._data;
+			}
+			return (*this);
+		}
 		bool	operator==(listNode const& rhs) const {
 			return (this->_data == rhs._data && this->_next = rhs._next && this->_prev == rhs._prev);
 		}
 		bool	operator!=(const listNode& rhs) const {
 			return *this != rhs;
 		}
-        listNode *getNext() {
+		listNode *getNext() {
 			return (this->_next);
 		}
-        listNode *getPrev() {
+		listNode *getPrev() {
 			return (this->_prev);
 		}
-    }; // class listNode
+	}; // class listNode
 } // namespace
 
 #endif

@@ -6,7 +6,7 @@
 /*   By: rvan-hou <rvan-hou@student.42.fr>            +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2021/03/23 13:22:00 by robijnvanho   #+#    #+#                 */
-/*   Updated: 2021/05/12 12:58:06 by rvan-hou      ########   odam.nl         */
+/*   Updated: 2021/05/12 14:47:16 by rvan-hou      ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -91,8 +91,6 @@ class vector {
 			}
 		// DESTRUCTOR
 		~vector() { // destroys
-			// if (_capacity)
-			// 	delete[] _container;
 			_allocator.deallocate(_container, _capacity);
 			return;
 		}
@@ -216,14 +214,6 @@ class vector {
 			}
 		}
 		void	push_back(T const& val) { // adds new element at end of vector
-			// if (_capacity == 0) {
-			// 	_container = _allocator.allocate(1);
-			// 	_capacity = 1;
-			// }
-			// else if (_size >= _capacity)
-			// 	realloc((2 * _capacity));
-			// _container[_size] = val;
-			// _size += 1;
 			if (size() >= capacity())
 				realloc(capacity() * 2);
 			_allocator.construct(_container + size(), val);
