@@ -1,4 +1,4 @@
-CODAM/42 project = ft_containers
+**CODAM/42 project - ft_containers**
 
 In this project you will implement the various container types of the C++ standard tem- plate library.
 For each container, turn in the appropriately named class files. The namespace will always be ft and
